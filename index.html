@@ -80,7 +80,7 @@ html,body{margin:0; padding:0; background:#EBE7DE;}
   border-radius:14px; padding:15px 17px; box-shadow:0 1px 2px rgba(42,37,33,.05), 0 10px 26px rgba(42,37,33,.05);
   position:relative; overflow:hidden;}
 .subj-head::before{content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:var(--c,var(--wine));}
-.subj-h-main h2{font-family:var(--serif); font-weight:500; font-size:22px; margin:0; letter-spacing:-.01em;}
+.subj-head h2{font-family:var(--serif); font-weight:500; font-size:22px; margin:0; letter-spacing:-.01em;}
 .subj-prof{margin:3px 0 0; font-size:13px; color:var(--ink-soft);}
 .subj-prof b{color:var(--ink); font-weight:500;}
 
@@ -112,6 +112,14 @@ html,body{margin:0; padding:0; background:#EBE7DE;}
   display:inline-flex; align-items:center; gap:6px;}
 .btn-ghost:hover{border-color:var(--faint);}
 .btn-ghost.sm{height:38px; font-size:13px; padding:0 12px;}
+.file-btn.ok{border-color:#8FB283; color:#3F6A36;}
+.file-btn.ok:hover{border-color:#6F9463;}
+.file-btn.warn{border-color:#D6A24E; color:#8A5A16;}
+.file-btn.warn:hover{border-color:#B9862F;}
+.app.dark .file-btn.ok{border-color:#3A5230; color:#A5C99A;}
+.app.dark .file-btn.ok:hover{border-color:#4E6B41;}
+.app.dark .file-btn.warn{border-color:#5A4520; color:#E0B473;}
+.app.dark .file-btn.warn:hover{border-color:#775C2C;}
 .btn-wine{border:0; background:var(--wine); color:#F6EEDF; padding:0 16px; font-weight:500;
   display:inline-flex; align-items:center; gap:7px; box-shadow:0 2px 8px rgba(110,38,57,.24);}
 .btn-wine:hover{background:var(--wine-dk);}
@@ -191,8 +199,6 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
 .icon-btn:hover{background:var(--hover); color:var(--ink);}
 .icon-btn.danger:hover{background:#F6E2E2; color:#A23A3A;}
 .app.dark .icon-btn.danger:hover{background:#3A2422; color:#E5A6A2;}
-.del-confirm{border:0; background:#A23A3A; color:#fff; font-size:12px; font-weight:600;
-  padding:6px 10px; border-radius:8px;}
 
 /* Visão semana */
 .week{max-width:1080px; margin:13px auto 0;}
@@ -356,6 +362,170 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
   text-shadow:0 1px 2px rgba(0,0,0,.4);}
 
 .app :focus-visible{outline:2px solid var(--wine-fg); outline-offset:2px; border-radius:6px;}
+
+.opt-check{display:flex; align-items:flex-start; gap:10px; border:1.5px solid var(--line);
+  border-radius:11px; padding:11px 13px; margin-bottom:13px; cursor:pointer; background:var(--card);}
+.opt-check:hover{border-color:var(--faint);}
+.opt-check input{margin-top:2px; flex:none; accent-color:var(--wine); width:16px; height:16px; cursor:pointer;}
+.opt-check b{font-size:13.5px; font-weight:500; display:block;}
+.opt-check .hint{display:block; margin-top:2px;}
+
+/* ============ ABA TCC ============ */
+/* A aba fica separada das outras duas por um traço vertical e um respiro. */
+.vsep{width:1px; align-self:stretch; background:var(--line); margin:4px 5px;}
+.vswitch button.tcc-tab{color:var(--wine-fg);}
+.vswitch button.tcc-tab.on{background:var(--wine); color:#F6EEDF;}
+.app.dark .vswitch button.tcc-tab{color:#E0A9B6;}
+
+.tcc{max-width:1080px; margin:14px auto 0;}
+.tcc-hero{background:var(--card); border:1.5px solid var(--line); border-radius:14px;
+  padding:16px 18px; position:relative; overflow:hidden;
+  box-shadow:0 1px 2px rgba(42,37,33,.05), 0 10px 26px rgba(42,37,33,.05);}
+.tcc-hero::before{content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:var(--wine);}
+.tcc-htop{display:flex; align-items:flex-start; gap:12px;}
+.tcc-hid{flex:1; min-width:0;}
+.tcc-kicker{font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--faint);}
+.tcc-hero h2{font-family:var(--serif); font-weight:500; font-size:22px; margin:2px 0 0; letter-spacing:-.01em;}
+.tcc-hero h2.vazio{color:var(--faint); font-style:italic;}
+.tcc-orient{margin:3px 0 0; font-size:13px; color:var(--ink-soft);}
+.tcc-orient b{color:var(--ink); font-weight:500;}
+
+.prazo{margin-top:13px; border:1.5px solid var(--line); border-radius:11px; padding:11px 13px;
+  display:flex; align-items:center; gap:11px; background:var(--chipn);}
+.prazo.perto{border-color:#D6A24E; background:#F7EBD6;}
+.prazo.urgente{border-color:#C97C74; background:#F6E2E2;}
+.app.dark .prazo{background:#232019;}
+.app.dark .prazo.perto{border-color:#5A4520; background:#3A2E1C;}
+.app.dark .prazo.urgente{border-color:#7A4340; background:#3A2422;}
+.prazo-ic{display:inline-flex; opacity:.75; flex:none;}
+.prazo-main{flex:1; min-width:0;}
+.prazo-t{font-size:13.5px; font-weight:600;}
+.prazo-d{font-size:12.5px; color:var(--ink-soft); margin-top:1px;}
+.prazo-n{font-family:var(--serif); font-size:26px; font-weight:500; line-height:1; text-align:right; flex:none;}
+.prazo-n small{display:block; font-family:var(--sans); font-size:11px; color:var(--ink-soft); font-weight:400; margin-top:3px;}
+.prazo.perto .prazo-n{color:#8A5B10;}
+.prazo.urgente .prazo-n{color:#A23A3A;}
+.app.dark .prazo.perto .prazo-n{color:#E0B473;}
+.app.dark .prazo.urgente .prazo-n{color:#E5A6A2;}
+.prazo-bar{margin-top:9px; height:6px; border-radius:999px; background:var(--chipn); overflow:hidden;}
+.app.dark .prazo-bar{background:#2A2622;}
+.prazo-bar > span{display:block; height:100%; border-radius:999px; background:var(--wine); transition:width .3s;}
+
+/* cabeçalho de bloco */
+.tcc-sec{margin-top:18px;}
+.tcc-sh{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:9px;}
+.tcc-sh h3{font-family:var(--serif); font-weight:500; font-size:17px; margin:0; letter-spacing:-.01em;}
+.tcc-sh .conta{font-family:var(--mono); font-size:12px; color:var(--ink-soft);}
+.tcc-sh .dir{margin-left:auto; display:flex; align-items:center; gap:8px;}
+.seg{display:inline-flex; background:var(--card); border:1.5px solid var(--line); border-radius:9px; padding:2px; gap:2px;}
+.seg button{border:0; background:none; color:var(--ink-soft); font-size:12.5px; padding:5px 10px;
+  border-radius:7px; display:inline-flex; align-items:center; gap:5px; font-family:inherit; cursor:pointer;}
+.seg button.on{background:var(--wine); color:#F6EEDF; font-weight:500;}
+.tcc-prog{height:7px; border-radius:999px; background:var(--chipn); overflow:hidden; margin-bottom:11px;}
+.app.dark .tcc-prog{background:#2A2622;}
+.tcc-prog > span{display:block; height:100%; border-radius:999px; background:#4E8C48; transition:width .3s;}
+
+/* ---- cronograma: barras (gantt) ---- */
+.gantt{border:1.5px solid var(--line); border-radius:12px; background:var(--card); overflow:hidden;}
+.gantt-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+.gantt-in{min-width:520px;}
+.grow{display:flex; align-items:stretch; border-top:1px solid var(--line);}
+.grow:first-child{border-top:0;}
+.gcell-l{width:172px; flex:none; padding:9px 11px; border-right:1px solid var(--line);
+  background:var(--card); position:sticky; left:0; z-index:2;}
+.gname{font-size:13px; line-height:1.35; display:flex; align-items:center; gap:7px;}
+.gname .gdot{width:8px; height:8px; border-radius:50%; flex:none;}
+.gwhen{display:block; font-family:var(--mono); font-size:10.5px; color:var(--faint); margin-top:2px; padding-left:15px;}
+.gtrack{flex:1; position:relative; min-width:340px; padding:11px 0;}
+.gbar{position:absolute; top:50%; transform:translateY(-50%); height:16px; border-radius:8px;
+  min-width:8px; display:flex; align-items:center; overflow:hidden;}
+.gbar span{font-size:10.5px; color:#fff; padding:0 7px; white-space:nowrap; min-width:0;
+  overflow:hidden; text-overflow:ellipsis; text-shadow:0 1px 2px rgba(0,0,0,.25);}
+.gsem{position:absolute; top:50%; transform:translateY(-50%); font-size:11px; color:var(--faint);
+  left:10px; font-style:italic;}
+.ghead{background:var(--chipn); font-size:11px; color:var(--ink-soft);}
+.app.dark .ghead{background:#232019;}
+.ghead .gcell-l{background:var(--chipn); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--faint);}
+.app.dark .ghead .gcell-l{background:#232019;}
+.ghead .gcell-l{display:flex; align-items:flex-end;}
+.gmeses{flex:1; display:flex; min-width:340px; position:relative;}
+.gmes{flex:1; padding:17px 0 7px; text-align:center; border-left:1px solid var(--line); font-size:11px;
+  text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; overflow:hidden;}
+.gmes:first-child{border-left:0;}
+.gsep{position:absolute; top:0; bottom:0; width:1px; background:var(--line); opacity:.55; pointer-events:none;}
+.ghoje{position:absolute; top:0; bottom:0; width:2px; background:#A23A3A; opacity:.75; pointer-events:none; z-index:1;}
+.ghead .ghoje::after{content:"hoje"; position:absolute; top:2px; left:4px; font-size:9.5px; color:#A23A3A;
+  font-family:var(--mono); letter-spacing:.02em; padding:0 3px; white-space:nowrap;}
+.app.dark .ghead .ghoje::after{background:#232019;}
+.app.dark .ghoje{background:#E5A6A2;}
+.app.dark .ghead .ghoje::after{color:#E5A6A2;}
+.grow.late .gcell-l .gname{color:#A23A3A;}
+.app.dark .grow.late .gcell-l .gname{color:#E5A6A2;}
+.grow:hover .gcell-l{background:var(--hover);}
+
+/* ---- cronograma: lista ---- */
+.elist{display:flex; flex-direction:column; gap:9px;}
+.eitem{display:flex; align-items:flex-start; gap:11px; border:1.5px solid var(--line); border-radius:12px;
+  background:var(--card); padding:12px 13px;}
+.eitem.late{border-color:#C97C74;}
+.eitem.done{opacity:.72;}
+.edot{width:10px; height:10px; border-radius:50%; flex:none; margin-top:5px;}
+.emain{flex:1; min-width:0;}
+.ename{font-family:var(--serif); font-weight:500; font-size:15px; letter-spacing:-.005em;}
+.emeta{font-size:12.5px; color:var(--ink-soft); margin-top:3px; line-height:1.5;}
+.emeta .atras{color:#A23A3A; font-weight:600;}
+.emeta .agora{color:#8A5B10; font-weight:600;}
+.app.dark .emeta .atras{color:#E5A6A2;}
+.app.dark .emeta .agora{color:#E0B473;}
+.enotes{font-size:12.5px; color:var(--ink-soft); margin-top:5px; line-height:1.5; white-space:pre-wrap;}
+.echip{display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:4px 11px;
+  font-size:12px; border:0; font-family:inherit; cursor:pointer; white-space:nowrap;}
+.eacts{display:flex; align-items:center; gap:4px; flex:none;}
+
+/* ---- orientações ---- */
+.olist{display:flex; flex-direction:column; gap:9px;}
+.oitem{border:1.5px solid var(--line); border-radius:12px; background:var(--card); padding:12px 13px;
+  display:flex; align-items:flex-start; gap:11px;}
+.oitem.ultima{border-color:var(--wine-fg);}
+.odate{font-family:var(--mono); font-size:12px; color:var(--ink-soft); flex:none; width:78px;
+  padding-top:1px; line-height:1.5;}
+.odate b{display:block; color:var(--ink); font-weight:500; font-size:13px;}
+.omain{flex:1; min-width:0;}
+.olabel{font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--faint); margin-bottom:2px;}
+.otxt{font-size:13.5px; line-height:1.55; white-space:pre-wrap;}
+.oprox{margin-top:8px; border-left:3px solid var(--wine-fg); padding-left:10px;}
+.obadge{display:inline-block; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--wine-fg); border:1px solid var(--wine-fg); border-radius:999px; padding:1px 7px; margin-bottom:5px;}
+
+/* ---- leituras herdadas da matéria do TCC ---- */
+.tcc-leituras{border:1.5px solid var(--line); border-radius:12px; background:var(--card); overflow:hidden;}
+
+/* ---- vazios ---- */
+.tcc-vazio{border:1.5px dashed var(--line); border-radius:12px; padding:22px 18px; text-align:center;
+  background:var(--card);}
+.tcc-vazio p{margin:0 0 4px; font-family:var(--serif); font-size:17px; color:var(--ink);}
+.tcc-vazio .hint{display:block; margin-bottom:13px;}
+.tcc-vazio .acoes{display:flex; gap:9px; justify-content:center; flex-wrap:wrap;}
+
+@media (max-width:720px){
+  .gcell-l{width:118px; padding:8px 9px;}
+  .gname{font-size:12px;}
+  .gwhen{padding-left:0;}
+  .gantt-in{min-width:420px;}
+  .gtrack, .gmeses{min-width:300px;}
+  .prazo{flex-wrap:wrap;}
+  .prazo-n{font-size:22px;}
+  .tcc-sh .dir{margin-left:0; width:100%;}
+  .seg{flex:1;}
+  .seg button{flex:1; justify-content:center;}
+  /* no celular a data ocupa a linha toda e o lápis vai para o canto dela */
+  .odate{width:100%; display:flex; gap:8px; align-items:baseline; padding-right:42px;}
+  .oitem{flex-direction:column; gap:7px; position:relative;}
+  .oitem .eacts{position:absolute; top:7px; right:7px;}
+  /* alvos de toque confortáveis nos botões das etapas e das orientações */
+  .eacts .icon-btn{min-width:40px; min-height:40px; justify-content:center;}
+  .echip{min-height:34px;}
+}
 
 @media (max-width:720px){
   .table-wrap{overflow:visible;}
@@ -540,22 +710,48 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
 
   // ---- state ----
   var subjects=[], texts=[];
+  var tcc=null;                 // aba TCC: etapas, orientações e prazo
   var view='subject';
+  var cronoModo='gantt';        // 'gantt' | 'lista' — preferência salva
   var currentSubjectId=null, query="", fTag="", sortKey="number", sortDir="asc";
   var dark=false, pace=3, gradiente=false;
-  var openMenuId=null, confirmId=null;
+  var openMenuId=null;
   var storageWarned=false;
   var curRefIds={}, curRefDiff=null;
   var narrow=false;   // celular: lista vira cartões, sem rolagem lateral
   var faltasAberta=false;   // painel de faltas dentro do card da matéria
   function isNarrow(){ return window.innerWidth<=720; }
 
-  var app, hero, subjectsEl, panel, toolbar, tagbar, tw, weekEl, foot, searchInput, clearX, importFile, themeBtn;
+  var app, hero, subjectsEl, panel, toolbar, tagbar, tw, weekEl, tccEl, foot, searchInput, clearX, importFile, themeBtn;
   var searchTimer=null;
+
+  /* Etapas do TCC. "doing" existe para o caso comum de duas frentes ao mesmo
+     tempo — escrever um capítulo enquanto ainda se coleta material. */
+  var ETAPA = {
+    todo : {label:'A fazer',     dot:'#B7AE9F', chip:'#EFEAE0', text:'#6E665C', chipD:'#2A2622', textD:'#B9AFA2'},
+    doing: {label:'Em andamento',dot:'#C98A2B', chip:'#F7EBD6', text:'#8A5B10', chipD:'#3A2E1C', textD:'#E0B473'},
+    done : {label:'Concluída',   dot:'#4E8C48', chip:'#E3EFDF', text:'#3F6A36', chipD:'#22301E', textD:'#A5C99A'}
+  };
+  var ETAPA_ORD = ['todo','doing','done'];
+  /* Sugestão baseada no roteiro comum de TCC (tema → levantamento → projeto →
+     revisão → coleta → análise → escrita → revisão final → defesa). Os pesos
+     distribuem as etapas dentro do prazo disponível. */
+  var ETAPAS_SUGERIDAS = [
+    {name:'Definição do tema e do problema', peso:1},
+    {name:'Levantamento bibliográfico',      peso:1.5},
+    {name:'Projeto de pesquisa',             peso:1},
+    {name:'Revisão de literatura e fichamentos', peso:2},
+    {name:'Coleta de material / campo',      peso:2},
+    {name:'Análise do material',             peso:1.5},
+    {name:'Escrita dos capítulos',           peso:3},
+    {name:'Revisão e formatação ABNT',       peso:1},
+    {name:'Preparação da defesa',            peso:1}
+  ];
 
   // ---- normalize ----
   function normSubject(s){
-    var o=Object.assign({id:"",name:"",professor:"",color:PALETTE[0],absenceLimit:7,absences:[],driveLink:""}, s);
+    var o=Object.assign({id:"",name:"",professor:"",color:PALETTE[0],absenceLimit:7,absences:[],driveLink:"",tcc:false}, s);
+    o.tcc=!!o.tcc;
     if(!o.id) o.id=uid('subj');
     if(!o.color) o.color=PALETTE[0];
     var lim=num(o.absenceLimit);
@@ -579,6 +775,31 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     delete o.ref;   // gerador de referências removido
     return o;
   }
+  function normEtapa(e){
+    var o=Object.assign({id:"",name:"",start:"",end:"",status:"todo",notes:""}, e);
+    if(!o.id) o.id=uid('et');
+    if(!ETAPA[o.status]) o.status='todo';
+    if(!isoOk(o.start)) o.start='';
+    if(!isoOk(o.end)) o.end='';
+    if(o.start && o.end && o.end < o.start) o.end=o.start;
+    return o;
+  }
+  function normOrient(o0){
+    var o=Object.assign({id:"",date:"",combinado:"",proximos:""}, o0);
+    if(!o.id) o.id=uid('or');
+    if(!isoOk(o.date)) o.date='';
+    return o;
+  }
+  function normTcc(t){
+    var o=Object.assign({titulo:"",orientadora:"",prazo:"",prazoLabel:"Entrega final",driveLink:"",
+      etapas:[], orientacoes:[]}, t||{});
+    if(!isoOk(o.prazo)) o.prazo='';
+    if(!o.prazoLabel) o.prazoLabel='Entrega final';
+    o.etapas = Array.isArray(o.etapas) ? o.etapas.map(normEtapa) : [];
+    o.orientacoes = Array.isArray(o.orientacoes) ? o.orientacoes.map(normOrient) : [];
+    return o;
+  }
+  function isoOk(d){ return /^\d{4}-\d{2}-\d{2}$/.test(d||''); }
 
   // ---- sincronização entre aparelhos (GitHub Gist) ----
   var SYNC_KEY='tracker-leituras:sync';
@@ -632,8 +853,9 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     if(!obj || !Array.isArray(obj.subjects) || !obj.subjects.length) return false;
     subjects=obj.subjects.map(normSubject);
     texts=Array.isArray(obj.texts)?obj.texts.map(normText):[];
+    tcc=normTcc(obj.tcc);
     dataUpdatedAt=obj.updatedAt||nowISO();
-    if(!currentSubjectId || !findSubject(currentSubjectId)) currentSubjectId=subjects[0].id;
+    ajustarMateriaAtual();
     persist({noStamp:true, noSync:true});
     lastSyncedAt=dataUpdatedAt; syncAt=nowISO(); saveSync();
     return true;
@@ -762,7 +984,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       q.onsuccess=function(){ res(q.result); }; q.onerror=function(){ rej(q.error); };
     }); });
   }
-  function payload(){ return {versao:1, updatedAt:dataUpdatedAt, subjects:subjects, texts:texts}; }
+  function payload(){ return {versao:1, updatedAt:dataUpdatedAt, subjects:subjects, texts:texts, tcc:tcc}; }
 
   function escreverArquivo(){
     if(fileState!=='on' || !fileHandle) return Promise.resolve();
@@ -784,7 +1006,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     if(!obj || !Array.isArray(obj.subjects) || !obj.subjects.length) return false;
     subjects=obj.subjects.map(normSubject);
     texts=Array.isArray(obj.texts)?obj.texts.map(normText):[];
-    if(!currentSubjectId || !findSubject(currentSubjectId)) currentSubjectId=subjects[0].id;
+    tcc=normTcc(obj.tcc);
+    ajustarMateriaAtual();
     return true;
   }
   function conectarArquivo(novo){
@@ -857,13 +1080,39 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     if(payload && Array.isArray(payload.subjects) && payload.subjects.length){
       subjects=payload.subjects.map(normSubject);
       texts=Array.isArray(payload.texts)?payload.texts.map(normText):[];
+      tcc=normTcc(payload.tcc);
       dataUpdatedAt=payload.updatedAt||nowISO();
     } else {
       var seed=seedData();
       subjects=seed.subjects.map(normSubject);
       texts=seed.texts.map(normText);
+      tcc=normTcc(null);
       persist();
     }
+  }
+  /* "Práticas de Pesquisa 1" deixa de ser uma matéria comum: ela passa a ser a
+     aba TCC. A matéria em si continua guardada (com os textos e o link do
+     Drive), só some da faixa de matérias e aparece dentro da aba. */
+  function migrarTcc(){
+    var KEY='tracker-leituras:tcc-v1';
+    var jaFez=false;
+    try{ jaFez=!!localStorage.getItem(KEY); }catch(e){ return; }
+    if(jaFez) return;
+    var achou=false;
+    subjects.forEach(function(sb){
+      if(!sb.tcc && /pr[áa]ticas de pesquisa|^tcc\b|monografia/i.test(sb.name)){
+        sb.tcc=true; sb.absenceLimit=0; achou=true;
+        if(sb.professor && !tcc.orientadora) tcc.orientadora=sb.professor;
+      }
+    });
+    try{ localStorage.setItem(KEY,'1'); }catch(e){}
+    if(achou){ ajustarMateriaAtual(); persist(); }
+  }
+  /* A matéria aberta nunca pode ser a do TCC — ela não aparece na faixa. */
+  function ajustarMateriaAtual(){
+    var vis=subjectsVis();
+    var atual=findSubject(currentSubjectId);
+    if(!atual || atual.tcc) currentSubjectId = vis.length ? vis[0].id : null;
   }
   /* Uma vez só: prepara o controle de faltas em quem já usava o app antes
      desta versão. Práticas de Pesquisa 1 (orientação) não tem chamada; a
@@ -886,7 +1135,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     opts=opts||{};
     if(!opts.noStamp) dataUpdatedAt=nowISO();
     try{
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({updatedAt:dataUpdatedAt, subjects:subjects, texts:texts}));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({updatedAt:dataUpdatedAt, subjects:subjects, texts:texts, tcc:tcc}));
       storageWarned=false;
       agendarEscrita();
       if(!opts.noSync) agendarSync();
@@ -899,7 +1148,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     }
   }
   function saveUI(){
-    try{ localStorage.setItem(UI_KEY, JSON.stringify({cur:currentSubjectId, sk:sortKey, sd:sortDir, view:view, dark:dark, pace:pace, tag:fTag, grad:gradiente})); }catch(e){}
+    try{ localStorage.setItem(UI_KEY, JSON.stringify({cur:currentSubjectId, sk:sortKey, sd:sortDir, view:view, dark:dark, pace:pace, tag:fTag, grad:gradiente, crono:cronoModo})); }catch(e){}
   }
   function loadUI(){
     try{
@@ -908,6 +1157,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       if(u.sk) sortKey=u.sk;
       if(u.sd==='desc') sortDir='desc';
       if(u.view==='week') view='week';   // a antiga aba de faltas virou parte do card
+      if(u.view==='tcc') view='tcc';
+      if(u.crono==='lista'||u.crono==='gantt') cronoModo=u.crono;
       dark=!!u.dark;
       if(u.pace) pace=Number(u.pace)||3;
       if(typeof u.tag==='string') fTag=u.tag;
@@ -919,6 +1170,9 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
   function findSubject(id){ for(var i=0;i<subjects.length;i++){ if(subjects[i].id===id) return subjects[i]; } return null; }
   function findText(id){ for(var i=0;i<texts.length;i++){ if(texts[i].id===id) return texts[i]; } return null; }
   function textsOf(subjectId){ return texts.filter(function(t){ return t.subjectId===subjectId; }); }
+  // matérias da faixa: a do TCC vive na aba própria
+  function subjectsVis(){ return subjects.filter(function(s){ return !s.tcc; }); }
+  function subjectTcc(){ for(var i=0;i<subjects.length;i++){ if(subjects[i].tcc) return subjects[i]; } return null; }
   // cor vazia = herda a cor da matéria
   function textColor(t){
     if(t.color) return t.color;
@@ -1050,7 +1304,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     var totalT=texts.length, totalRead=0;
     texts.forEach(function(t){ if(t.status==='lido') totalRead++; });
     var emDia=0, comAula=0;
-    subjects.forEach(function(s){
+    var visiveis=subjectsVis();
+    visiveis.forEach(function(s){
       var st=subjectStatus(s.id);
       if(st.kind==='none') return;
       comAula++; if(st.kind==='ok') emDia++;
@@ -1058,12 +1313,12 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     var diaTxt = comAula ? ' · <b>'+emDia+' de '+comAula+'</b> '+(comAula===1?'matéria em dia':'matérias em dia') : '';
     hero.innerHTML='<div class="hero-line"><span class="hero-ic">'+svg(IC.book,22)+'</span><div>'
       +'<h1>Tracker de Leituras UnB</h1>'
-      +'<p class="sub">10º semestre · '+subjects.length+' '+(subjects.length===1?'matéria':'matérias')
+      +'<p class="sub">10º semestre · '+visiveis.length+' '+(visiveis.length===1?'matéria':'matérias')
       +' · '+totalRead+'/'+totalT+' textos lidos'+diaTxt+'</p></div></div>';
   }
 
   function renderSubjects(){
-    var h=subjects.map(function(s){
+    var h=subjectsVis().map(function(s){
       var list=textsOf(s.id); var read=0; list.forEach(function(t){ if(t.status==='lido') read++; });
       var st=subjectStatus(s.id); var cfg=EMDIA[st.kind];
       var tip = st.kind==='none' ? 'Sem aulas futuras cadastradas'
@@ -1153,7 +1408,13 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
   }
   function renderPanel(){
     var s=findSubject(currentSubjectId);
-    if(!s){ panel.innerHTML=''; tw.innerHTML=''; tagbar.innerHTML=''; foot.innerHTML=''; return; }
+    if(!s){
+      panel.innerHTML=''; tagbar.innerHTML=''; foot.innerHTML='';
+      tw.innerHTML='<div class="empty"><p class="empty-big">Nenhuma matéria por aqui.</p>'
+        +'<p>Crie uma matéria para começar a cadastrar leituras'
+        +(subjectTcc()?' — o seu TCC está na aba <strong>TCC</strong>.':'.')+'</p></div>';
+      return;
+    }
     var chips=driveChip(s)+faltasChip(s);
     panel.innerHTML='<div class="subj-head" style="--c:'+s.color+'">'
       +'<div class="subj-top"><div class="subj-id"><h2>'+esc(s.name)+'</h2>'
@@ -1191,7 +1452,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     /* A visão escondida guarda o HTML antigo, então o mesmo texto pode ter duas
        pills no documento. Procurar só dentro da visão ativa evita medir a
        escondida, que devolve zero e jogava o menu para o canto da tela. */
-    var cont = view==='week' ? weekEl : tw;
+    var cont = view==='week' ? weekEl : (view==='tcc' ? tccEl : tw);
     var btn = (t && cont) ? cont.querySelector('.pill[data-act="pill"][data-id="'+openMenuId+'"]') : null;
     if(!t||!btn){ if(el) el.parentNode.removeChild(el); return; }
     var r0=btn.getBoundingClientRect();
@@ -1245,9 +1506,6 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     var refBadge=isRef?'<span class="ref-badge">'+(curRefDiff===0?'hoje':'próxima aula')+'</span>':'';
     var link=safeUrl(t.link);
     var linkHtml=link?' <a class="text-link" href="'+esc(link)+'" target="_blank" rel="noopener" title="Abrir texto" data-stop>'+SVG_LINK+'</a>':'';
-    var del=(confirmId===t.id)
-      ? '<button class="del-confirm" data-act="confirmdel" data-id="'+t.id+'">Remover?</button>'
-      : '<button class="icon-btn danger" data-act="del" data-id="'+t.id+'" title="Remover">'+SVG_TRASH+'</button>';
     var m=estMin(t);
     return '<tr'+(isRef?' class="is-ref"':'')+'>'
       +'<td class="c-num"><span class="num-badge" style="background:'+color+'">'+(t.number!=null?t.number:'—')+'</span></td>'
@@ -1261,7 +1519,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         :(temProgresso(t)?'':'<span class="muted">—</span>'))+progHtml(t)+'</td>'
       +'<td class="c-status">'+statusPill(t)+'</td>'
       +'<td class="c-actions">'
-        +'<button class="icon-btn" data-act="edit" data-id="'+t.id+'" title="Editar">'+SVG_PENCIL+'</button>'+del+'</td>'
+        +'<button class="icon-btn" data-act="edit" data-id="'+t.id+'" title="Editar">'+SVG_PENCIL+'</button></td>'
       +'</tr>';
   }
   function cardHtml(t){
@@ -1275,9 +1533,6 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     if(t.author) meta.push(esc(t.author));
     if(t.classDate) meta.push(fmtDate(t.classDate)+' <span class="'+dcls+'">'+relLabel(d)+'</span>');
     if(m!=null) meta.push(t.pages+' p ≈ '+fmtMin(m));
-    var del=(confirmId===t.id)
-      ? '<button class="del-confirm" data-act="confirmdel" data-id="'+t.id+'">Remover?</button>'
-      : '<button class="icon-btn danger" data-act="del" data-id="'+t.id+'" title="Remover">'+SVG_TRASH+'</button>';
     return '<div class="tcard'+(isRef?' is-ref':'')+'">'
       +'<div class="tc-top"><span class="num-badge" style="background:'+color+'">'+(t.number!=null?t.number:'—')+'</span>'
       +'<div class="tc-main"><span class="text-name">'+esc(t.name)+'</span>'
@@ -1290,7 +1545,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         +tagsHtml(t)
       +'</div></div>'
       +'<div class="tc-bottom">'+statusPill(t)
-      +'<div class="tc-acts"><button class="icon-btn" data-act="edit" data-id="'+t.id+'" title="Editar">'+SVG_PENCIL+'</button>'+del+'</div></div>'
+      +'<div class="tc-acts"><button class="icon-btn" data-act="edit" data-id="'+t.id+'" title="Editar">'+SVG_PENCIL+'</button></div></div>'
       +'</div>';
   }
   function headCell(k,label,cls){
@@ -1332,7 +1587,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     foot.innerHTML='Mostrando '+list.length+' de '+totalSubj+' texto(s)'
       +(pend?' · '+pend+' por ler'+(pendMin?' ≈ '+fmtMin(pendMin):''):'')
       +' · salvo neste navegador (use Exportar para backup)<br>'
-      +'<span class="kbd">n</span> novo texto · <span class="kbd">/</span> buscar · <span class="kbd">s</span> alternar visão · <span class="kbd">Esc</span> fechar';
+      +'<span class="kbd">n</span> novo texto · <span class="kbd">/</span> buscar · <span class="kbd">s</span> alternar visão · <span class="kbd">t</span> TCC · <span class="kbd">Esc</span> fechar';
     saveUI();
   }
 
@@ -1415,7 +1670,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     renderStatusMenu();
     foot.innerHTML='Visão geral de todas as matérias · ritmo de leitura: '+pace+' min por página'
       +' (ajuste no menu ☰) · salvo neste navegador<br>'
-      +'<span class="kbd">n</span> novo texto · <span class="kbd">s</span> alternar visão · <span class="kbd">Esc</span> fechar';
+      +'<span class="kbd">n</span> novo texto · <span class="kbd">s</span> alternar visão · <span class="kbd">t</span> TCC · <span class="kbd">Esc</span> fechar';
     saveUI();
   }
 
@@ -1440,14 +1695,290 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     persist(); renderAll();
   }
 
+
+  // ================= ABA TCC =================
+  var MES_ABR=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  function d2n(iso){ var p=String(iso).split('-'); return Date.UTC(+p[0], +p[1]-1, +p[2]); }
+  function n2d(ms){ var d=new Date(ms); var p=function(n){ return (n<10?'0':'')+n; };
+    return d.getUTCFullYear()+'-'+p(d.getUTCMonth()+1)+'-'+p(d.getUTCDate()); }
+  var DIA=86400000;
+
+  function etapasOrd(){
+    return tcc.etapas.slice().sort(function(a,b){
+      var sa=a.start||a.end||'￿', sb=b.start||b.end||'￿';
+      if(sa!==sb) return sa<sb?-1:1;
+      var ea=a.end||'￿', eb=b.end||'￿';
+      if(ea!==eb) return ea<eb?-1:1;
+      return COLL.compare(a.name||'', b.name||'');
+    });
+  }
+  function etapaAtrasada(e){
+    return e.status!=='done' && e.end && dayDiff(e.end)<0;
+  }
+  function orientOrd(){
+    return tcc.orientacoes.slice().sort(function(a,b){
+      var da=a.date||'', db=b.date||'';
+      return da<db?1:da>db?-1:0;   // mais recente primeiro
+    });
+  }
+
+  /* Janela do cronograma: cobre todas as etapas datadas, mais o prazo e o dia
+     de hoje, para que a linha do "hoje" nunca fique fora do desenho. */
+  function janelaCrono(){
+    var ds=[];
+    tcc.etapas.forEach(function(e){ if(e.start) ds.push(e.start); if(e.end) ds.push(e.end); });
+    if(tcc.prazo) ds.push(tcc.prazo);
+    if(!ds.length) return null;
+    ds.push(todayISO());
+    ds.sort();
+    var ini=d2n(ds[0]), fim=d2n(ds[ds.length-1]);
+    // arredonda para o começo do mês inicial e o fim do mês final
+    var a=new Date(ini), b=new Date(fim);
+    var t0=Date.UTC(a.getUTCFullYear(), a.getUTCMonth(), 1);
+    var t1=Date.UTC(b.getUTCFullYear(), b.getUTCMonth()+1, 1)-DIA;
+    if(t1<=t0) t1=t0+30*DIA;
+    return {t0:t0, t1:t1, span:(t1-t0)};
+  }
+  function mesesDe(j){
+    var out=[], d=new Date(j.t0);
+    var y=d.getUTCFullYear(), m=d.getUTCMonth();
+    while(true){
+      var ini=Date.UTC(y,m,1), fim=Date.UTC(y,m+1,1)-DIA;
+      if(ini>j.t1) break;
+      out.push({y:y, m:m, ini:Math.max(ini,j.t0), fim:Math.min(fim,j.t1)});
+      m++; if(m>11){ m=0; y++; }
+      if(out.length>60) break;   // trava de segurança
+    }
+    return out;
+  }
+  function pctDe(j, ms){ return Math.max(0, Math.min(100, (ms-j.t0)/j.span*100)); }
+
+  function renderGantt(j){
+    var meses=mesesDe(j);
+    var largs=meses.map(function(mm){ return ((mm.fim+DIA-mm.ini)/(j.span+DIA))*100; });
+    var hojeMs=d2n(todayISO());
+    var marca = (hojeMs>=j.t0 && hojeMs<=j.t1)
+      ? '<div class="ghoje" style="left:'+pctDe(j,hojeMs).toFixed(3)+'%"></div>' : '';
+
+    var cab='<div class="grow ghead"><div class="gcell-l">Etapa</div><div class="gmeses">'
+      +meses.map(function(mm,i){
+          return '<div class="gmes" style="flex:'+largs[i].toFixed(4)+'">'
+            +MES_ABR[mm.m]+(mm.m===0||i===0?' <span style="opacity:.6">'+String(mm.y).slice(2)+'</span>':'')+'</div>';
+        }).join('')
+      +marca+'</div></div>';
+    var grade = meses.slice(1).map(function(mm){
+      return '<div class="gsep" style="left:'+pctDe(j,mm.ini).toFixed(3)+'%"></div>'; }).join('');
+
+    var linhas=etapasOrd().map(function(e){
+      var cfg=ETAPA[e.status], late=etapaAtrasada(e);
+      var barra;
+      if(e.start || e.end){
+        var a=d2n(e.start||e.end), b=d2n(e.end||e.start);
+        if(b<a){ var tmp=a; a=b; b=tmp; }
+        var l=pctDe(j,a), r=pctDe(j,b+DIA);
+        var w=Math.max(r-l, 1.2);
+        // barra curta demais para caber um nome fica só com a cor e o title
+        barra='<div class="gbar" data-act="etedit" data-id="'+e.id+'" title="'+esc(e.name)+'" '
+          +'style="left:'+l.toFixed(3)+'%; width:'+w.toFixed(3)+'%; background:'+(late?'#A23A3A':cfg.dot)+'; cursor:pointer">'
+          +(w>=9?'<span>'+esc(e.name)+'</span>':'')+'</div>';
+      } else {
+        barra='<div class="gsem">sem datas</div>';
+      }
+      var quando = (e.start||e.end)
+        ? (e.start?fmtDate(e.start):'?')+' → '+(e.end?fmtDate(e.end):'?')
+        : '—';
+      return '<div class="grow'+(late?' late':'')+'">'
+        +'<div class="gcell-l"><div class="gname"><span class="gdot" style="background:'+cfg.dot+'"></span>'
+          +'<span class="gtitulo">'+esc(e.name)+'</span></div>'
+          +'<span class="gwhen">'+quando+'</span></div>'
+        +'<div class="gtrack">'+grade+marca+barra+'</div></div>';
+    }).join('');
+
+    return '<div class="gantt"><div class="gantt-scroll"><div class="gantt-in">'+cab+linhas+'</div></div></div>';
+  }
+
+  function renderEtapasLista(){
+    return '<div class="elist">'+etapasOrd().map(function(e){
+      var cfg=ETAPA[e.status], late=etapaAtrasada(e);
+      var meta=[];
+      if(e.start && e.end) meta.push(fmtDate(e.start)+' → '+fmtDate(e.end));
+      else if(e.end) meta.push('até '+fmtDate(e.end));
+      else if(e.start) meta.push('a partir de '+fmtDate(e.start));
+      else meta.push('sem datas');
+      if(e.status!=='done' && e.end){
+        var d=dayDiff(e.end);
+        if(d<0) meta.push('<span class="atras">'+Math.abs(d)+' '+(Math.abs(d)===1?'dia':'dias')+' em atraso</span>');
+        else if(d===0) meta.push('<span class="agora">termina hoje</span>');
+        else if(d<=14) meta.push('<span class="agora">faltam '+d+' '+(d===1?'dia':'dias')+'</span>');
+        else meta.push('faltam '+d+' dias');
+      }
+      var cor=dark?{bg:cfg.chipD,fg:cfg.textD}:{bg:cfg.chip,fg:cfg.text};
+      return '<div class="eitem'+(late?' late':'')+(e.status==='done'?' done':'')+'">'
+        +'<span class="edot" style="background:'+(late?'#A23A3A':cfg.dot)+'"></span>'
+        +'<div class="emain"><div class="ename">'+esc(e.name)+'</div>'
+          +'<div class="emeta">'+meta.join(' · ')+'</div>'
+          +(e.notes?'<div class="enotes">'+esc(e.notes)+'</div>':'')
+        +'</div>'
+        +'<div class="eacts">'
+          +'<button class="echip" data-act="etciclo" data-id="'+e.id+'" title="Trocar o status"'
+            +' style="background:'+cor.bg+'; color:'+cor.fg+'">'+cfg.label+'</button>'
+          +'<button class="icon-btn" data-act="etedit" data-id="'+e.id+'" title="Editar etapa">'+SVG_PENCIL+'</button>'
+        +'</div></div>';
+    }).join('')+'</div>';
+  }
+
+  function renderEtapas(){
+    var n=tcc.etapas.length;
+    if(!n){
+      return '<div class="tcc-vazio"><p>Nenhuma etapa ainda.</p>'
+        +'<span class="hint">Você pode começar do zero ou partir de um roteiro comum de TCC e ajustar depois.</span>'
+        +'<div class="acoes"><button class="btn-wine" data-act="etsugerir">'+svg(IC.plus,15)+' Usar etapas sugeridas</button>'
+        +'<button class="btn-ghost" data-act="etnova">Criar uma etapa</button></div></div>';
+    }
+    var feitas=0; tcc.etapas.forEach(function(e){ if(e.status==='done') feitas++; });
+    var pct=Math.round(feitas/n*100);
+    var j=janelaCrono();
+    var corpo = (cronoModo==='gantt' && j) ? renderGantt(j) : renderEtapasLista();
+    return '<div class="tcc-prog" title="'+feitas+' de '+n+' concluídas"><span style="width:'+pct+'%"></span></div>'+corpo;
+  }
+
+  function renderOrientacoes(){
+    var lista=orientOrd();
+    if(!lista.length){
+      return '<div class="tcc-vazio"><p>Nenhuma orientação registrada.</p>'
+        +'<span class="hint">Anote o que foi combinado em cada conversa — na semana seguinte isso vale ouro.</span>'
+        +'<div class="acoes"><button class="btn-wine" data-act="ornova">'+svg(IC.plus,15)+' Registrar orientação</button></div></div>';
+    }
+    return '<div class="olist">'+lista.map(function(o,i){
+      var d=o.date?dayDiff(o.date):null;
+      return '<div class="oitem'+(i===0?' ultima':'')+'">'
+        +'<div class="odate"><b>'+(o.date?fmtDate(o.date):'sem data')+'</b>'
+          +(d!=null?'<span>'+relLabel(d)+'</span>':'')+'</div>'
+        +'<div class="omain">'
+          +(o.combinado?'<div class="olabel">O que foi conversado</div><div class="otxt">'+esc(o.combinado)+'</div>':'')
+          +(o.proximos?'<div class="oprox">'+(i===0?'<span class="obadge">próximos passos</span>':'<div class="olabel">Próximos passos</div>')
+              +'<div class="otxt">'+esc(o.proximos)+'</div></div>':'')
+          +(!o.combinado && !o.proximos?'<div class="otxt" style="color:var(--faint)">Sem anotações.</div>':'')
+        +'</div>'
+        +'<div class="eacts"><button class="icon-btn" data-act="oredit" data-id="'+o.id+'" title="Editar registro">'+SVG_PENCIL+'</button></div>'
+        +'</div>';
+    }).join('')+'</div>';
+  }
+
+  function renderPrazo(){
+    if(!tcc.prazo){
+      return '<div class="prazo"><span class="prazo-ic">'+svg(IC.cal,17)+'</span>'
+        +'<div class="prazo-main"><div class="prazo-t">Sem prazo definido</div>'
+        +'<div class="prazo-d">Defina a data-limite para acompanhar a contagem regressiva.</div></div>'
+        +'<button class="btn-ghost sm" data-act="tccedit">Definir</button></div>';
+    }
+    var d=dayDiff(tcc.prazo);
+    var cls = d<0 ? 'urgente' : (d<=30 ? (d<=7?'urgente':'perto') : '');
+    var n, un;
+    if(d<0){ n=Math.abs(d); un=(n===1?'dia atrás':'dias atrás'); }
+    else if(d===0){ n='hoje'; un=''; }
+    else if(d<21){ n=d; un=(d===1?'dia':'dias'); }
+    else { n=Math.floor(d/7); un=(n===1?'semana':'semanas'); }
+    var barra='';
+    var j0=tcc.etapas.reduce(function(acc,e){ var v=e.start||e.end; return (v && (!acc || v<acc))?v:acc; }, '');
+    if(j0 && j0<tcc.prazo){
+      var tot=(d2n(tcc.prazo)-d2n(j0))/DIA, feito=(d2n(todayISO())-d2n(j0))/DIA;
+      var pct=Math.max(0, Math.min(100, Math.round(feito/tot*100)));
+      barra='<div class="prazo-bar" title="'+pct+'% do tempo planejado já passou"><span style="width:'+pct+'%"></span></div>';
+    }
+    return '<div class="prazo '+cls+'"><span class="prazo-ic">'+svg(IC.clock,17)+'</span>'
+      +'<div class="prazo-main"><div class="prazo-t">'+esc(tcc.prazoLabel)+' · '+fmtDate(tcc.prazo)+'</div>'
+      +'<div class="prazo-d">'+(d<0?'O prazo já passou.':(d===0?'É hoje.':'Contando a partir de hoje.'))+'</div>'
+      +barra+'</div>'
+      +'<div class="prazo-n">'+n+(un?'<small>'+un+'</small>':'')+'</div></div>';
+  }
+
+  function renderTcc(){
+    if(!tccEl) return;
+    var sTcc=subjectTcc();
+    var leituras=sTcc?textsOf(sTcc.id):[];
+    var nFeitas=0; tcc.etapas.forEach(function(e){ if(e.status==='done') nFeitas++; });
+
+    var lnk = safeUrl(tcc.driveLink || (sTcc?sTcc.driveLink:''));
+    var drive = lnk
+      ? '<a class="chip-btn" href="'+esc(lnk)+'" target="_blank" rel="noopener">'
+        +svg(IC.pasta,14)+' Pasta no Drive</a>' : '';
+
+    var h='<div class="tcc-hero"><div class="tcc-htop"><div class="tcc-hid">'
+      +'<div class="tcc-kicker">Trabalho de conclusão de curso</div>'
+      +'<h2'+(tcc.titulo?'':' class="vazio"')+'>'+esc(tcc.titulo||'Sem título ainda')+'</h2>'
+      +(tcc.orientadora?'<p class="tcc-orient">Orientação: <b>'+esc(tcc.orientadora)+'</b></p>':'')
+      +'</div>'
+      +'<button class="icon-btn" data-act="tccedit" title="Configurar o TCC">'+SVG_GEAR+'</button></div>'
+      +renderPrazo()
+      +(drive?'<div class="subj-chips">'+drive+'</div>':'')
+      +'</div>';
+
+    h+='<section class="tcc-sec"><div class="tcc-sh"><h3>Etapas e cronograma</h3>'
+      +(tcc.etapas.length?'<span class="conta">'+nFeitas+'/'+tcc.etapas.length+' concluídas</span>':'')
+      +'<div class="dir">'
+      +(tcc.etapas.length
+        ? '<div class="seg" id="cronoseg">'
+            +'<button data-act="crono" data-m="gantt"'+(cronoModo==='gantt'?' class="on"':'')+'>'+svg(IC.cal,13)+' Barras</button>'
+            +'<button data-act="crono" data-m="lista"'+(cronoModo==='lista'?' class="on"':'')+'>'+svg(IC.list,13)+' Lista</button>'
+          +'</div>'
+          +'<button class="btn-ghost sm" data-act="etnova">'+svg(IC.plus,14)+' Etapa</button>'
+        : '')
+      +'</div></div>'+renderEtapas()+'</section>';
+
+    h+='<section class="tcc-sec"><div class="tcc-sh"><h3>Orientações</h3>'
+      +(tcc.orientacoes.length?'<span class="conta">'+tcc.orientacoes.length+(tcc.orientacoes.length===1?' registro':' registros')+'</span>':'')
+      +'<div class="dir">'+(tcc.orientacoes.length?'<button class="btn-ghost sm" data-act="ornova">'+svg(IC.plus,14)+' Registro</button>':'')+'</div>'
+      +'</div>'+renderOrientacoes()+'</section>';
+
+    if(leituras.length){
+      var lidos=0; leituras.forEach(function(t){ if(t.status==='lido') lidos++; });
+      h+='<section class="tcc-sec"><div class="tcc-sh"><h3>Leituras do TCC</h3>'
+        +'<span class="conta">'+lidos+'/'+leituras.length+' lidos</span>'
+        +'<div class="dir"><button class="btn-ghost sm" data-act="tccadd">'+svg(IC.plus,14)+' Texto</button></div></div>'
+        +'<div class="tcc-leituras">'+leituras.slice().sort(function(a,b){
+            var na=a.number==null?Infinity:a.number, nb=b.number==null?Infinity:b.number;
+            if(na!==nb) return na-nb;
+            return COLL.compare(a.name||'', b.name||'');
+          }).map(weekItem).join('')+'</div></section>';
+    }
+
+    tccEl.innerHTML=h;
+  }
+
+  function cicloEtapa(id){
+    var e=null; tcc.etapas.forEach(function(x){ if(x.id===id) e=x; });
+    if(!e) return;
+    e.status = ETAPA_ORD[(ETAPA_ORD.indexOf(e.status)+1) % ETAPA_ORD.length];
+    persist(); renderTcc();
+  }
+  /* Distribui as etapas sugeridas entre hoje e o prazo (ou 4 meses, se não
+     houver prazo), proporcionalmente ao peso de cada uma. */
+  function criarEtapasSugeridas(){
+    var t0=d2n(todayISO());
+    var t1=tcc.prazo && d2n(tcc.prazo)>t0 ? d2n(tcc.prazo) : t0+120*DIA;
+    var total=ETAPAS_SUGERIDAS.reduce(function(a,e){ return a+e.peso; },0);
+    var acc=0;
+    ETAPAS_SUGERIDAS.forEach(function(base){
+      var ini=t0+Math.round((acc/total)*(t1-t0));
+      acc+=base.peso;
+      var fim=t0+Math.round((acc/total)*(t1-t0));
+      if(fim<=ini) fim=ini+DIA;
+      tcc.etapas.push(normEtapa({name:base.name, start:n2d(ini), end:n2d(fim-DIA)}));
+    });
+    persist(); renderTcc();
+  }
+
   // ---- alternância de visão ----
   function applyView(){
-    var isSubj=view==='subject', isWeek=view==='week';
+    var isSubj=view==='subject', isWeek=view==='week', isTcc=view==='tcc';
     subjectsEl.style.display = isSubj?'':'none';
     panel.style.display      = isSubj?'':'none';
     tagbar.style.display     = isSubj?'':'none';
     tw.style.display         = isSubj?'':'none';
     weekEl.style.display     = isWeek?'':'none';
+    tccEl.style.display      = isTcc?'':'none';
+    toolbar.style.display    = isTcc?'none':'';   // a aba TCC tem os botões dela
     document.getElementById('searchWrap').style.display = isSubj?'':'none';
     document.getElementById('sortMob').style.display = (isSubj && narrow)?'':'none';
     document.getElementById('sortSel').value = sortKey;
@@ -1479,7 +2010,9 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
             : (fileState==='on' ? 'Gravando em '+fileName : 'Salvar e sincronizar o progresso');
   }
   function renderMain(){
-    if(view==='week') renderWeek(); else renderPanel();
+    if(view==='tcc') renderTcc();
+    else if(view==='week') renderWeek();
+    else renderPanel();
   }
   function renderAll(){
     app.classList.toggle('dark', dark);
@@ -1541,7 +2074,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     var html='<div class="modal" role="dialog" aria-modal="true">'
       +'<div class="modal-head"><h2>'+(existing?'Editar texto':'Adicionar texto')+'</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
       +'<div class="field"><label>Matéria</label><select id="m_subj">'
-        +subjects.map(function(x){ return '<option value="'+x.id+'"'+(x.id===(b.subjectId||currentSubjectId)?' selected':'')+'>'+esc(x.name)+'</option>'; }).join('')
+        +subjects.map(function(x){ return '<option value="'+x.id+'"'+(x.id===(b.subjectId||currentSubjectId)?' selected':'')+'>'+esc(x.name)+(x.tcc?' (TCC)':'')+'</option>'; }).join('')
       +'</select></div>'
       +'<div class="row-3"><div class="field"><label>Nº</label><input id="m_num" type="number" min="0" value="'+v(b.number)+'"></div>'
       +'<div class="field" style="grid-column:span 2"><label>Nome do texto</label><input id="m_name" value="'+v(b.name)+'" placeholder="Ex.: A metrópole e a vida mental"><span class="err-msg" id="m_err" style="display:none">Dê um nome ao texto para salvar.</span></div></div>'
@@ -1560,6 +2093,9 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       +'<div class="field"><label>Cor</label>'+swatchesHtml(b.color, defColor)
         +'<span class="hint">"A" acompanha sempre a cor da matéria</span></div>'
       +'<div class="field"><label>Notas (opcional)</label><textarea id="m_notes" rows="2" placeholder="Anotações, tradução, capítulo…">'+v(b.notes)+'</textarea></div>'
+      +(existing?'<div class="zona-risco"><div><b>Remover este texto</b>'
+        +'<span class="hint">Apaga o texto e o progresso de leitura dele. Não dá para desfazer.</span></div>'
+        +'<button class="btn-danger" data-remover>'+SVG_TRASH+' Remover</button></div>':'')
       +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Cancelar</button><button class="btn-wine" data-save>'+(existing?'Salvar':'Adicionar')+'</button></div>'
       +'</div>';
     var overlay=buildOverlay(html);
@@ -1567,6 +2103,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     overlay.querySelector('[data-x]').addEventListener('click', closeModal);
     overlay.querySelector('[data-cancel]').addEventListener('click', closeModal);
     overlay.querySelector('[data-save]').addEventListener('click', function(){ saveText(existing, chosen); });
+    var rmT=overlay.querySelector('[data-remover]');
+    if(rmT) rmT.addEventListener('click', function(){ deleteText(existing.id); });
 
     /* O campo de "onde parei" só faz sentido com a leitura em curso — por isso
        ele aparece e some conforme o status escolhido. */
@@ -1626,6 +2164,9 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         +'<input id="s_lim" type="number" min="0" max="30" value="'+v(b.absenceLimit==null?7:b.absenceLimit)+'">'
         +'<span class="hint">0 = não controlar faltas nesta matéria</span></div>'
       +'<div class="field"><label>Cor</label>'+swatchesHtml(b.color)+'</div></div>'
+      +'<label class="opt-check"><input type="checkbox" id="s_tcc"'+(b.tcc?' checked':'')+'>'
+        +'<span><b>Esta matéria é o meu TCC</b>'
+        +'<span class="hint">Ela sai da faixa de matérias e passa a viver na aba TCC, junto com as etapas e as orientações.</span></span></label>'
       +(existing?'<div class="zona-risco"><div><b>Remover esta matéria</b>'
         +'<span class="hint">Apaga também os textos e as faltas dela. Não dá para desfazer.</span></div>'
         +'<button class="btn-danger" data-remover>'+SVG_TRASH+' Remover</button></div>':'')
@@ -1648,11 +2189,24 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     if(!name){ var el=document.getElementById('s_name'); el.classList.add('invalid');
       var em=document.getElementById('s_err'); if(em) em.style.display=''; el.focus(); return; }
     var lim=num(g('s_lim')); if(lim==null||lim<0) lim=0;
+    var ehTcc=!!document.getElementById('s_tcc').checked;
     var data={ name:name, professor:g('s_prof').trim(), color:chosen.val,
-      absenceLimit:Math.min(lim,30), driveLink:g('s_drive').trim() };
+      absenceLimit:Math.min(lim,30), driveLink:g('s_drive').trim(), tcc:ehTcc };
+    // só pode existir uma matéria de TCC — marcar uma desmarca a anterior
+    if(ehTcc) subjects.forEach(function(x){ if(x!==existing) x.tcc=false; });
     if(existing) Object.assign(existing,data);
-    else { var ns=normSubject(data); subjects.push(ns); currentSubjectId=ns.id; view='subject'; }
-    closeModal(); persist(); renderAll();
+    else { var ns=normSubject(data); subjects.push(ns);
+      if(ehTcc){ view='tcc'; } else { currentSubjectId=ns.id; view='subject'; } }
+    if(ehTcc && !tcc.orientadora && data.professor) tcc.orientadora=data.professor;
+    closeModal(); ajustarMateriaAtual(); persist(); saveUI(); renderAll();
+  }
+  function deleteText(id){
+    var t=findText(id); if(!t) return;
+    if(!confirm('Remover o texto "'+t.name+'"?\n\nEsta ação não pode ser desfeita.')) return;
+    closeModal();
+    texts=texts.filter(function(x){ return x.id!==id; });
+    openMenuId=null;
+    persist(); renderAll();
   }
   function deleteSubject(id){
     var s=findSubject(id); if(!s) return;
@@ -1661,8 +2215,144 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     closeModal();
     texts=texts.filter(function(t){ return t.subjectId!==id; });
     subjects=subjects.filter(function(x){ return x.id!==id; });
-    if(currentSubjectId===id) currentSubjectId=subjects.length?subjects[0].id:null;
+    if(currentSubjectId===id){ currentSubjectId=null; ajustarMateriaAtual(); }
     persist(); renderAll();
+  }
+
+
+  // ---- modais do TCC ----
+  function openTccModal(){
+    var v=function(x){ return esc(x==null?'':x); };
+    var html='<div class="modal" role="dialog" aria-modal="true">'
+      +'<div class="modal-head"><h2>Configurar o TCC</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
+      +'<div class="field"><label>Título do trabalho</label>'
+        +'<input id="c_tit" value="'+v(tcc.titulo)+'" placeholder="Ex.: A cidade como texto: leituras do centro de Brasília"></div>'
+      +'<div class="field"><label>Professor(a) orientador(a)</label>'
+        +'<input id="c_ori" value="'+v(tcc.orientadora)+'" placeholder="Ex.: Karl Marx da Silva"></div>'
+      +'<div class="field"><label>Pasta do TCC no Drive (opcional)</label>'
+        +'<input id="c_drv" value="'+v(tcc.driveLink)+'" placeholder="Cole o link de compartilhamento da pasta"></div>'
+      +'<div class="row-2"><div class="field"><label>O que é o prazo</label>'
+        +'<input id="c_plbl" value="'+v(tcc.prazoLabel)+'" placeholder="Ex.: Entrega final"></div>'
+      +'<div class="field"><label>Data-limite</label><input id="c_prz" type="date" value="'+v(tcc.prazo)+'">'
+        +'<span class="hint">Deixe em branco para não mostrar contagem.</span></div></div>'
+      +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Cancelar</button><button class="btn-wine" data-save>Salvar</button></div>'
+      +'</div>';
+    var overlay=buildOverlay(html);
+    function salvar(){
+      var g=function(id){ return document.getElementById(id).value; };
+      tcc.titulo=g('c_tit').trim();
+      tcc.orientadora=g('c_ori').trim();
+      tcc.driveLink=g('c_drv').trim();
+      tcc.prazoLabel=g('c_plbl').trim()||'Entrega final';
+      tcc.prazo=isoOk(g('c_prz'))?g('c_prz'):'';
+      closeModal(); persist(); renderTcc();
+    }
+    overlay.querySelector('[data-x]').addEventListener('click', closeModal);
+    overlay.querySelector('[data-cancel]').addEventListener('click', closeModal);
+    overlay.querySelector('[data-save]').addEventListener('click', salvar);
+    document.getElementById('c_tit').focus();
+    overlay.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); salvar(); } });
+  }
+
+  function openEtapaModal(existing){
+    var b=existing||normEtapa({start:todayISO()});
+    var v=function(x){ return esc(x==null?'':x); };
+    var html='<div class="modal" role="dialog" aria-modal="true">'
+      +'<div class="modal-head"><h2>'+(existing?'Editar etapa':'Nova etapa')+'</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
+      +'<div class="field"><label>Nome da etapa</label><input id="e_name" value="'+v(b.name)+'" placeholder="Ex.: Escrita do capítulo 2">'
+        +'<span class="err-msg" id="e_err" style="display:none">Dê um nome à etapa para salvar.</span></div>'
+      +'<div class="row-2"><div class="field"><label>Começa em</label><input id="e_ini" type="date" value="'+v(b.start)+'"></div>'
+      +'<div class="field"><label>Termina em</label><input id="e_fim" type="date" value="'+v(b.end)+'"></div></div>'
+      +'<div class="field"><label>Status</label><select id="e_st">'+opts(ETAPA,b.status)+'</select></div>'
+      +'<div class="field"><label>Notas (opcional)</label><textarea id="e_notes" rows="2" placeholder="O que precisa acontecer nesta etapa…">'+v(b.notes)+'</textarea></div>'
+      +(existing?'<div class="zona-risco"><div><b>Remover esta etapa</b>'
+        +'<span class="hint">Sai do cronograma. Não dá para desfazer.</span></div>'
+        +'<button class="btn-danger" data-remover>'+SVG_TRASH+' Remover</button></div>':'')
+      +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Cancelar</button><button class="btn-wine" data-save>'+(existing?'Salvar':'Adicionar')+'</button></div>'
+      +'</div>';
+    var overlay=buildOverlay(html);
+    function salvar(){
+      var g=function(id){ return document.getElementById(id).value; };
+      var nome=g('e_name').trim();
+      if(!nome){ var el=document.getElementById('e_name'); el.classList.add('invalid');
+        var em=document.getElementById('e_err'); if(em) em.style.display=''; el.focus(); return; }
+      var dados={name:nome, start:g('e_ini'), end:g('e_fim'), status:g('e_st'), notes:g('e_notes').trim()};
+      if(existing) Object.assign(existing, normEtapa(Object.assign({id:existing.id}, dados)));
+      else tcc.etapas.push(normEtapa(dados));
+      closeModal(); persist(); renderTcc();
+    }
+    overlay.querySelector('[data-x]').addEventListener('click', closeModal);
+    overlay.querySelector('[data-cancel]').addEventListener('click', closeModal);
+    overlay.querySelector('[data-save]').addEventListener('click', salvar);
+    var rm=overlay.querySelector('[data-remover]');
+    if(rm) rm.addEventListener('click', function(){
+      if(!confirm('Remover a etapa "'+existing.name+'"?\n\nEsta ação não pode ser desfeita.')) return;
+      tcc.etapas=tcc.etapas.filter(function(x){ return x.id!==existing.id; });
+      closeModal(); persist(); renderTcc();
+    });
+    var nm=document.getElementById('e_name'); nm.focus();
+    nm.addEventListener('input', function(){ nm.classList.remove('invalid');
+      var em=document.getElementById('e_err'); if(em) em.style.display='none'; });
+    overlay.addEventListener('keydown', function(e){
+      if(e.key==='Enter' && e.target && e.target.tagName!=='TEXTAREA'){ e.preventDefault(); salvar(); } });
+  }
+
+  function openOrientModal(existing){
+    var b=existing||normOrient({date:todayISO()});
+    var v=function(x){ return esc(x==null?'':x); };
+    var html='<div class="modal" role="dialog" aria-modal="true">'
+      +'<div class="modal-head"><h2>'+(existing?'Editar orientação':'Registrar orientação')+'</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
+      +'<div class="field"><label>Data da conversa</label><input id="o_date" type="date" value="'+v(b.date)+'"></div>'
+      +'<div class="field"><label>O que foi conversado</label>'
+        +'<textarea id="o_comb" rows="3" placeholder="Comentários sobre o texto, mudanças de rumo, bibliografia indicada…">'+v(b.combinado)+'</textarea></div>'
+      +'<div class="field"><label>Próximos passos</label>'
+        +'<textarea id="o_prox" rows="3" placeholder="O que ficou combinado para a próxima vez.">'+v(b.proximos)+'</textarea>'
+        +'<span class="hint">Os passos do registro mais recente ficam destacados na aba.</span></div>'
+      +(existing?'<div class="zona-risco"><div><b>Remover este registro</b>'
+        +'<span class="hint">Apaga as anotações desta conversa. Não dá para desfazer.</span></div>'
+        +'<button class="btn-danger" data-remover>'+SVG_TRASH+' Remover</button></div>':'')
+      +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Cancelar</button><button class="btn-wine" data-save>'+(existing?'Salvar':'Registrar')+'</button></div>'
+      +'</div>';
+    var overlay=buildOverlay(html);
+    function salvar(){
+      var g=function(id){ return document.getElementById(id).value; };
+      var dados={date:g('o_date'), combinado:g('o_comb').trim(), proximos:g('o_prox').trim()};
+      if(existing) Object.assign(existing, normOrient(Object.assign({id:existing.id}, dados)));
+      else tcc.orientacoes.push(normOrient(dados));
+      closeModal(); persist(); renderTcc();
+    }
+    overlay.querySelector('[data-x]').addEventListener('click', closeModal);
+    overlay.querySelector('[data-cancel]').addEventListener('click', closeModal);
+    overlay.querySelector('[data-save]').addEventListener('click', salvar);
+    var rm=overlay.querySelector('[data-remover]');
+    if(rm) rm.addEventListener('click', function(){
+      if(!confirm('Remover o registro de '+(existing.date?fmtDate(existing.date):'sem data')+'?\n\nEsta ação não pode ser desfeita.')) return;
+      tcc.orientacoes=tcc.orientacoes.filter(function(x){ return x.id!==existing.id; });
+      closeModal(); persist(); renderTcc();
+    });
+    document.getElementById('o_comb').focus();
+  }
+
+  function acharEtapa(id){ for(var i=0;i<tcc.etapas.length;i++){ if(tcc.etapas[i].id===id) return tcc.etapas[i]; } return null; }
+  function acharOrient(id){ for(var i=0;i<tcc.orientacoes.length;i++){ if(tcc.orientacoes[i].id===id) return tcc.orientacoes[i]; } return null; }
+
+  /* Todos os cliques da aba TCC passam por aqui. */
+  function tccActions(e){
+    var el=e.target.closest('[data-act]'); if(!el) return;
+    var act=el.getAttribute('data-act'), id=el.getAttribute('data-id');
+    if(act==='tccedit'){ openTccModal(); return; }
+    if(act==='etnova'){ openEtapaModal(null); return; }
+    if(act==='etsugerir'){ criarEtapasSugeridas(); return; }
+    if(act==='etedit'){ var et=acharEtapa(id); if(et) openEtapaModal(et); return; }
+    if(act==='etciclo'){ e.stopPropagation(); cicloEtapa(id); return; }
+    if(act==='ornova'){ openOrientModal(null); return; }
+    if(act==='oredit'){ var or=acharOrient(id); if(or) openOrientModal(or); return; }
+    if(act==='crono'){ cronoModo=el.getAttribute('data-m'); saveUI(); renderTcc(); return; }
+    if(act==='tccadd'){
+      var sb=subjectTcc(); if(!sb) return;
+      var antes=currentSubjectId; currentSubjectId=sb.id; openTextModal(null); currentSubjectId=antes; return; }
+    if(act==='edit'){ var t=findText(id); if(t) openTextModal(t); return; }
+    if(act==='pill'){ e.stopPropagation(); openMenuId=(openMenuId===id?null:id); renderTcc(); renderStatusMenu(); return; }
   }
 
   // ---- modal: preferências ----
@@ -1821,7 +2511,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     document.body.appendChild(a); a.click(); a.parentNode.removeChild(a);
     setTimeout(function(){ URL.revokeObjectURL(url); }, 500);
   }
-  function doExport(){ downloadJson({subjects:subjects, texts:texts}, 'tracker-leituras-'+stamp()+'.json'); }
+  function doExport(){ downloadJson({subjects:subjects, texts:texts, tcc:tcc}, 'tracker-leituras-'+stamp()+'.json'); }
   function doImport(file){
     var reader=new FileReader();
     reader.onload=function(){
@@ -1829,10 +2519,11 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       try{ obj=JSON.parse(reader.result); }catch(e){ alert('Não consegui ler esse arquivo. Verifique se é um JSON exportado por este tracker.'); return; }
       if(!obj || !Array.isArray(obj.subjects)){ alert('Esse JSON não parece ser um backup deste tracker (não encontrei matérias).'); return; }
       if(!confirm('Importar vai SUBSTITUIR as matérias e textos atuais.\n\nUm backup do estado atual será baixado antes. Continuar?')) return;
-      downloadJson({subjects:subjects, texts:texts}, 'backup-antes-de-importar-'+stamp()+'.json');
+      downloadJson({subjects:subjects, texts:texts, tcc:tcc}, 'backup-antes-de-importar-'+stamp()+'.json');
       subjects=obj.subjects.map(normSubject);
       texts=Array.isArray(obj.texts)?obj.texts.map(normText):[];
-      currentSubjectId=subjects.length?subjects[0].id:null;
+      tcc=normTcc(obj.tcc);
+      currentSubjectId=null; ajustarMateriaAtual();
       query=''; fTag=''; searchInput.value=''; clearX.style.display='none';
       persist(); renderAll();
       alert('Importado: '+subjects.length+' matéria(s) e '+texts.length+' texto(s).');
@@ -1855,6 +2546,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         +'<div class="vswitch" id="vswitch">'
           +'<button data-v="subject">'+svg(IC.list,15)+' Por matéria</button>'
           +'<button data-v="week">'+svg(IC.cal,15)+' Cronograma</button>'
+          +'<span class="vsep" aria-hidden="true"></span>'
+          +'<button class="tcc-tab" data-v="tcc">'+svg(IC.book,15)+' TCC</button>'
         +'</div>'
         +'<div class="viewbar-right">'
           +'<button class="btn-ghost sm" id="fileBtn"></button>'
@@ -1879,6 +2572,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       +'<div class="tagbar" id="tagbar"></div>'
       +'<div class="table-wrap" id="tw"></div>'
       +'<div class="week" id="week"></div>'
+      +'<div class="tcc" id="tcc"></div>'
       +'<footer class="foot" id="foot"></footer>';
 
     hero=document.getElementById('hero');
@@ -1888,6 +2582,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     tagbar=document.getElementById('tagbar');
     tw=document.getElementById('tw');
     weekEl=document.getElementById('week');
+    tccEl=document.getElementById('tcc');
+    tccEl.addEventListener('click', tccActions);
     foot=document.getElementById('foot');
     searchInput=document.getElementById('q');
     clearX=document.getElementById('clearx');
@@ -1906,7 +2602,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     themeBtn.addEventListener('click', function(){ dark=!dark; saveUI(); renderAll(); });
     document.getElementById('vswitch').addEventListener('click', function(e){
       var b=e.target.closest('[data-v]'); if(!b) return;
-      view=b.getAttribute('data-v'); openMenuId=null; confirmId=null;
+      view=b.getAttribute('data-v'); openMenuId=null;
       saveUI(); applyView(); renderMain();
     });
     document.getElementById('add').addEventListener('click', function(){
@@ -1921,7 +2617,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       var el=e.target.closest('[data-act]'); if(!el) return;
       var act=el.getAttribute('data-act');
       if(act==='pick'){ currentSubjectId=el.getAttribute('data-id'); query=''; fTag=''; faltasAberta=false;
-        searchInput.value=''; clearX.style.display='none'; openMenuId=null; confirmId=null; renderAll(); return; }
+        searchInput.value=''; clearX.style.display='none'; openMenuId=null; renderAll(); return; }
       if(act==='addsubj'){ openSubjectModal(null); return; }
     });
 
@@ -1985,14 +2681,12 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       var act=el.getAttribute('data-act'), id=el.getAttribute('data-id');
       if(act==='sort'){ var k=el.getAttribute('data-k');
         if(sortKey===k) sortDir=(sortDir==='asc'?'desc':'asc'); else { sortKey=k; sortDir='asc'; }
-        openMenuId=null; confirmId=null; renderTable(); return; }
+        openMenuId=null; renderTable(); return; }
       if(act==='clearsearch'){ clearSearch(); return; }
       if(act==='pedit'){ e.stopPropagation(); e.preventDefault(); abrirEdicaoPaginas(el); return; }
       if(act==='tagf'){ e.stopPropagation(); var g=el.getAttribute('data-t'); fTag=(fTag===g?'':g); renderTagbar(); renderTable(); return; }
       if(act==='edit'){ var t=findText(id); if(t) openTextModal(t); return; }
-      if(act==='del'){ e.stopPropagation(); confirmId=id; openMenuId=null; renderMain(); return; }
-      if(act==='confirmdel'){ e.stopPropagation(); texts=texts.filter(function(x){ return x.id!==id; }); confirmId=null; persist(); renderAll(); return; }
-      if(act==='pill'){ e.stopPropagation(); openMenuId=(openMenuId===id?null:id); confirmId=null; renderMain(); return; }
+      if(act==='pill'){ e.stopPropagation(); openMenuId=(openMenuId===id?null:id); renderMain(); return; }
       if(act==='setstatus'){ e.stopPropagation(); var b=findText(id); if(b) b.status=el.getAttribute('data-s');
         openMenuId=null; persist(); renderAll(); return; }
     }
@@ -2002,7 +2696,6 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     document.addEventListener('click', function(){
       var changed=false;
       if(openMenuId!==null){ openMenuId=null; changed=true; }
-      if(confirmId!==null){ confirmId=null; changed=true; }
       if(changed) renderMain();
     });
 
@@ -2011,7 +2704,6 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         if(modalOpen()){ closeModal(); return; }
         var changed=false;
         if(openMenuId!==null){ openMenuId=null; changed=true; }
-        if(confirmId!==null){ confirmId=null; changed=true; }
         if(changed) renderMain();
         return;
       }
@@ -2019,11 +2711,18 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       var tag=(e.target && e.target.tagName)||'';
       if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
       if(e.ctrlKey||e.metaKey||e.altKey) return;
-      if(e.key==='n'){ e.preventDefault(); if(currentSubjectId) openTextModal(null); return; }
+      if(e.key==='n'){ e.preventDefault();
+        if(view==='tcc'){ openEtapaModal(null); return; }
+        if(currentSubjectId) openTextModal(null); return; }
+      // "t" abre e fecha o TCC — ele fica fora do rodízio da tecla "s"
+      if(e.key==='t'){ e.preventDefault();
+        view = (view==='tcc') ? 'subject' : 'tcc';
+        saveUI(); applyView(); renderMain(); return; }
       if(e.key==='/'){ e.preventDefault(); if(view!=='subject'){ view='subject'; applyView(); renderMain(); } searchInput.focus(); return; }
       if(e.key==='s'){ e.preventDefault();
         var ordem=['subject','week'];
-        view=ordem[(ordem.indexOf(view)+1)%ordem.length];
+        var i=ordem.indexOf(view);
+        view = (i<0) ? 'subject' : ordem[(i+1)%ordem.length];
         saveUI(); applyView(); renderMain(); return; }
     });
 
@@ -2042,9 +2741,10 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     load();
     migrarFaltas();
     loadUI();
+    migrarTcc();
     loadSync();
     retomarArquivo();
-    if(!currentSubjectId || !findSubject(currentSubjectId)) currentSubjectId=subjects.length?subjects[0].id:null;
+    ajustarMateriaAtual();
     searchInput.value=query;
     renderAll();
     syncAoAbrir();
