@@ -84,6 +84,10 @@ html,body{margin:0; padding:0; background:#EBE7DE;}
 .subj-h-main h2{font-family:var(--serif); font-weight:500; font-size:22px; margin:0; letter-spacing:-.01em;}
 .subj-prof{margin:3px 0 0; font-size:13px; color:var(--ink-soft);}
 .subj-prof b{color:var(--ink); font-weight:500;}
+.drive-link{display:inline-flex; align-items:center; gap:7px; margin-top:9px; font-size:13px;
+  color:var(--wine-fg); text-decoration:none; border:1.5px solid var(--line);
+  background:var(--card); border-radius:9px; padding:7px 12px;}
+.drive-link:hover{border-color:var(--wine-fg); background:var(--wine-tint);}
 .subj-h-actions{display:flex; gap:6px; flex:none;}
 
 /* Card "leituras em dia" */
@@ -382,6 +386,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
   .fadd{gap:7px;}
   .fadd input[type=date]{min-width:0;}
   .subj-head{flex-direction:column; gap:11px;}
+  .drive-link{width:100%; justify-content:center; padding:11px 14px; font-size:13.5px;
+    min-height:44px; box-sizing:border-box;}   /* alvo de toque confortável */
   .subj-h-actions{width:100%;}
   .subj-h-actions .btn-ghost{flex:1; justify-content:center;}
   .modal{max-height:94vh;}
@@ -506,6 +512,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     moon:'<path d="M13.4 9.7A5.7 5.7 0 016.3 2.6a5.9 5.9 0 107.1 7.1z"/>',
     sun:'<circle cx="8" cy="8" r="2.9"/><path d="M8 1.3v1.5M8 13.2v1.5M14.7 8h-1.5M2.8 8H1.3M12.7 3.3l-1.05 1.05M4.35 11.65L3.3 12.7M12.7 12.7l-1.05-1.05M4.35 4.35L3.3 3.3"/>',
     cal:'<rect x="2.4" y="3.6" width="11.2" height="10" rx="1.6"/><path d="M2.4 6.6h11.2M5.4 2.3v2.4M10.6 2.3v2.4"/>',
+    pasta:'<path d="M2.2 12.4V4.2c0-.6.5-1.1 1.1-1.1h3l1.6 1.9h4.8c.6 0 1.1.5 1.1 1.1v6.3c0 .6-.5 1.1-1.1 1.1H3.3c-.6 0-1.1-.5-1.1-1.1z"/>',
+    menu:'<path d="M2.6 4.2h10.8M2.6 8h10.8M2.6 11.8h10.8"/>',
     list:'<path d="M5.6 4.4h7.9M5.6 8h7.9M5.6 11.6h7.9M2.7 4.4h.01M2.7 8h.01M2.7 11.6h.01"/>',
     clock:'<circle cx="8" cy="8" r="5.7"/><path d="M8 4.9V8l2.1 1.5"/>',
     alert:'<path d="M8 2.6L14.2 13H1.8z"/><path d="M8 6.6v3M8 11.3h.01"/>',
@@ -565,12 +573,12 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
   var narrow=false;   // celular: lista vira cartões, sem rolagem lateral
   function isNarrow(){ return window.innerWidth<=720; }
 
-  var app, hero, subjectsEl, panel, toolbar, tagbar, tw, weekEl, faltasEl, foot, searchInput, clearX, importFile, paceSel, themeBtn;
+  var app, hero, subjectsEl, panel, toolbar, tagbar, tw, weekEl, faltasEl, foot, searchInput, clearX, importFile, themeBtn;
   var searchTimer=null;
 
   // ---- normalize ----
   function normSubject(s){
-    var o=Object.assign({id:"",name:"",professor:"",color:PALETTE[0],absenceLimit:7,absences:[]}, s);
+    var o=Object.assign({id:"",name:"",professor:"",color:PALETTE[0],absenceLimit:7,absences:[],driveLink:""}, s);
     if(!o.id) o.id=uid('subj');
     if(!o.color) o.color=PALETTE[0];
     var lim=num(o.absenceLimit);
@@ -975,8 +983,11 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
   function fundoGradiente(pct){
     return 'linear-gradient(90deg,'+GRAD_INI+','+corDoProgresso(pct)+')';
   }
+  /* O gradiente marca leitura em andamento. "Lido parcialmente" é uma leitura
+     pausada, então segue com a cor sólida do status, sem animação. */
+  function usaGradiente(t){ return gradiente && t.status==='lendo'; }
   function progFill(t, pct){
-    if(!gradiente) return (STATUS[t.status]||STATUS.lendo).dot;
+    if(!usaGradiente(t)) return (STATUS[t.status]||STATUS.lendo).dot;
     return fundoGradiente(pct);
   }
   function numEditavel(t, valor){
@@ -991,7 +1002,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     var faltaTxt = (falta!=null && falta>0) ? '<span class="prest">faltam ≈ '+fmtMin(falta)+'</span>'
                  : (falta===0 ? '<span class="prest">tudo lido</span>' : '');
     if(pct==null) return '<span class="pnum">parou na p. '+numEditavel(t,r)+'</span>'+faltaTxt;
-    return '<span class="pbar'+(gradiente?' grad':'')+'" role="img" aria-label="'+pct+'% lido"><span style="width:'+pct+'%;background:'+progFill(t,pct)+'"></span></span>'
+    return '<span class="pbar'+(usaGradiente(t)?' grad':'')+'" role="img" aria-label="'+pct+'% lido"><span style="width:'+pct+'%;background:'+progFill(t,pct)+'"></span></span>'
       +'<span class="pnum">'+numEditavel(t,r)+'/'+p+' · '+pct+'%</span>'+faltaTxt;
   }
   function chipOf(cfg){ return dark?cfg.chipD:cfg.chip; }
@@ -1135,6 +1146,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       +'<div class="subj-h-main"><h2>'+esc(s.name)+'</h2>'
       +(s.professor?'<p class="subj-prof">Orientação / docência: <b>'+esc(s.professor)+'</b></p>':'')
       +faltasResumo(s)
+      +(safeUrl(s.driveLink)?'<a class="drive-link" href="'+esc(safeUrl(s.driveLink))+'" target="_blank" rel="noopener">'
+        +svg(IC.pasta,15)+' Pasta da matéria no Drive</a>':'')
       +emDiaHtml(subjectStatus(s.id))+'</div>'
       +'<div class="subj-h-actions">'
       +'<button class="btn-ghost sm" data-act="editsubj" data-id="'+s.id+'" title="Mudar nome, cor, professor e limite de faltas">'+SVG_GEAR+' Editar matéria</button>'
@@ -1383,7 +1396,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     weekEl.innerHTML=stats+body;
     renderStatusMenu();
     foot.innerHTML='Visão geral de todas as matérias · ritmo de leitura: '+pace+' min por página'
-      +' · salvo neste navegador<br>'
+      +' (ajuste no menu ☰) · salvo neste navegador<br>'
       +'<span class="kbd">n</span> novo texto · <span class="kbd">s</span> alternar visão · <span class="kbd">Esc</span> fechar';
     saveUI();
   }
@@ -1472,7 +1485,6 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     document.getElementById('searchWrap').style.display = isSubj?'':'none';
     document.getElementById('sortMob').style.display = (isSubj && narrow)?'':'none';
     document.getElementById('sortSel').value = sortKey;
-    document.getElementById('paceWrap').style.display   = isWeek?'':'none';
     var vb=document.getElementById('vswitch');
     Array.prototype.forEach.call(vb.querySelectorAll('button'), function(b){
       b.classList.toggle('on', b.getAttribute('data-v')===view);
@@ -1643,6 +1655,9 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       +'<div class="modal-head"><h2>'+(existing?'Editar matéria':'Nova matéria')+'</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
       +'<div class="field"><label>Nome da matéria</label><input id="s_name" value="'+v(b.name)+'" placeholder="Ex.: Sociologia Urbana"><span class="err-msg" id="s_err" style="display:none">Dê um nome à matéria.</span></div>'
       +'<div class="field"><label>Professor(a) / orientador(a) (opcional)</label><input id="s_prof" value="'+v(b.professor)+'" placeholder="Ex.: Zakia Ismail Hachem"></div>'
+      +'<div class="field"><label>Pasta da matéria no Drive (opcional)</label>'
+        +'<input id="s_drive" value="'+v(b.driveLink)+'" placeholder="Cole o link de compartilhamento da pasta">'
+        +'<span class="hint">Vira um atalho no cabeçalho da matéria. Aceita qualquer link.</span></div>'
       +'<div class="row-2"><div class="field"><label>Limite de faltas</label>'
         +'<input id="s_lim" type="number" min="0" max="30" value="'+v(b.absenceLimit==null?7:b.absenceLimit)+'">'
         +'<span class="hint">0 = não controlar faltas nesta matéria</span></div>'
@@ -1664,7 +1679,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     if(!name){ var el=document.getElementById('s_name'); el.classList.add('invalid');
       var em=document.getElementById('s_err'); if(em) em.style.display=''; el.focus(); return; }
     var lim=num(g('s_lim')); if(lim==null||lim<0) lim=0;
-    var data={ name:name, professor:g('s_prof').trim(), color:chosen.val, absenceLimit:Math.min(lim,30) };
+    var data={ name:name, professor:g('s_prof').trim(), color:chosen.val,
+      absenceLimit:Math.min(lim,30), driveLink:g('s_drive').trim() };
     if(existing) Object.assign(existing,data);
     else { var ns=normSubject(data); subjects.push(ns); currentSubjectId=ns.id; view='subject'; }
     closeModal(); persist(); renderAll();
@@ -1714,7 +1730,6 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     var pc=document.getElementById('p_pace');
     pc.addEventListener('change', function(){
       pace=Number(pc.value)||3;
-      if(paceSel) paceSel.value=String(pace);
       saveUI(); renderMain();
     });
   }
@@ -1773,7 +1788,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         +'<div class="fileacts"><button class="btn-wine" data-syncpull>'+svg(IC.down,15)+' Usar a da nuvem</button>'
         +'<button class="btn-ghost" data-syncforce>'+svg(IC.up,15)+' Usar a deste aparelho</button></div>';
     } else {
-      sync='<p>Cole um token do GitHub para o progresso viajar entre o computador e o celular sozinho.</p>'
+      sync='<p>Cole um token do GitHub para o progresso viajar entre o computador e o celular sozinho. Sem isso, dá para levar os dados na mão em <b>Cópia de segurança</b>, mais abaixo.</p>'
         +(syncState==='erro'?'<div class="fstat warn">'+svg(IC.alert,14)+' '+esc(syncMsg)+'</div>':'')
         +'<div class="field"><label>Token do GitHub</label>'
         +'<input id="sync_tok" type="password" placeholder="ghp_…" autocomplete="off"></div>'
@@ -1787,7 +1802,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         +'<li>Em <b>Note</b> escreva algo como "tracker" e escolha a validade em <b>Expiration</b>.</li>'
         +'<li>Na lista de caixinhas, marque <b>somente</b> <code>gist</code>. Nenhuma outra.</li>'
         +'<li>Role até o fim → <b>Generate token</b> → copie. Começa com <code>ghp_</code> e o GitHub só mostra uma vez.</li></ol>'
-        +'<p class="hint2"><b>Por que o clássico?</b> O GitHub tem também os <i>Fine-grained tokens</i>, mais novos, mas eles ainda não oferecem permissão de Gists — por isso a opção não aparece lá. Marcando só <code>gist</code>, o token clássico fica igualmente restrito: dá acesso aos seus gists e a nada mais.</p>'
+        +'<p class="hint2"><b>Precisa ser o clássico.</b> Os <i>Fine-grained tokens</i>, que aparecem primeiro na tela, ainda não oferecem permissão de Gists — lá a opção simplesmente não existe. Marcando só <code>gist</code> no clássico, o token fica igualmente restrito: alcança seus gists e nada mais.</p>'
         +'<p class="hint2">O token fica guardado só neste aparelho e nunca entra no Exportar. Se perder o celular, dá para revogá-lo no GitHub com um clique.</p></details>';
     }
 
@@ -1797,6 +1812,10 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       +'<h3 class="fsec">Neste computador</h3>'
       +estado+corpo
       +(acoes?'<div class="fileacts">'+acoes+'</div>':'')
+      +'<h3 class="fsec">Cópia de segurança</h3>'
+      +'<p class="hint2">Baixa ou carrega um arquivo com tudo: matérias, textos, faltas e progresso. Serve para guardar por fora ou levar para um aparelho que não usa a sincronização.</p>'
+      +'<div class="fileacts"><button class="btn-ghost" data-exportar>'+svg(IC.down,15)+' Exportar</button>'
+      +'<button class="btn-ghost" data-importar>'+svg(IC.up,15)+' Importar</button></div>'
       +drive
       +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Fechar</button></div></div>';
 
@@ -1815,6 +1834,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     if((b=ov.querySelector('[data-syncforce]')))b.addEventListener('click', function(){
       syncEnviar(true).then(function(){ closeModal(); renderAll(); }); });
     if((b=ov.querySelector('[data-syncpull]'))) b.addEventListener('click', function(){ syncBaixar(); });
+    if((b=ov.querySelector('[data-exportar]'))) b.addEventListener('click', doExport);
+    if((b=ov.querySelector('[data-importar]'))) b.addEventListener('click', function(){ importFile.click(); });
     if((b=ov.querySelector('[data-syncoff]')))  b.addEventListener('click', function(){
       if(!confirm('Desconectar a sincronização deste aparelho?\n\nO progresso continua salvo aqui e a cópia na nuvem não é apagada.')) return;
       esqueceSync(); closeModal(); renderAll(); });
@@ -1868,7 +1889,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         +'</div>'
         +'<div class="viewbar-right">'
           +'<button class="btn-ghost sm" id="fileBtn"></button>'
-          +'<button class="icon-toggle" id="prefsBtn" title="Preferências">'+svg(IC.gear,16)+'</button>'
+          +'<button class="icon-toggle" id="prefsBtn" title="Menu e preferências">'+svg(IC.menu,17)+'</button>'
           +'<button class="icon-toggle" id="theme" title="Modo escuro"></button></div>'
       +'</div>'
       +'<div class="subjects" id="subjects"></div>'
@@ -1881,12 +1902,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
           +'<option value="number">Nº</option><option value="date">Data da aula</option>'
           +'<option value="author">Autor</option><option value="status">Status</option>'
           +'<option value="priority">Prioridade</option></select></div>'
-        +'<div class="pace-wrap" id="paceWrap">'+svg(IC.clock,15)+' Ritmo: <select class="tool-select" id="pace" style="height:38px">'
-          +'<option value="2">2 min/página</option><option value="3">3 min/página</option>'
-          +'<option value="4">4 min/página</option><option value="5">5 min/página</option></select></div>'
         +'<div class="tool-right">'
-          +'<button class="btn-ghost sm" id="imp" title="Carregar um backup JSON">'+svg(IC.up,14)+' Importar</button>'
-          +'<button class="btn-ghost sm" id="exp" title="Baixar um backup JSON">'+svg(IC.down,14)+' Exportar</button>'
           +'<button class="btn-wine" id="add">'+svg(IC.plus,15)+' Adicionar texto</button>'
         +'</div>'
         +'<input type="file" id="impfile" accept="application/json,.json" style="display:none">'
@@ -1909,7 +1925,6 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     searchInput=document.getElementById('q');
     clearX=document.getElementById('clearx');
     importFile=document.getElementById('impfile');
-    paceSel=document.getElementById('pace');
     themeBtn=document.getElementById('theme');
 
     searchInput.addEventListener('input', function(){
@@ -1918,7 +1933,6 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       searchTimer=setTimeout(function(){ searchTimer=null; renderTable(); }, 120);
     });
     clearX.addEventListener('click', clearSearch);
-    paceSel.addEventListener('change', function(){ pace=Number(paceSel.value)||3; renderMain(); });
     document.getElementById('sortSel').addEventListener('change', function(){
       sortKey=this.value; sortDir='asc'; renderTable();
     });
@@ -1934,8 +1948,6 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     });
     document.getElementById('fileBtn').addEventListener('click', abrirModalArquivo);
     document.getElementById('prefsBtn').addEventListener('click', abrirPreferencias);
-    document.getElementById('exp').addEventListener('click', doExport);
-    document.getElementById('imp').addEventListener('click', function(){ importFile.click(); });
     importFile.addEventListener('change', function(){ if(importFile.files && importFile.files[0]){ doImport(importFile.files[0]); importFile.value=''; } });
 
     subjectsEl.addEventListener('click', function(e){
@@ -2073,7 +2085,6 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     retomarArquivo();
     if(!currentSubjectId || !findSubject(currentSubjectId)) currentSubjectId=subjects.length?subjects[0].id:null;
     searchInput.value=query;
-    paceSel.value=String(pace);
     renderAll();
     syncAoAbrir();
   }
