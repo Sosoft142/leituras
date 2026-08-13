@@ -224,6 +224,15 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
 .wmeta{font-size:11.5px; color:var(--ink-soft); margin-top:2px;}
 .wright{display:flex; align-items:center; gap:10px; flex:none;}
 .wempty{padding:34px 20px; text-align:center; color:var(--ink-soft); font-size:13.5px;}
+/* separa visualmente o que já passou do que ainda vem */
+.wsep{display:flex; align-items:center; gap:12px; margin:26px 2px 13px; color:var(--faint);
+  font-size:11.5px; text-transform:uppercase; letter-spacing:.08em;}
+.wsep::before, .wsep::after{content:""; flex:1; height:1px; background:var(--line);}
+.wgroup.past{background:transparent; border-style:dashed; box-shadow:none;}
+.wgroup.past .wgroup-h{background:transparent; border-bottom-style:dashed;}
+.wgroup.past .witem{opacity:.72;}
+.wgroup.past .witem:hover{opacity:1; background:var(--hover);}
+.wgroup.past .wname{color:var(--ink-soft); font-style:italic;}
 
 /* Janela de faltas */
 .faltas{max-width:1080px; margin:13px auto 0; display:grid;
@@ -284,22 +293,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
   box-shadow:inset 0 1px 2px rgba(0,0,0,.07);}
 .pbar > span{display:block; height:100%; border-radius:99px; transition:width .3s ease;}
 
-/* Só a barra em gradiente ganha vida: respira de leve e um brilho passa por ela. */
-.pbar.grad > span{position:relative; overflow:hidden; animation:respira 3s ease-in-out infinite;}
-.pbar.grad > span::after{
-  content:""; position:absolute; top:0; bottom:0; left:0; width:70%;
-  background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.65) 50%, rgba(255,255,255,0) 100%);
-  transform:translateX(-160%);
-  animation:brilha 3s ease-in-out infinite;
-}
-@keyframes respira{
-  0%,100%{ filter:saturate(1) brightness(1); }
-  50%    { filter:saturate(1.12) brightness(1.09); }
-}
-@keyframes brilha{
-  0%     { transform:translateX(-160%); }
-  55%,100%{ transform:translateX(260%); }
-}
+/* Gradiente sem animação: a cor sozinha já indica o avanço. */
+.pbar.grad > span{position:relative;}
 .pnum{display:block; font-family:var(--mono); font-size:11px; color:var(--ink-soft); margin-top:3px; white-space:nowrap;}
 .prest{display:block; font-family:var(--mono); font-size:11px; color:var(--faint); margin-top:2px; white-space:nowrap;}
 .pedit{font-family:var(--mono); font-size:11px; color:var(--ink); background:var(--chipn);
@@ -408,7 +403,6 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
 }
 @media (prefers-reduced-motion:reduce){
   .app *, .app *::before, .app *::after{transition:none !important; animation:none !important;}
-  .pbar.grad > span::after{display:none;}
 }
 
 </style>
@@ -1144,7 +1138,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     if(!s){ panel.innerHTML=''; tw.innerHTML=''; tagbar.innerHTML=''; foot.innerHTML=''; return; }
     panel.innerHTML='<div class="subj-head" style="--c:'+s.color+'">'
       +'<div class="subj-h-main"><h2>'+esc(s.name)+'</h2>'
-      +(s.professor?'<p class="subj-prof">Orientação / docência: <b>'+esc(s.professor)+'</b></p>':'')
+      +(s.professor?'<p class="subj-prof">Professor(a): <b>'+esc(s.professor)+'</b></p>':'')
       +faltasResumo(s)
       +(safeUrl(s.driveLink)?'<a class="drive-link" href="'+esc(safeUrl(s.driveLink))+'" target="_blank" rel="noopener">'
         +svg(IC.pasta,15)+' Pasta da matéria no Drive</a>':'')
@@ -1177,8 +1171,14 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
   function renderStatusMenu(){
     var el=document.getElementById('statusmenu');
     var t=openMenuId?findText(openMenuId):null;
-    var btn=t?document.querySelector('.pill[data-act="pill"][data-id="'+openMenuId+'"]'):null;
+    /* A visão escondida guarda o HTML antigo, então o mesmo texto pode ter duas
+       pills no documento. Procurar só dentro da visão ativa evita medir a
+       escondida, que devolve zero e jogava o menu para o canto da tela. */
+    var cont = view==='week' ? weekEl : tw;
+    var btn = (t && cont) ? cont.querySelector('.pill[data-act="pill"][data-id="'+openMenuId+'"]') : null;
     if(!t||!btn){ if(el) el.parentNode.removeChild(el); return; }
+    var r0=btn.getBoundingClientRect();
+    if(!r0.width && !r0.height){ if(el) el.parentNode.removeChild(el); return; }
     if(!el){
       el=document.createElement('div');
       el.id='statusmenu'; el.className='menu'; el.setAttribute('role','menu');
@@ -1196,7 +1196,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         +'<span class="pill-dot" style="background:'+STATUS[st].dot+'"></span>'+STATUS[st].label
         +(st===t.status?'<span class="check">✓</span>':'')+'</button>';
     }).join('');
-    var r=btn.getBoundingClientRect();
+    var r=r0;
     el.style.visibility='hidden';
     var h=el.offsetHeight, w=el.offsetWidth;
     var top=r.bottom+5, left=r.left;
@@ -1359,9 +1359,9 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         +'<button class="icon-btn" data-act="edit" data-id="'+t.id+'" title="Editar">'+SVG_PENCIL+'</button></div>'
       +'</div>';
   }
-  function weekGroup(title, dot, items, note){
+  function weekGroup(title, dot, items, note, cls){
     if(!items.length) return '';
-    return '<div class="wgroup"><div class="wgroup-h"><span class="gdot" style="background:'+dot+'"></span>'+esc(title)
+    return '<div class="wgroup'+(cls?' '+cls:'')+'"><div class="wgroup-h"><span class="gdot" style="background:'+dot+'"></span>'+esc(title)
       +'<span class="gn">'+items.length+'</span></div>'
       +items.map(weekItem).join('')
       +(note?'<div class="wempty" style="padding:11px 15px;text-align:left">'+esc(note)+'</div>':'')
@@ -1389,8 +1389,9 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     var body=weekGroup('Hoje', EMDIA.todo.dot, g.today)
       + weekGroup('Amanhã', STATUS.lendo.dot, g.tomorrow)
       + weekGroup('Próximos 7 dias', STATUS.parcial.dot, g.soon)
-      + weekGroup('Atrasados — não contam para o "em dia"', '#8A8073', g.late)
-      + weekGroup('Mais adiante', STATUS.nao_lido.dot, laterShown, laterNote);
+      + weekGroup('Mais adiante', STATUS.nao_lido.dot, laterShown, laterNote)
+      + (g.late.length ? '<div class="wsep"><span>aulas que já passaram</span></div>' : '')
+      + weekGroup('Atrasados — não contam para o "em dia"', '#8A8073', g.late, null, 'past');
 
     if(!body) body='<div class="wgroup"><div class="wempty">Nenhum texto com data de aula cadastrada.<br>Adicione datas aos textos para vê-los aqui.</div></div>';
     weekEl.innerHTML=stats+body;
@@ -1654,7 +1655,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     var html='<div class="modal" role="dialog" aria-modal="true">'
       +'<div class="modal-head"><h2>'+(existing?'Editar matéria':'Nova matéria')+'</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
       +'<div class="field"><label>Nome da matéria</label><input id="s_name" value="'+v(b.name)+'" placeholder="Ex.: Sociologia Urbana"><span class="err-msg" id="s_err" style="display:none">Dê um nome à matéria.</span></div>'
-      +'<div class="field"><label>Professor(a) / orientador(a) (opcional)</label><input id="s_prof" value="'+v(b.professor)+'" placeholder="Ex.: Zakia Ismail Hachem"></div>'
+      +'<div class="field"><label>Professor(a) (opcional)</label><input id="s_prof" value="'+v(b.professor)+'" placeholder="Ex.: Zakia Ismail Hachem"></div>'
       +'<div class="field"><label>Pasta da matéria no Drive (opcional)</label>'
         +'<input id="s_drive" value="'+v(b.driveLink)+'" placeholder="Cole o link de compartilhamento da pasta">'
         +'<span class="hint">Vira um atalho no cabeçalho da matéria. Aceita qualquer link.</span></div>'
@@ -1884,7 +1885,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       +'<div class="viewbar">'
         +'<div class="vswitch" id="vswitch">'
           +'<button data-v="subject">'+svg(IC.list,15)+' Por matéria</button>'
-          +'<button data-v="week">'+svg(IC.cal,15)+' Esta semana</button>'
+          +'<button data-v="week">'+svg(IC.cal,15)+' Cronograma</button>'
           +'<button data-v="faltas">'+svg(IC.alert,15)+' Faltas</button>'
         +'</div>'
         +'<div class="viewbar-right">'
