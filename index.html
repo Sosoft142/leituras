@@ -159,7 +159,7 @@ tbody tr:hover td{background:var(--hover);}
 .app.dark .prio-alta{background:#3A2422; color:#E5A6A2;}
 .c-author{color:var(--ink); width:17%;}
 .c-date{width:118px;}
-.c-est{width:88px;}
+.c-est{width:106px;}
 .est{font-family:var(--mono); font-size:12.5px; color:var(--ink-soft); white-space:nowrap;}
 .mono{font-family:var(--mono); font-size:13px;}
 .muted{color:var(--faint);}
@@ -262,6 +262,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
 .app.dark .fstat.warn{background:#3D3220; color:#E0B473;}
 .modal p{font-size:13.5px; line-height:1.6; margin:0 0 11px;}
 .hint2{font-size:12.5px; color:var(--ink-soft);}
+.hint2 code{font-family:var(--mono); font-size:11.5px; background:var(--chipn);
+  padding:1px 5px; border-radius:4px; color:var(--ink);}
 .fileacts{display:flex; flex-wrap:wrap; gap:8px; margin:15px 0 4px;}
 .fileacts button{height:38px; font-size:13px; padding:0 13px; border-radius:10px;}
 .fdrive{margin-top:16px; padding-top:14px; border-top:1px solid var(--line);}
@@ -272,6 +274,49 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
 .fstat.warn span{flex:1;}
 .fdrive ol{margin:8px 0 0; padding-left:20px;}
 .fdrive li{margin-bottom:5px; line-height:1.55;}
+
+.pbar{display:block; height:6px; border-radius:99px; background:var(--chipn);
+  overflow:hidden; margin-top:6px; max-width:150px;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.07);}
+.pbar > span{display:block; height:100%; border-radius:99px; transition:width .3s ease;}
+
+/* Só a barra em gradiente ganha vida: respira de leve e um brilho passa por ela. */
+.pbar.grad > span{position:relative; overflow:hidden; animation:respira 3s ease-in-out infinite;}
+.pbar.grad > span::after{
+  content:""; position:absolute; top:0; bottom:0; left:0; width:70%;
+  background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.65) 50%, rgba(255,255,255,0) 100%);
+  transform:translateX(-160%);
+  animation:brilha 3s ease-in-out infinite;
+}
+@keyframes respira{
+  0%,100%{ filter:saturate(1) brightness(1); }
+  50%    { filter:saturate(1.12) brightness(1.09); }
+}
+@keyframes brilha{
+  0%     { transform:translateX(-160%); }
+  55%,100%{ transform:translateX(260%); }
+}
+.pnum{display:block; font-family:var(--mono); font-size:11px; color:var(--ink-soft); margin-top:3px; white-space:nowrap;}
+.prest{display:block; font-family:var(--mono); font-size:11px; color:var(--faint); margin-top:2px; white-space:nowrap;}
+.pedit{font-family:var(--mono); font-size:11px; color:var(--ink); background:var(--chipn);
+  border:0; border-bottom:1.5px dashed var(--faint); border-radius:4px; padding:1px 5px;
+  cursor:text; line-height:1.3;}
+.pedit:hover{background:var(--wine-tint); color:var(--wine-fg); border-bottom-color:var(--wine-fg);}
+.pedit-inp{font-family:var(--mono); font-size:11px; width:4.2em; padding:1px 4px;
+  border:1.5px solid var(--wine-fg); border-radius:5px; background:var(--input);
+  color:var(--ink); outline:0;}
+.witem .pbar{max-width:190px;}
+.witem .pnum, .witem .pbar{margin-left:0;}
+.tcard .pbar{max-width:none; margin-top:8px;}
+.prog-prev{display:flex; align-items:center; gap:9px; font-size:12.5px; color:var(--ink-soft);
+  background:var(--thead); border-radius:9px; padding:9px 11px; min-height:38px;}
+.prog-prev .pbar{margin-top:0; flex:1; max-width:none;}
+.prog-prev b{font-family:var(--mono); font-size:12.5px; color:var(--ink);}
+.pref-demo{display:flex; flex-direction:column; gap:8px; margin-top:10px;
+  background:var(--thead); border-radius:9px; padding:12px;}
+.pref-demo > div{display:flex; align-items:center; gap:10px;}
+.pref-demo .pbar{margin-top:0; flex:1;}
+.pref-lbl{font-family:var(--mono); font-size:11px; color:var(--ink-soft); width:32px; flex:none;}
 
 /* Cartões (celular) */
 .tcards{display:block;}
@@ -355,7 +400,10 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
   .vswitch{width:100%;}
   .vswitch button{flex:1; justify-content:center; padding:7px 6px;}
 }
-@media (prefers-reduced-motion:reduce){ .app *{transition:none !important; animation:none !important;} }
+@media (prefers-reduced-motion:reduce){
+  .app *, .app *::before, .app *::after{transition:none !important; animation:none !important;}
+  .pbar.grad > span::after{display:none;}
+}
 
 </style>
 </head>
@@ -510,7 +558,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
   var subjects=[], texts=[];
   var view='subject';
   var currentSubjectId=null, query="", fTag="", sortKey="number", sortDir="asc";
-  var dark=false, pace=4;
+  var dark=false, pace=3, gradiente=false;
   var openMenuId=null, confirmId=null;
   var storageWarned=false;
   var curRefIds={}, curRefDiff=null;
@@ -533,12 +581,15 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
   }
   function normText(t){
     var o=Object.assign({id:"",subjectId:"",number:null,name:"",originalTitle:"",author:"",classDate:"",
-      link:"",color:"",status:"nao_lido",notes:"",pages:null,priority:"normal",tags:[]}, t);
+      link:"",color:"",status:"nao_lido",notes:"",pages:null,pagesRead:null,priority:"normal",tags:[]}, t);
     if(!o.id) o.id=uid('t');
     if(!STATUS[o.status]) o.status='nao_lido';
     if(!PRIO[o.priority]) o.priority='normal';
     o.number=num(o.number);
     o.pages=num(o.pages);
+    o.pagesRead=num(o.pagesRead);
+    if(o.pagesRead!=null && o.pagesRead<0) o.pagesRead=null;
+    if(o.pagesRead!=null && o.pages!=null && o.pagesRead>o.pages) o.pagesRead=o.pages;
     if(!Array.isArray(o.tags)) o.tags = o.tags? String(o.tags).split(',').map(function(x){return x.trim();}).filter(Boolean) : [];
     delete o.ref;   // gerador de referências removido
     return o;
@@ -863,7 +914,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     }
   }
   function saveUI(){
-    try{ localStorage.setItem(UI_KEY, JSON.stringify({cur:currentSubjectId, sk:sortKey, sd:sortDir, view:view, dark:dark, pace:pace, tag:fTag})); }catch(e){}
+    try{ localStorage.setItem(UI_KEY, JSON.stringify({cur:currentSubjectId, sk:sortKey, sd:sortDir, view:view, dark:dark, pace:pace, tag:fTag, grad:gradiente})); }catch(e){}
   }
   function loadUI(){
     try{
@@ -875,6 +926,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       dark=!!u.dark;
       if(u.pace) pace=Number(u.pace)||3;
       if(typeof u.tag==='string') fTag=u.tag;
+      gradiente=!!u.grad;
     }catch(e){}
   }
 
@@ -889,6 +941,59 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     return sb?sb.color:'#B7AE9F';
   }
   function estMin(t){ var p=num(t.pages); if(!p||p<=0) return null; return Math.round(p*pace); }
+  /* A marcação de onde parou só faz sentido enquanto a leitura está em curso. */
+  function emCurso(t){ return t.status==='lendo' || t.status==='parcial'; }
+  function temProgresso(t){ return emCurso(t) && num(t.pagesRead)!=null; }
+  function readPct(t){
+    var p=num(t.pages), r=num(t.pagesRead);
+    if(!p || p<=0 || r==null) return null;
+    return Math.max(0, Math.min(100, Math.round(r/p*100)));
+  }
+  // páginas que ainda faltam, já descontando o que foi lido
+  function pagesLeft(t){
+    var p=num(t.pages); if(!p||p<=0) return null;
+    if(t.status==='lido') return 0;
+    var r=num(t.pagesRead);
+    if(emCurso(t) && r!=null) return Math.max(0, p-Math.min(r,p));
+    return p;
+  }
+  function estMinRest(t){ var l=pagesLeft(t); return l==null?null:Math.round(l*pace); }
+  function hex2rgb(h){ h=h.replace('#',''); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+  function rgb2hex(a){ return '#'+a.map(function(x){ var v=Math.round(x).toString(16); return v.length<2?'0'+v:v; }).join(''); }
+  function lerpCor(c1,c2,t){
+    var a=hex2rgb(c1), b=hex2rgb(c2);
+    return rgb2hex([a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t]);
+  }
+  /* Padrão: cor do status. Com o gradiente ligado, a barra caminha do vermelho
+     (nada lido) ao verde (perto do fim), passando pelo âmbar no meio. */
+  // tons claros e quentes, para combinar com o papel do resto do app
+  var GRAD_INI='#E8796B', GRAD_MEIO='#EFB65C', GRAD_FIM='#86C77E';
+  function corDoProgresso(pct){
+    return pct<=50 ? lerpCor(GRAD_INI, GRAD_MEIO, pct/50)
+                   : lerpCor(GRAD_MEIO, GRAD_FIM, (pct-50)/50);
+  }
+  function fundoGradiente(pct){
+    return 'linear-gradient(90deg,'+GRAD_INI+','+corDoProgresso(pct)+')';
+  }
+  function progFill(t, pct){
+    if(!gradiente) return (STATUS[t.status]||STATUS.lendo).dot;
+    return fundoGradiente(pct);
+  }
+  function numEditavel(t, valor){
+    return '<button class="pedit" data-act="pedit" data-id="'+t.id+'" title="Clique para mudar quantas páginas já leu">'+valor+'</button>';
+  }
+  /* Barra some quando não há nada a mostrar: é isso que a mantém discreta. */
+  function progHtml(t){
+    if(!temProgresso(t)) return '';
+    var r=num(t.pagesRead), p=num(t.pages), pct=readPct(t);
+    var falta=estMinRest(t);
+    // em linha própria para não sobrar um "·" solto quando a coluna é estreita
+    var faltaTxt = (falta!=null && falta>0) ? '<span class="prest">faltam ≈ '+fmtMin(falta)+'</span>'
+                 : (falta===0 ? '<span class="prest">tudo lido</span>' : '');
+    if(pct==null) return '<span class="pnum">parou na p. '+numEditavel(t,r)+'</span>'+faltaTxt;
+    return '<span class="pbar'+(gradiente?' grad':'')+'" role="img" aria-label="'+pct+'% lido"><span style="width:'+pct+'%;background:'+progFill(t,pct)+'"></span></span>'
+      +'<span class="pnum">'+numEditavel(t,r)+'/'+p+' · '+pct+'%</span>'+faltaTxt;
+  }
   function chipOf(cfg){ return dark?cfg.chipD:cfg.chip; }
   function textOf(cfg){ return dark?cfg.textD:cfg.text; }
   function lineOf(cfg){ return dark?cfg.lineD:cfg.line; }
@@ -1004,7 +1109,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         return '<span class="refname">'+esc(t.name)+'</span> ('+STATUS[t.status].label.toLowerCase()+')';
       }).join(' · ');
       var totMin=0, anyMin=false;
-      st.group.forEach(function(t){ if(t.status!=='lido'){ var m=estMin(t); if(m!=null){ totMin+=m; anyMin=true; } } });
+      st.group.forEach(function(t){ if(t.status!=='lido'){ var m=estMinRest(t); if(m!=null){ totMin+=m; anyMin=true; } } });
       desc = (isToday?'Aula de hoje':'Próxima aula')+' <span class="emdia-when">'+fmtDate(st.refDate)+' · '+relLabel(st.diff)+'</span> — '+names
            + (anyMin?' · falta ler ≈ <b>'+fmtMin(totMin)+'</b>':'');
     }
@@ -1122,7 +1227,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         +tagsHtml(t)+'</td>'
       +'<td class="c-author">'+(t.author?esc(t.author):'<span class="muted">—</span>')+'</td>'
       +'<td class="c-date mono">'+dateCell(t)+'</td>'
-      +'<td class="c-est">'+(m!=null?'<span class="est">'+t.pages+' p · '+fmtMin(m)+'</span>':'<span class="muted">—</span>')+'</td>'
+      +'<td class="c-est">'+(m!=null?'<span class="est">'+t.pages+' p · '+fmtMin(m)+'</span>'
+        :(temProgresso(t)?'':'<span class="muted">—</span>'))+progHtml(t)+'</td>'
       +'<td class="c-status">'+statusPill(t)+'</td>'
       +'<td class="c-actions">'
         +'<button class="icon-btn" data-act="edit" data-id="'+t.id+'" title="Editar">'+SVG_PENCIL+'</button>'+del+'</td>'
@@ -1150,6 +1256,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         +(t.notes?'<span class="note-dot" title="'+esc(t.notes)+'">·</span>':'')
         +(t.originalTitle?'<span class="orig">'+esc(t.originalTitle)+'</span>':'')
         +(meta.length?'<div class="tc-meta">'+meta.join(' · ')+'</div>':'')
+        +progHtml(t)
         +tagsHtml(t)
       +'</div></div>'
       +'<div class="tc-bottom">'+statusPill(t)
@@ -1191,7 +1298,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     tw.innerHTML=html;
     renderStatusMenu();
     var pend=0, pendMin=0;
-    list.forEach(function(t){ if(t.status!=='lido'){ pend++; var m=estMin(t); if(m!=null) pendMin+=m; } });
+    list.forEach(function(t){ if(t.status!=='lido'){ pend++; var m=estMinRest(t); if(m!=null) pendMin+=m; } });
     foot.innerHTML='Mostrando '+list.length+' de '+totalSubj+' texto(s)'
       +(pend?' · '+pend+' por ler'+(pendMin?' ≈ '+fmtMin(pendMin):''):'')
       +' · salvo neste navegador (use Exportar para backup)<br>'
@@ -1233,7 +1340,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         +(link?' <a class="text-link" href="'+esc(link)+'" target="_blank" rel="noopener" data-stop title="Abrir texto">'+SVG_LINK+'</a>':'')
         +prioBadge(t)
         +'<div class="wmeta">'+(t.number!=null?'nº '+t.number+' · ':'')+fmtDate(t.classDate)+' · '+relLabel(dayDiff(t.classDate))
-        +(t.author?' · '+esc(t.author):'')+(m!=null?' · '+t.pages+' p ≈ '+fmtMin(m):'')+'</div></div>'
+        +(t.author?' · '+esc(t.author):'')+(m!=null?' · '+t.pages+' p ≈ '+fmtMin(m):'')
+        +'</div>'+progHtml(t)+'</div>'
       +'<div class="wright">'+statusPill(t)
         +'<button class="icon-btn" data-act="edit" data-id="'+t.id+'" title="Editar">'+SVG_PENCIL+'</button></div>'
       +'</div>';
@@ -1252,7 +1360,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     var lidos=0, pendMin=0, pend=0;
     semana.forEach(function(t){
       if(t.status==='lido') lidos++;
-      else { pend++; var m=estMin(t); if(m!=null) pendMin+=m; }
+      else { pend++; var m=estMinRest(t); if(m!=null) pendMin+=m; }
     });
     var LATER_CAP=6;
     var laterShown=g.later.slice(0,LATER_CAP);
@@ -1468,6 +1576,10 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       +'<div class="row-3"><div class="field"><label>Páginas</label><input id="m_pages" type="number" min="0" value="'+v(b.pages)+'" placeholder="18"></div>'
       +'<div class="field"><label>Prioridade</label><select id="m_prio">'+opts(PRIO,b.priority)+'</select></div>'
       +'<div class="field"><label>Status</label><select id="m_status">'+opts(STATUS,b.status)+'</select></div></div>'
+      +'<div class="field" id="lidoWrap" style="display:none">'
+        +'<label>Páginas lidas <span style="font-weight:400">— onde você parou (opcional)</span></label>'
+        +'<div class="row-2"><input id="m_pagesread" type="number" min="0" value="'+v(b.pagesRead)+'" placeholder="Ex.: 8">'
+        +'<div class="prog-prev" id="m_prog"></div></div></div>'
       +'<div class="field"><label>Tags <span style="font-weight:400">(separadas por vírgula)</span></label><input id="m_tags" value="'+v(b.tags.join(', '))+'" placeholder="Ex.: metodologia, tcc"></div>'
       +'<div class="field"><label>Cor</label>'+swatchesHtml(b.color, defColor)
         +'<span class="hint">"A" acompanha sempre a cor da matéria</span></div>'
@@ -1479,6 +1591,29 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     overlay.querySelector('[data-x]').addEventListener('click', closeModal);
     overlay.querySelector('[data-cancel]').addEventListener('click', closeModal);
     overlay.querySelector('[data-save]').addEventListener('click', function(){ saveText(existing, chosen); });
+
+    /* O campo de "onde parei" só faz sentido com a leitura em curso — por isso
+       ele aparece e some conforme o status escolhido. */
+    var selStatus=document.getElementById('m_status');
+    var wrapLido=document.getElementById('lidoWrap');
+    var inpLidas=document.getElementById('m_pagesread');
+    var inpPags=document.getElementById('m_pages');
+    function attProgresso(){
+      var emCurso = selStatus.value==='lendo' || selStatus.value==='parcial';
+      wrapLido.style.display = emCurso ? '' : 'none';
+      if(!emCurso) return;
+      var tot=num(inpPags.value), lidas=num(inpLidas.value), box=document.getElementById('m_prog');
+      if(lidas==null){ box.innerHTML='<span>Deixe em branco se não quiser marcar.</span>'; return; }
+      if(tot==null || tot<=0){ box.innerHTML='<span>Parou na página <b>'+lidas+'</b>. Preencha "Páginas" para ver a porcentagem.</span>'; return; }
+      if(lidas>tot){ box.innerHTML='<span>Maior que o total — vou ajustar para <b>'+tot+'</b>.</span>'; return; }
+      var pct=Math.max(0, Math.min(100, Math.round(lidas/tot*100)));
+      var cor=(STATUS[selStatus.value]||STATUS.lendo).dot;
+      box.innerHTML='<span class="pbar"><span style="width:'+pct+'%;background:'+cor+'"></span></span><b>'+pct+'%</b>';
+    }
+    selStatus.addEventListener('change', attProgresso);
+    inpLidas.addEventListener('input', attProgresso);
+    inpPags.addEventListener('input', attProgresso);
+    attProgresso();
 
     var nm=document.getElementById('m_name'); nm.focus();
     nm.addEventListener('input', function(){ nm.classList.remove('invalid'); var em=document.getElementById('m_err'); if(em) em.style.display='none'; });
@@ -1492,7 +1627,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     var data={ subjectId:g('m_subj'), number:num(g('m_num')), name:name,
       originalTitle:g('m_orig').trim(), author:g('m_author').trim(),
       classDate:g('m_date'), link:g('m_link').trim(), status:g('m_status'),
-      priority:g('m_prio'), pages:num(g('m_pages')),
+      priority:g('m_prio'), pages:num(g('m_pages')), pagesRead:num(g('m_pagesread')),
       tags:g('m_tags').split(',').map(function(x){ return x.trim(); }).filter(Boolean),
       color:chosen.val, notes:g('m_notes') };
     if(existing) Object.assign(existing, normText(Object.assign({id:existing.id}, data)));
@@ -1542,6 +1677,46 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     subjects=subjects.filter(function(x){ return x.id!==id; });
     if(currentSubjectId===id) currentSubjectId=subjects.length?subjects[0].id:null;
     persist(); renderAll();
+  }
+
+  // ---- modal: preferências ----
+  function abrirPreferencias(){
+    var exemplo=function(pct, grad){
+      var fill = grad ? fundoGradiente(pct) : STATUS.lendo.dot;
+      return '<span class="pbar'+(grad?' grad':'')+'" style="max-width:none"><span style="width:'+pct+'%;background:'+fill+'"></span></span>';
+    };
+    var html='<div class="modal" role="dialog" aria-modal="true">'
+      +'<div class="modal-head"><h2>Preferências</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
+      +'<div class="field"><label>Cor da barra de progresso</label>'
+        +'<select id="p_grad"><option value="0"'+(!gradiente?' selected':'')+'>Cor do status (padrão)</option>'
+        +'<option value="1"'+(gradiente?' selected':'')+'>Do vermelho ao verde conforme avança</option></select>'
+        +'<div class="pref-demo"><div><span class="pref-lbl">20%</span>'+exemplo(20,gradiente)+'</div>'
+        +'<div><span class="pref-lbl">60%</span>'+exemplo(60,gradiente)+'</div>'
+        +'<div><span class="pref-lbl">95%</span>'+exemplo(95,gradiente)+'</div></div></div>'
+      +'<div class="field"><label>Ritmo de leitura</label>'
+        +'<select id="p_pace">'+[2,3,4,5].map(function(v){
+            return '<option value="'+v+'"'+(pace===v?' selected':'')+'>'+v+' min por página</option>'; }).join('')
+        +'</select><span class="hint">Usado para estimar quanto tempo falta de leitura.</span></div>'
+      +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Fechar</button></div></div>';
+    var ov=buildOverlay(html);
+    ov.querySelector('[data-x]').addEventListener('click', closeModal);
+    ov.querySelector('[data-cancel]').addEventListener('click', closeModal);
+    var g=document.getElementById('p_grad');
+    g.addEventListener('change', function(){
+      gradiente = g.value==='1'; saveUI(); renderMain();
+      var barras=ov.querySelectorAll('.pref-demo .pbar');
+      [20,60,95].forEach(function(pct,i){
+        if(!barras[i]) return;
+        barras[i].classList.toggle('grad', gradiente);
+        barras[i].firstElementChild.style.background = gradiente ? fundoGradiente(pct) : STATUS.lendo.dot;
+      });
+    });
+    var pc=document.getElementById('p_pace');
+    pc.addEventListener('change', function(){
+      pace=Number(pc.value)||3;
+      if(paceSel) paceSel.value=String(pace);
+      saveUI(); renderMain();
+    });
   }
 
   // ---- modal: como salvar em um arquivo só ----
@@ -1601,16 +1776,18 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       sync='<p>Cole um token do GitHub para o progresso viajar entre o computador e o celular sozinho.</p>'
         +(syncState==='erro'?'<div class="fstat warn">'+svg(IC.alert,14)+' '+esc(syncMsg)+'</div>':'')
         +'<div class="field"><label>Token do GitHub</label>'
-        +'<input id="sync_tok" type="password" placeholder="github_pat_… ou ghp_…" autocomplete="off"></div>'
+        +'<input id="sync_tok" type="password" placeholder="ghp_…" autocomplete="off"></div>'
         +'<div class="fileacts"><button class="btn-wine" data-syncon>'+svg(IC.sync,15)+' Conectar</button></div>'
-        +'<details class="abnt"><summary>Como criar o token (uma vez só)</summary>'
+        +'<details class="abnt" open><summary>Como criar o token (uma vez só)</summary>'
         +'<ol class="hint2" style="margin:0 0 10px;padding-left:20px">'
         +'<li>No GitHub: foto do perfil → <b>Settings</b>.</li>'
-        +'<li>No fim do menu: <b>Developer settings</b>.</li>'
-        +'<li><b>Personal access tokens</b> → <b>Fine-grained tokens</b> → <b>Generate new token</b>.</li>'
-        +'<li>Dê um nome (ex.: tracker) e escolha a validade.</li>'
-        +'<li>Em <b>Account permissions</b>, procure <b>Gists</b> e marque <b>Read and write</b>. Não marque mais nada.</li>'
-        +'<li>Gere e copie. O GitHub só mostra o token uma vez.</li></ol>'
+        +'<li>No fim do menu da esquerda: <b>Developer settings</b>.</li>'
+        +'<li><b>Personal access tokens</b> → <b>Tokens (classic)</b>.</li>'
+        +'<li>Botão <b>Generate new token</b> → <b>Generate new token (classic)</b>.</li>'
+        +'<li>Em <b>Note</b> escreva algo como "tracker" e escolha a validade em <b>Expiration</b>.</li>'
+        +'<li>Na lista de caixinhas, marque <b>somente</b> <code>gist</code>. Nenhuma outra.</li>'
+        +'<li>Role até o fim → <b>Generate token</b> → copie. Começa com <code>ghp_</code> e o GitHub só mostra uma vez.</li></ol>'
+        +'<p class="hint2"><b>Por que o clássico?</b> O GitHub tem também os <i>Fine-grained tokens</i>, mais novos, mas eles ainda não oferecem permissão de Gists — por isso a opção não aparece lá. Marcando só <code>gist</code>, o token clássico fica igualmente restrito: dá acesso aos seus gists e a nada mais.</p>'
         +'<p class="hint2">O token fica guardado só neste aparelho e nunca entra no Exportar. Se perder o celular, dá para revogá-lo no GitHub com um clique.</p></details>';
     }
 
@@ -1691,6 +1868,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         +'</div>'
         +'<div class="viewbar-right">'
           +'<button class="btn-ghost sm" id="fileBtn"></button>'
+          +'<button class="icon-toggle" id="prefsBtn" title="Preferências">'+svg(IC.gear,16)+'</button>'
           +'<button class="icon-toggle" id="theme" title="Modo escuro"></button></div>'
       +'</div>'
       +'<div class="subjects" id="subjects"></div>'
@@ -1755,6 +1933,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       openTextModal(null);
     });
     document.getElementById('fileBtn').addEventListener('click', abrirModalArquivo);
+    document.getElementById('prefsBtn').addEventListener('click', abrirPreferencias);
     document.getElementById('exp').addEventListener('click', doExport);
     document.getElementById('imp').addEventListener('click', function(){ importFile.click(); });
     importFile.addEventListener('change', function(){ if(importFile.files && importFile.files[0]){ doImport(importFile.files[0]); importFile.value=''; } });
@@ -1781,6 +1960,39 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       if(act==='tagclear'){ fTag=''; renderTagbar(); renderTable(); return; }
     });
 
+    /* Troca o número por um campo ali mesmo, sem re-renderizar a lista —
+       re-renderizar mataria o foco no meio da digitação. */
+    function abrirEdicaoPaginas(btn){
+      var id=btn.getAttribute('data-id');
+      var t=findText(id); if(!t) return;
+      var inp=document.createElement('input');
+      inp.type='number'; inp.className='pedit-inp'; inp.min='0';
+      inp.setAttribute('inputmode','numeric');
+      inp.setAttribute('aria-label','Páginas lidas');
+      if(t.pages!=null) inp.max=String(t.pages);
+      inp.value = (t.pagesRead!=null ? t.pagesRead : '');
+      btn.parentNode.replaceChild(inp, btn);
+      inp.focus(); inp.select();
+      var fechado=false;
+      function encerrar(salvar){
+        if(fechado) return; fechado=true;
+        if(salvar){
+          var txt=inp.value.trim();
+          var v = txt==='' ? null : Math.max(0, Math.floor(Number(txt)||0));
+          if(v!=null && t.pages!=null && v>t.pages) v=t.pages;
+          if(v!==t.pagesRead){ t.pagesRead=v; persist(); }
+        }
+        renderAll();
+      }
+      inp.addEventListener('keydown', function(ev){
+        ev.stopPropagation();
+        if(ev.key==='Enter'){ ev.preventDefault(); encerrar(true); }
+        else if(ev.key==='Escape'){ ev.preventDefault(); encerrar(false); }
+      });
+      inp.addEventListener('blur', function(){ encerrar(true); });
+      inp.addEventListener('click', function(ev){ ev.stopPropagation(); });
+    }
+
     function rowActions(e){
       if(e.target.closest('[data-stop]')) return;
       var el=e.target.closest('[data-act]'); if(!el) return;
@@ -1789,6 +2001,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         if(sortKey===k) sortDir=(sortDir==='asc'?'desc':'asc'); else { sortKey=k; sortDir='asc'; }
         openMenuId=null; confirmId=null; renderTable(); return; }
       if(act==='clearsearch'){ clearSearch(); return; }
+      if(act==='pedit'){ e.stopPropagation(); e.preventDefault(); abrirEdicaoPaginas(el); return; }
       if(act==='tagf'){ e.stopPropagation(); var g=el.getAttribute('data-t'); fTag=(fTag===g?'':g); renderTagbar(); renderTable(); return; }
       if(act==='edit'){ var t=findText(id); if(t) openTextModal(t); return; }
       if(act==='del'){ e.stopPropagation(); confirmId=id; openMenuId=null; renderMain(); return; }
