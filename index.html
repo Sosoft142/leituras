@@ -188,9 +188,25 @@ tr.ja-passou:focus-within td, .tcard.ja-passou:focus-within, .witem.ja-passou:fo
 .aval-badge svg{opacity:.8;}
 .num-vazio{display:inline-block; width:26px; height:26px; border-radius:8px; border:1.5px dashed;
   opacity:.5; vertical-align:middle;}
-tr.is-aval .c-text .text-name, .tcard.is-aval .text-name, .witem.is-aval .wname{font-style:normal;}
-tr.is-aval td{background:var(--chipn);}
-.tcard.is-aval, .witem.is-aval{background:var(--chipn);}
+/* Anel no lugar do fundo cinza: aquele tom era quase o do papel e a avaliação
+   sumia. O desenho segue o do botão de sincronia — contorno de 1.5px, cantos
+   arredondados —, só que na cor do item (ou do status, no próximo texto).
+   A tabela usa border-collapse:collapse, onde não há raio de canto por célula;
+   por isso o anel é feito com box-shadow inset em cada ponta da linha. */
+tbody tr.com-anel td{box-shadow:inset 0 1.5px 0 var(--anel), inset 0 -1.5px 0 var(--anel);}
+tbody tr.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel), inset 0 -1.5px 0 var(--anel),
+  inset 1.5px 0 0 var(--anel);}
+tbody tr.com-anel td:last-child{box-shadow:inset 0 1.5px 0 var(--anel), inset 0 -1.5px 0 var(--anel),
+  inset -1.5px 0 0 var(--anel);}
+tbody tr.com-anel td:first-child{border-top-left-radius:11px; border-bottom-left-radius:11px;}
+tbody tr.com-anel td:last-child{border-top-right-radius:11px; border-bottom-right-radius:11px;}
+tbody tr.com-anel td{border-bottom-color:transparent;}
+/* respiro para dois anéis vizinhos não virarem um traço só */
+tbody tr.com-anel td{padding-top:15px; padding-bottom:15px;}
+tbody tr.com-anel + tr.com-anel td{padding-top:18px;}
+.tcard.com-anel, .witem.com-anel{box-shadow:inset 0 0 0 1.5px var(--anel); border-radius:11px;
+  border-bottom-color:transparent;}
+.tcards .tcard.com-anel, .week .witem.com-anel{margin:6px 0;}
 .num-badge{display:inline-grid; place-items:center; min-width:26px; height:26px; padding:0 6px; border-radius:8px;
   font-family:var(--mono); font-size:13px; font-weight:500; color:#fff;}
 .c-text{width:36%;}
@@ -223,6 +239,8 @@ tr.is-aval td{background:var(--chipn);}
 .app.dark .date-rel.today{color:#d9958d;}
 tbody tr.is-ref td{background:var(--refbg);}
 tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
+tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
+  inset 0 -1.5px 0 var(--anel), inset 3px 0 0 var(--anel);}
 .ref-badge{display:inline-block; font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
   padding:2px 6px; border-radius:5px; background:var(--wine-tint); color:var(--wine-fg); margin-left:7px; vertical-align:2px;}
 
@@ -350,6 +368,12 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
   background:var(--thead); border-radius:9px; padding:12px;}
 .pref-demo > div{display:flex; align-items:center; gap:10px;}
 .pref-demo .pbar{margin-top:0; flex:1;}
+.pref-anel{display:flex; flex-direction:column; gap:7px; margin-top:10px;}
+.anel-ex{display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:11px;
+  background:var(--card); border:1.5px solid var(--line); font-size:13px;}
+.anel-ex.com-anel{border-color:transparent; box-shadow:inset 0 0 0 1.5px var(--anel);}
+.anel-nome{font-family:var(--serif); font-size:14px;}
+.anel-tag{margin-left:auto; font-size:11.5px; text-transform:uppercase; letter-spacing:.05em;}
 .pref-lbl{font-family:var(--mono); font-size:11px; color:var(--ink-soft); width:32px; flex:none;}
 
 /* Cartões (celular) */
@@ -357,6 +381,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
 .tcard{display:block; padding:13px 15px; border-bottom:1px solid var(--line); position:relative;}
 .tcard:last-child{border-bottom:0;}
 .tcard.is-ref{background:var(--refbg); box-shadow:inset 3px 0 0 var(--wine-fg);}
+.tcard.is-ref.com-anel{box-shadow:inset 0 0 0 1.5px var(--anel), inset 3px 0 0 var(--anel);}
 .tc-top{display:flex; gap:11px; align-items:flex-start;}
 .tc-main{flex:1; min-width:0;}
 .tc-meta{font-size:12.5px; color:var(--ink-soft); margin-top:4px; line-height:1.5;}
@@ -375,6 +400,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
 .empty p{margin:4px 0;}
 
 .foot{max-width:1080px; margin:12px auto 0; color:var(--faint); font-size:12px; text-align:center; line-height:1.7;}
+.versao{font-family:var(--mono); font-size:11px; color:var(--faint); letter-spacing:.02em;}
 .kbd{font-family:var(--mono); font-size:11px; border:1px solid var(--line); border-bottom-width:2px;
   border-radius:4px; padding:1px 5px; color:var(--ink-soft); background:var(--card);}
 
@@ -657,6 +683,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
 (function(){
   'use strict';
 
+  /* Sobe 0.01 a cada versão entregue. Aparece no rodapé, junto dos atalhos. */
+  var APP_VERSAO = '0.79';
   var STORAGE_KEY = 'tracker-leituras:v1';
   var UI_KEY      = 'tracker-leituras:ui';
 
@@ -822,6 +850,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
   var cronoModo='gantt';        // 'gantt' | 'lista' — preferência salva
   var currentSubjectId=null, query="", fTag="", sortKey="number", sortDir="asc";
   var soPendentes=false;   // "falta ler": esconde o que já está lido
+  var contornos=true;      // anéis coloridos na avaliação e no próximo texto
   var dark=false, pace=3, gradiente=false;
   var openMenuId=null;
   var menuScroll={x:0,y:0};   // posição da página quando o menu de status abriu
@@ -1416,7 +1445,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     }
   }
   function saveUI(){
-    try{ localStorage.setItem(UI_KEY, JSON.stringify({cur:currentSubjectId, sk:sortKey, sd:sortDir, view:view, dark:dark, pace:pace, tag:fTag, grad:gradiente, crono:cronoModo, pend:soPendentes})); }catch(e){}
+    try{ localStorage.setItem(UI_KEY, JSON.stringify({cur:currentSubjectId, sk:sortKey, sd:sortDir, view:view, dark:dark, pace:pace, tag:fTag, grad:gradiente, crono:cronoModo, pend:soPendentes, anel:contornos})); }catch(e){}
   }
   function loadUI(){
     try{
@@ -1428,6 +1457,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       if(u.view==='tcc') view='tcc';
       if(u.crono==='lista'||u.crono==='gantt') cronoModo=u.crono;
       soPendentes=!!u.pend;
+      if(typeof u.anel==='boolean') contornos=u.anel;
       dark=!!u.dark;
       if(u.pace) pace=Number(u.pace)||3;
       if(typeof u.tag==='string') fTag=u.tag;
@@ -1801,12 +1831,46 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     if(!ehAval(t)) return '';
     return '<span class="aval-badge">'+svg(IC.alert,10)+' '+esc(tipoAval(t))+'</span>';
   }
-  /* Já cumpriu o seu papel: foi lido E a aula dele já foi (ou é hoje). Continua
-     no mesmo lugar da lista, só recua visualmente. */
+  /* Recua visualmente sem sair do lugar. Vale para tudo cuja aula já passou e,
+     além disso, para o que foi lido na aula de hoje — esse também já cumpriu o
+     seu papel. O que é de hoje e ainda não foi lido continua em destaque. */
   function jaPassou(t){
-    if(t.status!=='lido' || !t.classDate) return false;
+    if(!t.classDate) return false;
     var d=dayDiff(t.classDate);
-    return d!=null && d<=0;
+    if(d==null) return false;
+    if(d<0) return true;                       // aula já passou
+    return d===0 && t.status==='lido';         // é de hoje, mas já está lido
+  }
+  /* Anel colorido: no próximo texto a cor vem do STATUS (muda conforme avança);
+     numa avaliação vem da cor escolhida para o item. Quando o item é os dois, o
+     status manda — é a informação mais urgente. */
+  /* Uma cor escolhida escura (o vinho, por exemplo) some contra o papel escuro.
+     Aqui ela é clareada só o quanto for preciso para o anel aparecer — o matiz
+     continua sendo o que a pessoa escolheu. */
+  function lumRel(hex){
+    var c=hex2rgb(hex).map(function(v){ v/=255;
+      return v<=0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); });
+    return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];
+  }
+  function razao(a,b){ var x=lumRel(a), y=lumRel(b);
+    return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05); }
+  function corVisivel(cor){
+    if(!dark || !/^#[0-9a-f]{6}$/i.test(cor)) return cor;
+    var fundo='#2d2822';                      // --card do tema escuro
+    var c=cor;
+    for(var i=0;i<12 && razao(c,fundo)<2.6;i++) c=lerpCor(c,'#FFFFFF',0.12);
+    return c;
+  }
+  function corDoAnel(t, isRef){
+    if(isRef) return corVisivel((STATUS[t.status]||STATUS.nao_lido).dot);
+    if(ehAval(t)) return corVisivel(textColor(t));
+    return '';
+  }
+  function anelAttr(t, isRef){
+    if(!contornos) return {cls:'', style:''};
+    var c=corDoAnel(t, isRef);
+    if(!c) return {cls:'', style:''};
+    return {cls:' com-anel', style:'--anel:'+esc(c)+';'};
   }
   function prioBadge(t){
     if(t.priority==='normal') return '';
@@ -1827,7 +1891,9 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     var m=estMin(t);
     var cls=[]; if(isRef) cls.push('is-ref'); if(ehAval(t)) cls.push('is-aval');
     if(jaPassou(t)) cls.push('ja-passou');
-    return '<tr'+(cls.length?' class="'+cls.join(' ')+'"':'')+'>'
+    var anel=anelAttr(t, isRef);
+    if(anel.cls) cls.push(anel.cls.trim());
+    return '<tr'+(cls.length?' class="'+cls.join(' ')+'"':'')+(anel.style?' style="'+anel.style+'"':'')+'>'
       +'<td class="c-num">'+(t.number!=null
           ? '<span class="num-badge" style="background:'+color+'">'+t.number+'</span>'
           : '<span class="num-vazio" style="border-color:'+color+'" aria-hidden="true"></span>')+'</td>'
@@ -1857,7 +1923,9 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     if(t.author) meta.push(esc(t.author));
     if(t.classDate) meta.push(fmtDate(t.classDate)+' <span class="'+dcls+'">'+relLabel(d)+'</span>');
     if(m!=null) meta.push(t.pages+' p ≈ '+fmtMin(m));
-    return '<div class="tcard'+(isRef?' is-ref':'')+(ehAval(t)?' is-aval':'')+(jaPassou(t)?' ja-passou':'')+'">'
+    var anelC=anelAttr(t, isRef);
+    return '<div class="tcard'+(isRef?' is-ref':'')+(ehAval(t)?' is-aval':'')+(jaPassou(t)?' ja-passou':'')
+      +anelC.cls+'"'+(anelC.style?' style="'+anelC.style+'"':'')+'>'
       +'<div class="tc-top">'+(t.number!=null
           ? '<span class="num-badge" style="background:'+color+'">'+t.number+'</span>'
           : '<span class="num-vazio" style="border-color:'+color+'" aria-hidden="true"></span>')
@@ -1925,7 +1993,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
       +(pend?' · '+pend+' por ler'+(pendMin?' ≈ '+fmtMin(pendMin):''):'')
       +(avalPend?' · '+avalPend+' avaliação(ões) por fazer':'')
       +' · salvo neste navegador (use Exportar para backup)<br>'
-      +'<span class="kbd">n</span> novo texto · <span class="kbd">/</span> buscar · <span class="kbd">s</span> alternar visão · <span class="kbd">t</span> TCC · <span class="kbd">Esc</span> fechar';
+      +'<span class="kbd">n</span> novo texto · <span class="kbd">/</span> buscar · <span class="kbd">s</span> alternar visão · <span class="kbd">t</span> TCC · <span class="kbd">Esc</span> fechar'
+      +selo();
     saveUI();
   }
 
@@ -1957,7 +2026,9 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     var cfg=STATUS[t.status]||STATUS.nao_lido;
     var m=estMin(t);
     var link=safeUrl(t.link);
-    return '<div class="witem'+(ehAval(t)?' is-aval':'')+(jaPassou(t)?' ja-passou':'')+'">'
+    var anelW=anelAttr(t, false);
+    return '<div class="witem'+(ehAval(t)?' is-aval':'')+(jaPassou(t)?' ja-passou':'')
+      +anelW.cls+'"'+(anelW.style?' style="'+anelW.style+'"':'')+'>'
       +'<span class="wsub" title="'+esc(s?s.name:'')+'"><span class="sdot" style="background:'+(s?s.color:'#999')+'"></span>'+esc(s?s.name:'—')+'</span>'
       +'<div class="wmain"><span class="wname">'+esc(t.name)+'</span>'
         +(link?' <a class="text-link" href="'+esc(link)+'" target="_blank" rel="noopener" data-stop title="Abrir texto">'+SVG_LINK+'</a>':'')
@@ -2010,7 +2081,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     renderStatusMenu();
     foot.innerHTML='Visão geral de todas as matérias · ritmo de leitura: '+pace+' min por página'
       +' (ajuste no menu ☰) · salvo neste navegador<br>'
-      +'<span class="kbd">n</span> novo texto · <span class="kbd">s</span> alternar visão · <span class="kbd">t</span> TCC · <span class="kbd">Esc</span> fechar';
+      +'<span class="kbd">n</span> novo texto · <span class="kbd">s</span> alternar visão · <span class="kbd">t</span> TCC · <span class="kbd">Esc</span> fechar'
+      +selo();
     saveUI();
   }
 
@@ -2341,7 +2413,8 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     if(atrasadas) partes.push(atrasadas+' em atraso');
     if(tcc.orientacoes.length) partes.push(tcc.orientacoes.length+' orientação(ões) registrada(s)');
     return esc(partes.join(' · '))+' · salvo neste navegador<br>'
-      +'<span class="kbd">n</span> nova etapa · <span class="kbd">t</span> voltar · <span class="kbd">Esc</span> fechar';
+      +'<span class="kbd">n</span> nova etapa · <span class="kbd">t</span> voltar · <span class="kbd">Esc</span> fechar'
+      +selo();
   }
 
   function cicloEtapa(id){
@@ -2428,6 +2501,7 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     if(soSeMudou && txt===ultimoAviso) return;
     ultimoAviso=txt; el.textContent=txt;
   }
+  function selo(){ return ' · <span class="versao">V'+esc(APP_VERSAO)+'</span>'; }
   function renderPendBtn(){
     var b=document.getElementById('pend'); if(!b) return;
     b.classList.toggle('on', soPendentes);
@@ -3011,12 +3085,18 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
     };
     var html='<div class="modal" role="dialog" aria-modal="true">'
       +'<div class="modal-head"><h2>Preferências</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
-      +'<div class="field"><label for="p_grad">Cor da barra de progresso</label>'
+      +'<div class="field"><label for="p_grad">Gradiente</label>'
         +'<select id="p_grad"><option value="0"'+(!gradiente?' selected':'')+'>Cor do status (padrão)</option>'
         +'<option value="1"'+(gradiente?' selected':'')+'>Do vermelho ao verde conforme avança</option></select>'
+        +'<span class="hint">Como a barra de progresso da leitura é pintada.</span>'
         +'<div class="pref-demo"><div><span class="pref-lbl">20%</span>'+exemplo(20,gradiente)+'</div>'
         +'<div><span class="pref-lbl">60%</span>'+exemplo(60,gradiente)+'</div>'
         +'<div><span class="pref-lbl">95%</span>'+exemplo(95,gradiente)+'</div></div></div>'
+      +'<div class="field"><label for="p_anel">Contornos coloridos</label>'
+        +'<select id="p_anel"><option value="1"'+(contornos?' selected':'')+'>Ligados</option>'
+        +'<option value="0"'+(!contornos?' selected':'')+'>Desligados</option></select>'
+        +'<span class="hint">Contorna a avaliação na cor dela e o próximo texto na cor do status.</span>'
+        +'<div class="pref-anel" id="anelDemo"></div></div>'
       +'<div class="field"><label for="p_pace">Ritmo de leitura</label>'
         +'<select id="p_pace">'+[2,3,4,5].map(function(v){
             return '<option value="'+v+'"'+(pace===v?' selected':'')+'>'+v+' min por página</option>'; }).join('')
@@ -3035,6 +3115,23 @@ tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
         barras[i].firstElementChild.style.background = gradiente ? fundoGradiente(pct) : STATUS.lendo.dot;
       });
     });
+    /* Demonstração ao vivo: a pessoa vê o que o contorno faz antes de decidir. */
+    function pintarDemo(){
+      var box=document.getElementById('anelDemo'); if(!box) return;
+      var linhas=[['Próximo texto','Lendo',STATUS.lendo.dot],
+                  ['Prova 1','Avaliação',PALETTE[0]]];
+      box.innerHTML=linhas.map(function(l){
+        return '<div class="anel-ex'+(contornos?' com-anel':'')+'" style="--anel:'+l[2]+'">'
+          +'<span class="anel-nome">'+esc(l[0])+'</span>'
+          +'<span class="anel-tag" style="color:'+l[2]+'">'+esc(l[1])+'</span></div>';
+      }).join('');
+    }
+    var an=document.getElementById('p_anel');
+    an.addEventListener('change', function(){
+      contornos = an.value==='1'; saveUI(); pintarDemo(); renderMain();
+      anunciar(contornos?'Contornos ligados':'Contornos desligados');
+    });
+    pintarDemo();
     var pc=document.getElementById('p_pace');
     pc.addEventListener('change', function(){
       pace=Number(pc.value)||3;
