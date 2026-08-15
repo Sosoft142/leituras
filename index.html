@@ -86,12 +86,6 @@ html,body{margin:0; padding:0; background:#EBE7DE;}
 .subj-head::before{content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:var(--c,var(--wine));}
 .subj-head h2{font-family:var(--serif); font-weight:500; font-size:22px; margin:0; letter-spacing:-.01em;}
 .subj-prof{margin:3px 0 0; font-size:13px; color:var(--ink-soft);}
-.subj-aula{margin:5px 0 0; display:flex; flex-wrap:wrap; gap:4px 14px; font-size:12.5px; color:var(--ink-soft);}
-.subj-aula span{display:inline-flex; align-items:center; gap:5px;}
-.subj-aula svg{opacity:.65; flex:none;}
-.hint-ok{color:var(--ink-soft);}
-.hint-erro{color:#A23A3A;}
-.app.dark .hint-erro{color:#d9958d;}
 .subj-prof b{color:var(--ink); font-weight:500;}
 
 /* Card "leituras em dia" */
@@ -165,48 +159,6 @@ tbody td{padding:12px 14px; border-bottom:1px solid var(--line); font-size:14px;
 tbody tr:last-child td{border-bottom:0;}
 tbody tr:hover td{background:var(--hover);}
 .c-num{width:52px;}
-/* Já lido e já passou: some do caminho sem sair do lugar. */
-tr.ja-passou td, .tcard.ja-passou, .witem.ja-passou{opacity:.55;}
-tr.ja-passou:hover td, .tcard.ja-passou:hover, .witem.ja-passou:hover{opacity:1;}
-tr.ja-passou:focus-within td, .tcard.ja-passou:focus-within, .witem.ja-passou:focus-within{opacity:1;}
-.btn-ghost.on{border-color:var(--wine-fg); color:var(--wine-fg); background:var(--wine-tint);}
-.adiar-de{border:1.5px solid var(--line); border-radius:12px; padding:14px 15px; margin-bottom:14px; background:var(--chipn);}
-.adiar-nome{font-family:var(--serif); font-size:16px; font-weight:500; margin-bottom:8px;}
-.adiar-datas{display:flex; align-items:center; gap:11px; font-family:var(--mono); font-size:14px; flex-wrap:wrap;}
-.adiar-datas .antes{color:var(--ink-soft); text-decoration:line-through;}
-.adiar-datas .seta{color:var(--faint);}
-.adiar-datas .depois{color:var(--wine-fg); font-weight:500;}
-.adiar-como{margin-top:9px; font-size:12.5px; color:var(--ink-soft); line-height:1.5;}
-.adiar-como b{color:var(--ink); font-weight:500;}
-.segfield{display:flex; gap:6px; border:1.5px solid var(--line); border-radius:10px; padding:3px; background:var(--card);}
-.segfield button{flex:1; border:0; background:none; color:var(--ink-soft); font-family:inherit; font-size:13.5px;
-  padding:8px 10px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; gap:7px; cursor:pointer;}
-.segfield button.on{background:var(--wine); color:#F6EEDF; font-weight:500;}
-.aval-badge{display:inline-flex; align-items:center; gap:4px; margin-left:7px; padding:2px 8px;
-  border-radius:999px; font-size:10.5px; text-transform:uppercase; letter-spacing:.05em;
-  background:var(--wine-tint); color:var(--wine-fg); white-space:nowrap; vertical-align:2px;}
-.aval-badge svg{opacity:.8;}
-.num-vazio{display:inline-block; width:26px; height:26px; border-radius:8px; border:1.5px dashed;
-  opacity:.5; vertical-align:middle;}
-/* Anel no lugar do fundo cinza: aquele tom era quase o do papel e a avaliação
-   sumia. O desenho segue o do botão de sincronia — contorno de 1.5px, cantos
-   arredondados —, só que na cor do item (ou do status, no próximo texto).
-   A tabela usa border-collapse:collapse, onde não há raio de canto por célula;
-   por isso o anel é feito com box-shadow inset em cada ponta da linha. */
-tbody tr.com-anel td{box-shadow:inset 0 1.5px 0 var(--anel), inset 0 -1.5px 0 var(--anel);}
-tbody tr.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel), inset 0 -1.5px 0 var(--anel),
-  inset 1.5px 0 0 var(--anel);}
-tbody tr.com-anel td:last-child{box-shadow:inset 0 1.5px 0 var(--anel), inset 0 -1.5px 0 var(--anel),
-  inset -1.5px 0 0 var(--anel);}
-tbody tr.com-anel td:first-child{border-top-left-radius:11px; border-bottom-left-radius:11px;}
-tbody tr.com-anel td:last-child{border-top-right-radius:11px; border-bottom-right-radius:11px;}
-tbody tr.com-anel td{border-bottom-color:transparent;}
-/* respiro para dois anéis vizinhos não virarem um traço só */
-tbody tr.com-anel td{padding-top:15px; padding-bottom:15px;}
-tbody tr.com-anel + tr.com-anel td{padding-top:18px;}
-.tcard.com-anel, .witem.com-anel{box-shadow:inset 0 0 0 1.5px var(--anel); border-radius:11px;
-  border-bottom-color:transparent;}
-.tcards .tcard.com-anel, .week .witem.com-anel{margin:6px 0;}
 .num-badge{display:inline-grid; place-items:center; min-width:26px; height:26px; padding:0 6px; border-radius:8px;
   font-family:var(--mono); font-size:13px; font-weight:500; color:#fff;}
 .c-text{width:36%;}
@@ -239,8 +191,6 @@ tbody tr.com-anel + tr.com-anel td{padding-top:18px;}
 .app.dark .date-rel.today{color:#d9958d;}
 tbody tr.is-ref td{background:var(--refbg);}
 tbody tr.is-ref td:first-child{box-shadow:inset 3px 0 0 var(--wine-fg);}
-tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
-  inset 0 -1.5px 0 var(--anel), inset 3px 0 0 var(--anel);}
 .ref-badge{display:inline-block; font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
   padding:2px 6px; border-radius:5px; background:var(--wine-tint); color:var(--wine-fg); margin-left:7px; vertical-align:2px;}
 
@@ -368,12 +318,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
   background:var(--thead); border-radius:9px; padding:12px;}
 .pref-demo > div{display:flex; align-items:center; gap:10px;}
 .pref-demo .pbar{margin-top:0; flex:1;}
-.pref-anel{display:flex; flex-direction:column; gap:7px; margin-top:10px;}
-.anel-ex{display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:11px;
-  background:var(--card); border:1.5px solid var(--line); font-size:13px;}
-.anel-ex.com-anel{border-color:transparent; box-shadow:inset 0 0 0 1.5px var(--anel);}
-.anel-nome{font-family:var(--serif); font-size:14px;}
-.anel-tag{margin-left:auto; font-size:11.5px; text-transform:uppercase; letter-spacing:.05em;}
 .pref-lbl{font-family:var(--mono); font-size:11px; color:var(--ink-soft); width:32px; flex:none;}
 
 /* Cartões (celular) */
@@ -381,7 +325,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
 .tcard{display:block; padding:13px 15px; border-bottom:1px solid var(--line); position:relative;}
 .tcard:last-child{border-bottom:0;}
 .tcard.is-ref{background:var(--refbg); box-shadow:inset 3px 0 0 var(--wine-fg);}
-.tcard.is-ref.com-anel{box-shadow:inset 0 0 0 1.5px var(--anel), inset 3px 0 0 var(--anel);}
 .tc-top{display:flex; gap:11px; align-items:flex-start;}
 .tc-main{flex:1; min-width:0;}
 .tc-meta{font-size:12.5px; color:var(--ink-soft); margin-top:4px; line-height:1.5;}
@@ -400,7 +343,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
 .empty p{margin:4px 0;}
 
 .foot{max-width:1080px; margin:12px auto 0; color:var(--faint); font-size:12px; text-align:center; line-height:1.7;}
-.versao{font-family:var(--mono); font-size:11px; color:var(--faint); letter-spacing:.02em;}
 .kbd{font-family:var(--mono); font-size:11px; border:1px solid var(--line); border-bottom-width:2px;
   border-radius:4px; padding:1px 5px; color:var(--ink-soft); background:var(--card);}
 
@@ -683,8 +625,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
 (function(){
   'use strict';
 
-  /* Sobe 0.01 a cada versão entregue. Aparece no rodapé, junto dos atalhos. */
-  var APP_VERSAO = '0.79';
   var STORAGE_KEY = 'tracker-leituras:v1';
   var UI_KEY      = 'tracker-leituras:ui';
 
@@ -710,25 +650,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     baixa: {label:"Baixa", cls:"prio-baixa"}
   };
   var PRIO_ORDER=["alta","normal","baixa"];
-
-  /* Avaliações usam a mesma mecânica dos textos, mas com linguagem própria:
-     "Prova — Pronta" faz sentido, "Prova — Lida" não. Os status são os MESMOS
-     internamente (nao_lido/lendo/parcial/lido), só o rótulo muda. */
-  var AVAL_TIPO = {
-    prova:      'Prova',
-    trabalho:   'Trabalho',
-    seminario:  'Seminário',
-    apresentacao:'Apresentação',
-    outro:      'Avaliação'
-  };
-  var AVAL_ORDER=['prova','trabalho','seminario','apresentacao','outro'];
-  var AVAL_LABEL = { nao_lido:'A fazer', lendo:'Estudando', parcial:'Estudando', lido:'Pronta' };
-  function ehAval(t){ return !!(t && t.kind==='aval'); }
-  function rotuloStatus(t){
-    var cfg=STATUS[t.status]||STATUS.nao_lido;
-    return ehAval(t) ? (AVAL_LABEL[t.status]||cfg.label) : cfg.label;
-  }
-  function tipoAval(t){ return AVAL_TIPO[t.avalType]||AVAL_TIPO.outro; }
 
   var PALETTE = ["#6E2639","#2E6E6A","#B06A1F","#3B5C8A","#7A5AA0","#4C6B44","#B0453E","#8A6D3B","#546E7A","#A0446E"];
   // ---- seed ----
@@ -775,8 +696,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     menu:'<path d="M2.6 4.2h10.8M2.6 8h10.8M2.6 11.8h10.8"/>',
     list:'<path d="M5.6 4.4h7.9M5.6 8h7.9M5.6 11.6h7.9M2.7 4.4h.01M2.7 8h.01M2.7 11.6h.01"/>',
     clock:'<circle cx="8" cy="8" r="5.7"/><path d="M8 4.9V8l2.1 1.5"/>',
-    adiar:'<path d="M2.6 8a5.4 5.4 0 109.4-3.6"/><path d="M12.6 1.4v3.4H9.2"/><path d="M8 5.4V8l2 1.4"/>',
-    pin:'<path d="M8 14s4.4-4.2 4.4-7.4A4.4 4.4 0 003.6 6.6C3.6 9.8 8 14 8 14z"/><circle cx="8" cy="6.5" r="1.6"/>',
     alert:'<path d="M8 2.6L14.2 13H1.8z"/><path d="M8 6.6v3M8 11.3h.01"/>',
     save:'<path d="M3.4 2.6h7.2l2.4 2.4v8.4H3.4z"/><path d="M5.6 2.6v3.6h4.8V2.6M5.6 13.4V9.4h4.8v4"/>',
     check:'<path d="M3.2 8.4l3.2 3.2 6.4-7"/>',
@@ -849,8 +768,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
   var view='subject';
   var cronoModo='gantt';        // 'gantt' | 'lista' — preferência salva
   var currentSubjectId=null, query="", fTag="", sortKey="number", sortDir="asc";
-  var soPendentes=false;   // "falta ler": esconde o que já está lido
-  var contornos=true;      // anéis coloridos na avaliação e no próximo texto
   var dark=false, pace=3, gradiente=false;
   var openMenuId=null;
   var menuScroll={x:0,y:0};   // posição da página quando o menu de status abriu
@@ -905,81 +822,9 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     return /^[A-Za-z0-9_-]{1,64}$/.test(v) ? v : uid(prefixo);
   }
 
-  /* Código de horário do SIGAA/UnB: dígitos = dias (2=segunda … 7=sábado),
-     letra = turno (M manhã, T tarde, N noite), dígitos finais = slots de 1 h.
-     Ex.: "35M12" = terça e quinta, manhã, 1º e 2º horários (8h–9h50).
-     Aceita vários blocos separados por espaço: "35M12 6T34". */
-  var DIA_NOME=['','domingo','segunda','terça','quarta','quinta','sexta','sábado'];
-  var DIA_CURTO=['','dom','seg','ter','qua','qui','sex','sáb'];
-  var TURNO_INI={M:8, T:14, N:19};        // hora do 1º slot de cada turno
-  var TURNO_NOME={M:'manhã', T:'tarde', N:'noite'};
-
-  function parseHorario(cod){
-    cod=String(cod||'').toUpperCase().replace(/\s+/g,' ').trim();
-    if(!cod) return null;
-    var blocos=cod.split(' ').filter(Boolean), out=[], ok=false;
-    for(var i=0;i<blocos.length;i++){
-      var m=/^([2-7]+)([MTN])([1-6]+)$/.exec(blocos[i]);
-      if(!m) continue;
-      ok=true;
-      var dias=m[1].split('').map(Number);
-      var slots=m[3].split('').map(Number).sort(function(a,b){return a-b;});
-      out.push({dias:dias, turno:m[2], slots:slots, txt:blocos[i]});
-    }
-    return ok?out:null;
-  }
-  // slot n do turno M começa às 8h; o 1º dura 60 min e os seguintes 55
-  function horaDoSlot(turno, slot){
-    var h=TURNO_INI[turno]; if(h==null) return null;
-    var min=(slot-1)*60;
-    return {h:h+Math.floor(min/60), m:min%60};
-  }
-  function hhmm(o){ return o.h+'h'+(o.m?pad2(o.m):''); }
-  function listaPt(a){
-    if(a.length<=1) return a.join('');
-    return a.slice(0,-1).join(', ')+' e '+a[a.length-1];
-  }
-  function faixaHoraria(bloco){
-    var ini=horaDoSlot(bloco.turno, bloco.slots[0]);
-    var fim=horaDoSlot(bloco.turno, bloco.slots[bloco.slots.length-1]);
-    if(!ini||!fim) return '';
-    var fimReal={h:fim.h, m:fim.m+50}; if(fimReal.m>=60){ fimReal.h++; fimReal.m-=60; }
-    return hhmm(ini)+'–'+hhmm(fimReal);
-  }
-  // todos os dias da semana (0=dom … 6=sáb) em que a matéria tem aula
-  function diasDeAula(sb){
-    var bl=parseHorario(sb && sb.schedule); if(!bl) return [];
-    var set={};
-    bl.forEach(function(b){ b.dias.forEach(function(d){ set[d-1]=1; }); });
-    return Object.keys(set).map(Number).sort(function(a,b){return a-b;});
-  }
-  function horarioTexto(sb){
-    var bl=parseHorario(sb && sb.schedule); if(!bl) return '';
-    return bl.map(function(b){
-      // no código, 2=segunda … 7=sábado — que é justamente o índice em DIA_CURTO
-      var ds=b.dias.map(function(d){ return DIA_CURTO[d]; });
-      return listaPt(ds)+' · '+faixaHoraria(b);
-    }).join(' | ');
-  }
-  /* Próxima data de aula DEPOIS de uma data dada. Sem horário cadastrado, cai
-     no comportamento antigo: uma semana à frente. */
-  function proximaAula(sb, isoBase){
-    var dias=diasDeAula(sb);
-    var d=parseISO(isoBase); if(!d) return '';
-    if(!dias.length){ d.setDate(d.getDate()+7); return diaLocal(d); }
-    for(var i=1;i<=14;i++){
-      var t=new Date(d.getTime()); t.setDate(t.getDate()+i);
-      if(dias.indexOf(t.getDay())>=0) return diaLocal(t);
-    }
-    d.setDate(d.getDate()+7); return diaLocal(d);
-  }
-
   // ---- normalize ----
   function normSubject(s){
-    var o=Object.assign({id:"",name:"",professor:"",color:PALETTE[0],absenceLimit:7,absences:[],
-      driveLink:"",tcc:false,schedule:"",place:""}, s);
-    o.schedule=String(o.schedule||'').toUpperCase().replace(/\s+/g,' ').trim().slice(0,40);
-    o.place=String(o.place||'').trim().slice(0,60);
+    var o=Object.assign({id:"",name:"",professor:"",color:PALETTE[0],absenceLimit:7,absences:[],driveLink:"",tcc:false}, s);
     o.tcc=!!o.tcc;
     o.id=idSeguro(o.id,'subj');
     o.color=corSegura(o.color, PALETTE[0]);
@@ -991,10 +836,7 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
   }
   function normText(t){
     var o=Object.assign({id:"",subjectId:"",number:null,name:"",originalTitle:"",author:"",classDate:"",
-      link:"",color:"",status:"nao_lido",notes:"",pages:null,pagesRead:null,priority:"normal",tags:[],
-      kind:"texto",avalType:"prova"}, t);
-    o.kind = (o.kind==='aval') ? 'aval' : 'texto';
-    if(!AVAL_TIPO[o.avalType]) o.avalType='prova';
+      link:"",color:"",status:"nao_lido",notes:"",pages:null,pagesRead:null,priority:"normal",tags:[]}, t);
     o.id=idSeguro(o.id,'t');
     o.color=corSegura(o.color);           // vazio = herda a cor da matéria
     if(!isoOk(o.classDate)) o.classDate='';
@@ -1445,7 +1287,7 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     }
   }
   function saveUI(){
-    try{ localStorage.setItem(UI_KEY, JSON.stringify({cur:currentSubjectId, sk:sortKey, sd:sortDir, view:view, dark:dark, pace:pace, tag:fTag, grad:gradiente, crono:cronoModo, pend:soPendentes, anel:contornos})); }catch(e){}
+    try{ localStorage.setItem(UI_KEY, JSON.stringify({cur:currentSubjectId, sk:sortKey, sd:sortDir, view:view, dark:dark, pace:pace, tag:fTag, grad:gradiente, crono:cronoModo})); }catch(e){}
   }
   function loadUI(){
     try{
@@ -1456,8 +1298,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
       if(u.view==='week') view='week';   // a antiga aba de faltas virou parte do card
       if(u.view==='tcc') view='tcc';
       if(u.crono==='lista'||u.crono==='gantt') cronoModo=u.crono;
-      soPendentes=!!u.pend;
-      if(typeof u.anel==='boolean') contornos=u.anel;
       dark=!!u.dark;
       if(u.pace) pace=Number(u.pace)||3;
       if(typeof u.tag==='string') fTag=u.tag;
@@ -1469,8 +1309,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
   function findSubject(id){ for(var i=0;i<subjects.length;i++){ if(subjects[i].id===id) return subjects[i]; } return null; }
   function findText(id){ for(var i=0;i<texts.length;i++){ if(texts[i].id===id) return texts[i]; } return null; }
   function textsOf(subjectId){ return texts.filter(function(t){ return t.subjectId===subjectId; }); }
-  // só o que é leitura de verdade conta em "X/Y lidos", tempo estimado e "em dia"
-  function leiturasDe(subjectId){ return textsOf(subjectId).filter(function(t){ return !ehAval(t); }); }
   // matérias da faixa: a do TCC vive na aba própria
   function subjectsVis(){ return subjects.filter(function(s){ return !s.tcc; }); }
   function subjectTcc(){ for(var i=0;i<subjects.length;i++){ if(subjects[i].tcc) return subjects[i]; } return null; }
@@ -1545,11 +1383,9 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
      próxima data futura. Textos passados não lidos não entram no veredito. */
   function subjectStatus(subjectId){
     var t0=todayISO();
-    // avaliação não é leitura: fica fora do veredito de "leituras em dia"
-    var lista=leiturasDe(subjectId);
-    var dated=lista.filter(function(t){ return !!t.classDate; });
+    var dated=textsOf(subjectId).filter(function(t){ return !!t.classDate; });
     var late=dated.filter(function(t){ return t.classDate<t0 && t.status!=='lido'; }).length;
-    var undated=lista.length - dated.length;
+    var undated=textsOf(subjectId).length - dated.length;
 
     var refDate=null;
     if(dated.some(function(t){ return t.classDate===t0; })) refDate=t0;
@@ -1575,7 +1411,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
   function currentTexts(){
     var q=query.trim().toLowerCase();
     var out=textsOf(currentSubjectId).filter(function(t){
-      if(soPendentes && t.status==='lido') return false;
       if(fTag && t.tags.indexOf(fTag)<0) return false;
       if(!q) return true;
       return (t.name+' '+(t.originalTitle||'')+' '+(t.author||'')+' '+(t.notes||'')+' '+t.tags.join(' ')).toLowerCase().indexOf(q)>=0;
@@ -1584,18 +1419,8 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     out.sort(function(a,b){
       var r=0;
       if(sortKey==='number'){
-        /* Avaliação costuma não ter número. Compará-la como "infinito" a
-           empurrava para o fim, quebrando a ordem cronológica da lista. Quando
-           um dos dois não tem número, a data decide. */
-        if(a.number==null || b.number==null){
-          var ca=a.classDate||'￿', cb=b.classDate||'￿';
-          if(ca!==cb) r=(ca<cb?-1:1)*dir;
-          else if(a.number==null && b.number!=null) r=1*dir;
-          else if(b.number==null && a.number!=null) r=-1*dir;
-          else r=0;
-        } else {
-          r=(a.number<b.number?-1:a.number>b.number?1:0)*dir;
-        }
+        var x=a.number==null?Infinity:a.number, y=b.number==null?Infinity:b.number;
+        r=(x<y?-1:x>y?1:0)*dir;
       } else if(sortKey==='date'){
         var da=a.classDate||'￿', db=b.classDate||'￿';
         r=(da<db?-1:da>db?1:0)*dir;
@@ -1607,8 +1432,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
         r=COLL.compare(String(a[sortKey]||''),String(b[sortKey]||''))*dir;
       }
       if(r!==0) return r;
-      var ca2=a.classDate||'￿', cb2=b.classDate||'￿';
-      if(ca2!==cb2) return ca2<cb2?-1:1;
       var na=a.number==null?Infinity:a.number, nb=b.number==null?Infinity:b.number;
       return na-nb;
     });
@@ -1617,9 +1440,8 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
 
   // ---- render: hero ----
   function renderHero(){
-    var leituras=texts.filter(function(t){ return !ehAval(t); });
-    var totalT=leituras.length, totalRead=0;
-    leituras.forEach(function(t){ if(t.status==='lido') totalRead++; });
+    var totalT=texts.length, totalRead=0;
+    texts.forEach(function(t){ if(t.status==='lido') totalRead++; });
     var emDia=0, comAula=0;
     var visiveis=subjectsVis();
     visiveis.forEach(function(s){
@@ -1636,7 +1458,7 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
 
   function renderSubjects(){
     var h=subjectsVis().map(function(s){
-      var list=leiturasDe(s.id); var read=0; list.forEach(function(t){ if(t.status==='lido') read++; });
+      var list=textsOf(s.id); var read=0; list.forEach(function(t){ if(t.status==='lido') read++; });
       var st=subjectStatus(s.id); var cfg=EMDIA[st.kind];
       var tip = st.kind==='none' ? 'Sem aulas futuras cadastradas'
               : cfg.label+' — próxima aula '+fmtDate(st.refDate)+' ('+relLabel(st.diff)+')';
@@ -1717,15 +1539,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
       +'<button class="btn-wine" data-act="addfalta" data-sid="'+sb.id+'"'+(cheio?' disabled':'')+'>'
       +svg(IC.plus,15)+' Registrar falta</button></div></div>';
   }
-  /* Horário e local numa linha só, e só quando existem. */
-  function aulaLinha(sb){
-    var partes=[];
-    var h=horarioTexto(sb);
-    if(h) partes.push('<span class="aula-h">'+svg(IC.clock,12)+' '+esc(h)+'</span>');
-    if(sb.place) partes.push('<span class="aula-l">'+svg(IC.pin,12)+' '+esc(sb.place)+'</span>');
-    if(!partes.length) return '';
-    return '<div class="subj-aula">'+partes.join('')+'</div>';
-  }
   function driveChip(sb){
     var u=safeUrl(sb.driveLink);
     if(!u) return '';
@@ -1744,8 +1557,7 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     var chips=driveChip(s)+faltasChip(s);
     panel.innerHTML='<div class="subj-head" style="--c:'+s.color+'">'
       +'<div class="subj-top"><div class="subj-id"><h2>'+esc(s.name)+'</h2>'
-        +(s.professor?'<span class="subj-prof">Professor(a): <b>'+esc(s.professor)+'</b></span>':'')
-        +aulaLinha(s)+'</div>'
+        +(s.professor?'<span class="subj-prof">Professor(a): <b>'+esc(s.professor)+'</b></span>':'')+'</div>'
         +'<button class="icon-btn" data-act="editsubj" data-id="'+s.id+'" title="Configurar matéria">'+SVG_GEAR+'</button></div>'
       +emDiaHtml(subjectStatus(s.id))
       +(chips?'<div class="subj-chips">'+chips+'</div>':'')
@@ -1769,7 +1581,7 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
   function statusPill(t){
     var cfg=STATUS[t.status]||STATUS.nao_lido;
     return '<div class="pill-wrap"><button class="pill" data-act="pill" data-id="'+t.id+'" style="background:'+chipOf(cfg)+';color:'+textOf(cfg)+'" aria-haspopup="true" aria-expanded="'+(openMenuId===t.id)+'">'
-      +'<span class="pill-dot" style="background:'+cfg.dot+'"></span>'+esc(rotuloStatus(t))+' '+SVG_CARET+'</button></div>';
+      +'<span class="pill-dot" style="background:'+cfg.dot+'"></span>'+cfg.label+' '+SVG_CARET+'</button></div>';
   }
   /* O menu vive fora da tabela, em camada fixa: dentro dela ficava recortado
      pelo overflow do contêiner e era difícil de clicar. */
@@ -1798,15 +1610,11 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
       });
       app.appendChild(el);
     }
-    var ordem = ehAval(t)
-      ? STATUS_ORDER.filter(function(st){ return st!=='parcial'; })   // "Estudando" cobre lendo e parcial
-      : STATUS_ORDER;
-    el.innerHTML=ordem.map(function(st){
+    el.innerHTML=STATUS_ORDER.map(function(st){
       var atual=(st===t.status);
-      var rot = ehAval(t) ? (AVAL_LABEL[st]||STATUS[st].label) : STATUS[st].label;
       return '<button class="menu-item" role="menuitemradio" aria-checked="'+atual+'"'
         +' data-act="setstatus" data-id="'+esc(t.id)+'" data-s="'+st+'">'
-        +'<span class="pill-dot" aria-hidden="true" style="background:'+STATUS[st].dot+'"></span>'+esc(rot)
+        +'<span class="pill-dot" aria-hidden="true" style="background:'+STATUS[st].dot+'"></span>'+STATUS[st].label
         +(atual?'<span class="check" aria-hidden="true">✓</span>':'')+'</button>';
     }).join('');
     var r=r0;
@@ -1825,53 +1633,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     var cls = d===0 ? 'today' : ((d!=null && d>0 && d<=3) ? 'soon' : '');
     return fmtDate(t.classDate)+'<span class="date-rel '+cls+'">'+relLabel(d)+'</span>';
   }
-  /* A avaliação se distingue por uma etiqueta com o tipo, não por outra cor de
-     linha — assim ela continua lendo como parte da mesma lista. */
-  function avalBadge(t){
-    if(!ehAval(t)) return '';
-    return '<span class="aval-badge">'+svg(IC.alert,10)+' '+esc(tipoAval(t))+'</span>';
-  }
-  /* Recua visualmente sem sair do lugar. Vale para tudo cuja aula já passou e,
-     além disso, para o que foi lido na aula de hoje — esse também já cumpriu o
-     seu papel. O que é de hoje e ainda não foi lido continua em destaque. */
-  function jaPassou(t){
-    if(!t.classDate) return false;
-    var d=dayDiff(t.classDate);
-    if(d==null) return false;
-    if(d<0) return true;                       // aula já passou
-    return d===0 && t.status==='lido';         // é de hoje, mas já está lido
-  }
-  /* Anel colorido: no próximo texto a cor vem do STATUS (muda conforme avança);
-     numa avaliação vem da cor escolhida para o item. Quando o item é os dois, o
-     status manda — é a informação mais urgente. */
-  /* Uma cor escolhida escura (o vinho, por exemplo) some contra o papel escuro.
-     Aqui ela é clareada só o quanto for preciso para o anel aparecer — o matiz
-     continua sendo o que a pessoa escolheu. */
-  function lumRel(hex){
-    var c=hex2rgb(hex).map(function(v){ v/=255;
-      return v<=0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); });
-    return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];
-  }
-  function razao(a,b){ var x=lumRel(a), y=lumRel(b);
-    return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05); }
-  function corVisivel(cor){
-    if(!dark || !/^#[0-9a-f]{6}$/i.test(cor)) return cor;
-    var fundo='#2d2822';                      // --card do tema escuro
-    var c=cor;
-    for(var i=0;i<12 && razao(c,fundo)<2.6;i++) c=lerpCor(c,'#FFFFFF',0.12);
-    return c;
-  }
-  function corDoAnel(t, isRef){
-    if(isRef) return corVisivel((STATUS[t.status]||STATUS.nao_lido).dot);
-    if(ehAval(t)) return corVisivel(textColor(t));
-    return '';
-  }
-  function anelAttr(t, isRef){
-    if(!contornos) return {cls:'', style:''};
-    var c=corDoAnel(t, isRef);
-    if(!c) return {cls:'', style:''};
-    return {cls:' com-anel', style:'--anel:'+esc(c)+';'};
-  }
   function prioBadge(t){
     if(t.priority==='normal') return '';
     return '<span class="prio '+PRIO[t.priority].cls+'">'+PRIO[t.priority].label+'</span>';
@@ -1889,15 +1650,9 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     var link=safeUrl(t.link);
     var linkHtml=link?' <a class="text-link" href="'+esc(link)+'" target="_blank" rel="noopener" title="Abrir texto" data-stop>'+SVG_LINK+'</a>':'';
     var m=estMin(t);
-    var cls=[]; if(isRef) cls.push('is-ref'); if(ehAval(t)) cls.push('is-aval');
-    if(jaPassou(t)) cls.push('ja-passou');
-    var anel=anelAttr(t, isRef);
-    if(anel.cls) cls.push(anel.cls.trim());
-    return '<tr'+(cls.length?' class="'+cls.join(' ')+'"':'')+(anel.style?' style="'+anel.style+'"':'')+'>'
-      +'<td class="c-num">'+(t.number!=null
-          ? '<span class="num-badge" style="background:'+color+'">'+t.number+'</span>'
-          : '<span class="num-vazio" style="border-color:'+color+'" aria-hidden="true"></span>')+'</td>'
-      +'<td class="c-text"><span class="text-name">'+esc(t.name)+'</span>'+linkHtml+avalBadge(t)+prioBadge(t)+refBadge
+    return '<tr'+(isRef?' class="is-ref"':'')+'>'
+      +'<td class="c-num"><span class="num-badge" style="background:'+color+'">'+(t.number!=null?t.number:'—')+'</span></td>'
+      +'<td class="c-text"><span class="text-name">'+esc(t.name)+'</span>'+linkHtml+prioBadge(t)+refBadge
         +(t.notes?'<button type="button" class="note-dot" data-act="edit" data-id="'+esc(t.id)+'" '
           +'title="'+esc(t.notes)+'" aria-label="'+esc('Notas: '+t.notes)+'">·</button>':'')
         +(t.originalTitle?'<span class="orig">'+esc(t.originalTitle)+'</span>':'')
@@ -1908,7 +1663,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
         :(temProgresso(t)?'':'<span class="muted">—</span>'))+progHtml(t)+'</td>'
       +'<td class="c-status">'+statusPill(t)+'</td>'
       +'<td class="c-actions">'
-        +(t.classDate?'<button class="icon-btn" data-act="adiar" data-id="'+esc(t.id)+'" title="Adiar para a próxima aula" aria-label="'+esc('Adiar '+t.name+' para a próxima aula')+'">'+svg(IC.adiar,15)+'</button>':'')
         +'<button class="icon-btn" data-act="edit" data-id="'+t.id+'" title="Editar">'+SVG_PENCIL+'</button></td>'
       +'</tr>';
   }
@@ -1923,15 +1677,11 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     if(t.author) meta.push(esc(t.author));
     if(t.classDate) meta.push(fmtDate(t.classDate)+' <span class="'+dcls+'">'+relLabel(d)+'</span>');
     if(m!=null) meta.push(t.pages+' p ≈ '+fmtMin(m));
-    var anelC=anelAttr(t, isRef);
-    return '<div class="tcard'+(isRef?' is-ref':'')+(ehAval(t)?' is-aval':'')+(jaPassou(t)?' ja-passou':'')
-      +anelC.cls+'"'+(anelC.style?' style="'+anelC.style+'"':'')+'>'
-      +'<div class="tc-top">'+(t.number!=null
-          ? '<span class="num-badge" style="background:'+color+'">'+t.number+'</span>'
-          : '<span class="num-vazio" style="border-color:'+color+'" aria-hidden="true"></span>')
+    return '<div class="tcard'+(isRef?' is-ref':'')+'">'
+      +'<div class="tc-top"><span class="num-badge" style="background:'+color+'">'+(t.number!=null?t.number:'—')+'</span>'
       +'<div class="tc-main"><span class="text-name">'+esc(t.name)+'</span>'
         +(link?' <a class="text-link" href="'+esc(link)+'" target="_blank" rel="noopener" title="Abrir texto" data-stop>'+SVG_LINK+'</a>':'')
-        +avalBadge(t)+prioBadge(t)+(isRef?'<span class="ref-badge">'+(curRefDiff===0?'hoje':'próxima aula')+'</span>':'')
+        +prioBadge(t)+(isRef?'<span class="ref-badge">'+(curRefDiff===0?'hoje':'próxima aula')+'</span>':'')
         +(t.notes?'<button type="button" class="note-dot" data-act="edit" data-id="'+esc(t.id)+'" '
           +'title="'+esc(t.notes)+'" aria-label="'+esc('Notas: '+t.notes)+'">·</button>':'')
         +(t.originalTitle?'<span class="orig">'+esc(t.originalTitle)+'</span>':'')
@@ -1940,8 +1690,7 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
         +tagsHtml(t)
       +'</div></div>'
       +'<div class="tc-bottom">'+statusPill(t)
-      +'<div class="tc-acts">'+(t.classDate?'<button class="icon-btn" data-act="adiar" data-id="'+esc(t.id)+'" title="Adiar para a próxima aula" aria-label="'+esc('Adiar '+t.name+' para a próxima aula')+'">'+svg(IC.adiar,15)+'</button>':'')
-      +'<button class="icon-btn" data-act="edit" data-id="'+t.id+'" title="Editar">'+SVG_PENCIL+'</button></div></div>'
+      +'<div class="tc-acts"><button class="icon-btn" data-act="edit" data-id="'+t.id+'" title="Editar">'+SVG_PENCIL+'</button></div></div>'
       +'</div>';
   }
   function headCell(k,label,cls){
@@ -1963,10 +1712,8 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     var html='';
     if(list.length===0){
       html='<div class="empty">'+(totalSubj===0
-        ? '<p class="empty-big">Nenhum texto nesta matéria ainda.</p><p>Clique em <strong>Adicionar</strong> para começar.</p>'
-        : (soPendentes && !query && !fTag
-            ? '<p class="empty-big">Tudo lido nesta matéria.</p><button class="btn-ghost sm" data-act="verpend">Mostrar também os lidos</button>'
-            : '<p class="empty-big">Nenhum texto encontrado.</p><button class="btn-ghost sm" data-act="clearsearch">Limpar busca e filtros</button>'))+'</div>';
+        ? '<p class="empty-big">Nenhum texto nesta matéria ainda.</p><p>Clique em <strong>Adicionar texto</strong> para começar.</p>'
+        : '<p class="empty-big">Nenhum texto encontrado.</p><button class="btn-ghost sm" data-act="clearsearch">Limpar busca e filtros</button>')+'</div>';
     } else if(narrow){
       html='<div class="tcards">'+list.map(cardHtml).join('')+'</div>';
     } else {
@@ -1982,19 +1729,12 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     }
     tw.innerHTML=html;
     renderStatusMenu();
-    var pend=0, pendMin=0, avalPend=0;
-    list.forEach(function(t){
-      if(t.status==='lido') return;
-      if(ehAval(t)){ avalPend++; return; }        // prova não é "página por ler"
-      pend++; var m=estMinRest(t); if(m!=null) pendMin+=m;
-    });
-    foot.innerHTML='Mostrando '+list.length+' de '+totalSubj+' item(ns)'
-      +(soPendentes?' · filtro "falta ler" ligado':'')
+    var pend=0, pendMin=0;
+    list.forEach(function(t){ if(t.status!=='lido'){ pend++; var m=estMinRest(t); if(m!=null) pendMin+=m; } });
+    foot.innerHTML='Mostrando '+list.length+' de '+totalSubj+' texto(s)'
       +(pend?' · '+pend+' por ler'+(pendMin?' ≈ '+fmtMin(pendMin):''):'')
-      +(avalPend?' · '+avalPend+' avaliação(ões) por fazer':'')
       +' · salvo neste navegador (use Exportar para backup)<br>'
-      +'<span class="kbd">n</span> novo texto · <span class="kbd">/</span> buscar · <span class="kbd">s</span> alternar visão · <span class="kbd">t</span> TCC · <span class="kbd">Esc</span> fechar'
-      +selo();
+      +'<span class="kbd">n</span> novo texto · <span class="kbd">/</span> buscar · <span class="kbd">s</span> alternar visão · <span class="kbd">t</span> TCC · <span class="kbd">Esc</span> fechar';
     saveUI();
   }
 
@@ -2026,18 +1766,15 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     var cfg=STATUS[t.status]||STATUS.nao_lido;
     var m=estMin(t);
     var link=safeUrl(t.link);
-    var anelW=anelAttr(t, false);
-    return '<div class="witem'+(ehAval(t)?' is-aval':'')+(jaPassou(t)?' ja-passou':'')
-      +anelW.cls+'"'+(anelW.style?' style="'+anelW.style+'"':'')+'>'
+    return '<div class="witem">'
       +'<span class="wsub" title="'+esc(s?s.name:'')+'"><span class="sdot" style="background:'+(s?s.color:'#999')+'"></span>'+esc(s?s.name:'—')+'</span>'
       +'<div class="wmain"><span class="wname">'+esc(t.name)+'</span>'
         +(link?' <a class="text-link" href="'+esc(link)+'" target="_blank" rel="noopener" data-stop title="Abrir texto">'+SVG_LINK+'</a>':'')
-        +avalBadge(t)+prioBadge(t)
+        +prioBadge(t)
         +'<div class="wmeta">'+(t.number!=null?'nº '+t.number+' · ':'')+fmtDate(t.classDate)+' · '+relLabel(dayDiff(t.classDate))
         +(t.author?' · '+esc(t.author):'')+(m!=null?' · '+t.pages+' p ≈ '+fmtMin(m):'')
         +'</div>'+progHtml(t)+'</div>'
       +'<div class="wright">'+statusPill(t)
-        +(t.classDate?'<button class="icon-btn" data-act="adiar" data-id="'+esc(t.id)+'" title="Adiar para a próxima aula" aria-label="'+esc('Adiar '+t.name+' para a próxima aula')+'">'+svg(IC.adiar,15)+'</button>':'')
         +'<button class="icon-btn" data-act="edit" data-id="'+t.id+'" title="Editar">'+SVG_PENCIL+'</button></div>'
       +'</div>';
   }
@@ -2081,8 +1818,7 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     renderStatusMenu();
     foot.innerHTML='Visão geral de todas as matérias · ritmo de leitura: '+pace+' min por página'
       +' (ajuste no menu ☰) · salvo neste navegador<br>'
-      +'<span class="kbd">n</span> novo texto · <span class="kbd">s</span> alternar visão · <span class="kbd">t</span> TCC · <span class="kbd">Esc</span> fechar'
-      +selo();
+      +'<span class="kbd">n</span> novo texto · <span class="kbd">s</span> alternar visão · <span class="kbd">t</span> TCC · <span class="kbd">Esc</span> fechar';
     saveUI();
   }
 
@@ -2413,8 +2149,7 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     if(atrasadas) partes.push(atrasadas+' em atraso');
     if(tcc.orientacoes.length) partes.push(tcc.orientacoes.length+' orientação(ões) registrada(s)');
     return esc(partes.join(' · '))+' · salvo neste navegador<br>'
-      +'<span class="kbd">n</span> nova etapa · <span class="kbd">t</span> voltar · <span class="kbd">Esc</span> fechar'
-      +selo();
+      +'<span class="kbd">n</span> nova etapa · <span class="kbd">t</span> voltar · <span class="kbd">Esc</span> fechar';
   }
 
   function cicloEtapa(id){
@@ -2501,14 +2236,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     if(soSeMudou && txt===ultimoAviso) return;
     ultimoAviso=txt; el.textContent=txt;
   }
-  function selo(){ return ' · <span class="versao">V'+esc(APP_VERSAO)+'</span>'; }
-  function renderPendBtn(){
-    var b=document.getElementById('pend'); if(!b) return;
-    b.classList.toggle('on', soPendentes);
-    b.setAttribute('aria-pressed', soPendentes?'true':'false');
-    b.title = soPendentes ? 'Mostrando só o que falta ler — clique para ver tudo'
-                          : 'Esconder o que já está lido';
-  }
   function renderMain(){
     if(view==='tcc') renderTcc();
     else if(view==='week') renderWeek();
@@ -2520,7 +2247,7 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     renderFileBtn();
     themeBtn.innerHTML = svg(dark?IC.sun:IC.moon,16);
     themeBtn.title = dark?'Modo claro':'Modo escuro';
-    renderHero(); renderSubjects(); renderPendBtn(); applyView(); renderMain();
+    renderHero(); renderSubjects(); applyView(); renderMain();
   }
 
   // ---- swatches ----
@@ -2619,15 +2346,7 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
       +'<div class="field"><label for="m_subj">Matéria</label><select id="m_subj">'
         +subjects.map(function(x){ return '<option value="'+x.id+'"'+(x.id===(b.subjectId||currentSubjectId)?' selected':'')+'>'+esc(x.name)+(x.tcc?' (TCC)':'')+'</option>'; }).join('')
       +'</select></div>'
-      +'<div class="field"><div class="segfield" role="radiogroup" aria-label="Tipo de item">'
-        +'<button type="button" data-kind="texto" class="'+(b.kind!=='aval'?'on':'')+'" role="radio" aria-checked="'+(b.kind!=='aval')+'">'+svg(IC.book,14)+' Leitura</button>'
-        +'<button type="button" data-kind="aval" class="'+(b.kind==='aval'?'on':'')+'" role="radio" aria-checked="'+(b.kind==='aval')+'">'+svg(IC.alert,14)+' Avaliação</button>'
-      +'</div></div>'
-      +'<div class="field" id="avalWrap" style="display:none"><label for="m_avaltipo">Tipo da avaliação</label>'
-        +'<select id="m_avaltipo">'+AVAL_ORDER.map(function(k){
-            return '<option value="'+k+'"'+(k===b.avalType?' selected':'')+'>'+esc(AVAL_TIPO[k])+'</option>'; }).join('')
-        +'</select></div>'
-      +'<div class="row-3"><div class="field"><label for="m_num">Nº <span id="numOpc" style="font-weight:400"></span></label><input id="m_num" type="number" min="0" value="'+v(b.number)+'"></div>'
+      +'<div class="row-3"><div class="field"><label for="m_num">Nº</label><input id="m_num" type="number" min="0" value="'+v(b.number)+'"></div>'
       +'<div class="field" style="grid-column:span 2"><label for="m_name">Nome do texto</label><input id="m_name" value="'+v(b.name)+'" placeholder="Ex.: A metrópole e a vida mental"><span class="err-msg" id="m_err" style="display:none">Dê um nome ao texto para salvar.</span></div></div>'
       +'<div class="field"><label for="m_orig">Título original (opcional)</label><input id="m_orig" value="'+v(b.originalTitle)+'" placeholder="Ex.: Die Großstädte und das Geistesleben"></div>'
       +'<div class="row-2"><div class="field"><label for="m_author">Autor</label><input id="m_author" value="'+v(b.author)+'" placeholder="Ex.: Georg Simmel"></div>'
@@ -2653,51 +2372,9 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     var chosen=wireSwatches(overlay, b.color||'');
     overlay.querySelector('[data-x]').addEventListener('click', closeModal);
     overlay.querySelector('[data-cancel]').addEventListener('click', closeModal);
-    overlay.querySelector('[data-save]').addEventListener('click', function(){ saveText(existing, chosen, kindAtual); });
+    overlay.querySelector('[data-save]').addEventListener('click', function(){ saveText(existing, chosen); });
     var rmT=overlay.querySelector('[data-remover]');
     if(rmT) rmT.addEventListener('click', function(){ deleteText(existing.id); });
-
-    /* Alternar entre leitura e avaliação troca o vocabulário do formulário:
-       uma prova não tem autor nem título original, e o número é opcional. */
-    var kindAtual = (b.kind==='aval') ? 'aval' : 'texto';
-    var segK=overlay.querySelector('.segfield');
-    var wrapAval=document.getElementById('avalWrap');
-    var selTipo=document.getElementById('m_avaltipo');
-    function aplicarKind(){
-      var aval = kindAtual==='aval';
-      wrapAval.style.display = aval?'':'none';
-      document.getElementById('numOpc').textContent = aval?'(opcional)':'';
-      var nomeLbl=overlay.querySelector('label[for="m_name"]');
-      if(nomeLbl) nomeLbl.textContent = aval?'Nome da avaliação':'Nome do texto';
-      var nomeInp=document.getElementById('m_name');
-      if(nomeInp) nomeInp.placeholder = aval?'Ex.: Prova 1 — unidades I e II':'Ex.: A metrópole e a vida mental';
-      var dataLbl=overlay.querySelector('label[for="m_date"]');
-      if(dataLbl) dataLbl.textContent = aval?'Data da avaliação':'Data da aula';
-      // campos que só fazem sentido para leitura
-      ['m_orig','m_author','m_pages','m_link'].forEach(function(id){
-        var el=document.getElementById(id); if(!el) return;
-        var campo=el.closest('.field'); if(campo) campo.style.display = aval?'none':'';
-      });
-      Array.prototype.forEach.call(segK.querySelectorAll('[data-kind]'), function(btn){
-        var on=btn.getAttribute('data-kind')===kindAtual;
-        btn.classList.toggle('on', on); btn.setAttribute('aria-checked', on?'true':'false');
-      });
-      atualizarStatusRotulos();
-    }
-    /* Os rótulos do <select> de status acompanham o tipo escolhido. */
-    function atualizarStatusRotulos(){
-      var sel=document.getElementById('m_status'); if(!sel) return;
-      var aval = kindAtual==='aval';
-      Array.prototype.forEach.call(sel.options, function(op){
-        op.textContent = aval ? (AVAL_LABEL[op.value]||STATUS[op.value].label) : STATUS[op.value].label;
-        op.style.display = (aval && op.value==='parcial') ? 'none' : '';
-      });
-      if(aval && sel.value==='parcial') sel.value='lendo';
-    }
-    segK.addEventListener('click', function(e){
-      var btn=e.target.closest('[data-kind]'); if(!btn) return;
-      kindAtual=btn.getAttribute('data-kind'); aplicarKind(); attProgresso();
-    });
 
     /* O campo de "onde parei" só faz sentido com a leitura em curso — por isso
        ele aparece e some conforme o status escolhido. */
@@ -2706,7 +2383,7 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     var inpLidas=document.getElementById('m_pagesread');
     var inpPags=document.getElementById('m_pages');
     function attProgresso(){
-      var emCurso = (kindAtual!=='aval') && (selStatus.value==='lendo' || selStatus.value==='parcial');
+      var emCurso = selStatus.value==='lendo' || selStatus.value==='parcial';
       wrapLido.style.display = emCurso ? '' : 'none';
       if(!emCurso) return;
       var tot=num(inpPags.value), lidas=num(inpLidas.value), box=document.getElementById('m_prog');
@@ -2718,27 +2395,23 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
       box.innerHTML='<span class="pbar"><span style="width:'+pct+'%;background:'+cor+'"></span></span><b>'+pct+'%</b>';
     }
     selStatus.addEventListener('change', attProgresso);
-    aplicarKind();
     inpLidas.addEventListener('input', attProgresso);
     inpPags.addEventListener('input', attProgresso);
     attProgresso();
 
     var nm=document.getElementById('m_name'); nm.focus();
     nm.addEventListener('input', function(){ nm.classList.remove('invalid'); var em=document.getElementById('m_err'); if(em) em.style.display='none'; });
-    overlay.addEventListener('keydown', function(e){ if(e.key==='Enter' && e.target && e.target.tagName!=='TEXTAREA'){ e.preventDefault(); saveText(existing, chosen, kindAtual); } });
+    overlay.addEventListener('keydown', function(e){ if(e.key==='Enter' && e.target && e.target.tagName!=='TEXTAREA'){ e.preventDefault(); saveText(existing, chosen); } });
   }
-  function saveText(existing, chosen, kind){
+  function saveText(existing, chosen){
     var g=function(id){ return document.getElementById(id).value; };
     var name=g('m_name').trim();
     if(!name){ var el=document.getElementById('m_name'); el.classList.add('invalid');
       var em=document.getElementById('m_err'); if(em) em.style.display=''; el.focus(); return; }
-    var aval = kind==='aval';
     var data={ subjectId:g('m_subj'), number:num(g('m_num')), name:name,
-      kind: aval?'aval':'texto', avalType: aval?g('m_avaltipo'):'prova',
-      originalTitle: aval?'':g('m_orig').trim(), author: aval?'':g('m_author').trim(),
-      classDate:g('m_date'), link: aval?'':g('m_link').trim(), status:g('m_status'),
-      priority:g('m_prio'), pages: aval?null:num(g('m_pages')),
-      pagesRead: aval?null:num(g('m_pagesread')),
+      originalTitle:g('m_orig').trim(), author:g('m_author').trim(),
+      classDate:g('m_date'), link:g('m_link').trim(), status:g('m_status'),
+      priority:g('m_prio'), pages:num(g('m_pages')), pagesRead:num(g('m_pagesread')),
       tags:g('m_tags').split(',').map(function(x){ return x.trim(); }).filter(Boolean),
       color:chosen.val, notes:g('m_notes') };
     if(existing) Object.assign(existing, normText(Object.assign({id:existing.id}, data)));
@@ -2755,11 +2428,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
       +'<div class="modal-head"><h2>'+(existing?'Editar matéria':'Nova matéria')+'</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
       +'<div class="field"><label for="s_name">Nome da matéria</label><input id="s_name" value="'+v(b.name)+'" placeholder="Ex.: Sociologia Urbana"><span class="err-msg" id="s_err" style="display:none">Dê um nome à matéria.</span></div>'
       +'<div class="field"><label for="s_prof">Professor(a) (opcional)</label><input id="s_prof" value="'+v(b.professor)+'" placeholder="Ex.: Karl Marx da Silva"></div>'
-      +'<div class="row-2"><div class="field"><label for="s_hor">Horário (código da UnB)</label>'
-        +'<input id="s_hor" value="'+v(b.schedule)+'" placeholder="Ex.: 35M12" autocapitalize="characters">'
-        +'<span class="hint" id="s_hor_lida">Dias, turno e horários. Ex.: 35M12 = terça e quinta, 8h–9h50.</span></div>'
-      +'<div class="field"><label for="s_local">Local da aula</label>'
-        +'<input id="s_local" value="'+v(b.place)+'" placeholder="Ex.: PAT AT 099"></div></div>'
       +'<div class="field"><label for="s_drive">Pasta da matéria no Drive (opcional)</label>'
         +'<input id="s_drive" value="'+v(b.driveLink)+'" placeholder="Cole o link de compartilhamento da pasta">'
         +'<span class="hint">Vira um atalho no cabeçalho da matéria. Aceita qualquer link.</span></div>'
@@ -2782,21 +2450,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     overlay.querySelector('[data-save]').addEventListener('click', function(){ saveSubject(existing, chosen); });
     var rm=overlay.querySelector('[data-remover]');
     if(rm) rm.addEventListener('click', function(){ deleteSubject(existing.id); });
-    /* Mostra em português o que o código quer dizer, enquanto ela digita —
-       assim um erro de digitação aparece na hora, e não semanas depois. */
-    var inpHor=document.getElementById('s_hor'), dicaHor=document.getElementById('s_hor_lida');
-    function lerHorario(){
-      var val=inpHor.value.trim();
-      if(!val){ dicaHor.textContent='Dias, turno e horários. Ex.: 35M12 = terça e quinta, 8h–9h50.';
-        dicaHor.classList.remove('hint-erro','hint-ok'); inpHor.classList.remove('invalid'); return; }
-      var lido=horarioTexto({schedule:val});
-      if(lido){ dicaHor.textContent='Entendi: '+lido;
-        dicaHor.classList.add('hint-ok'); dicaHor.classList.remove('hint-erro'); inpHor.classList.remove('invalid'); }
-      else { dicaHor.textContent='Não reconheci esse código. Formato: dias + turno + horários, como 35M12.';
-        dicaHor.classList.add('hint-erro'); dicaHor.classList.remove('hint-ok'); inpHor.classList.add('invalid'); }
-    }
-    inpHor.addEventListener('input', lerHorario);
-    lerHorario();
     var nm=document.getElementById('s_name'); nm.focus();
     nm.addEventListener('input', function(){ nm.classList.remove('invalid'); var em=document.getElementById('s_err'); if(em) em.style.display='none'; });
     overlay.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); saveSubject(existing, chosen); } });
@@ -2809,8 +2462,7 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     var lim=num(g('s_lim')); if(lim==null||lim<0) lim=0;
     var ehTcc=!!document.getElementById('s_tcc').checked;
     var data={ name:name, professor:g('s_prof').trim(), color:chosen.val,
-      absenceLimit:Math.min(lim,30), driveLink:g('s_drive').trim(), tcc:ehTcc,
-      schedule:g('s_hor').trim(), place:g('s_local').trim() };
+      absenceLimit:Math.min(lim,30), driveLink:g('s_drive').trim(), tcc:ehTcc };
     // só pode existir uma matéria de TCC — marcar uma desmarca a anterior
     if(ehTcc) subjects.forEach(function(x){ if(x!==existing) x.tcc=false; });
     var eraTcc = !!(existing && existing.tcc);
@@ -2823,65 +2475,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     if(existing && !eraTcc && ehTcc) view='tcc';
     if(ehTcc && !tcc.orientadora && data.professor) tcc.orientadora=data.professor;
     closeModal(); ajustarMateriaAtual(); persist(); saveUI(); renderAll();
-  }
-  /* Adiar = empurrar para a PRÓXIMA data de aula da matéria, lida do código de
-     horário. Aula desmarcada normalmente arrasta o resto do plano junto, por
-     isso a pergunta sobre os subsequentes. */
-  function textosDepoisDe(t){
-    if(!t.classDate) return [];
-    return texts.filter(function(x){
-      return x.subjectId===t.subjectId && x.id!==t.id && x.classDate && x.classDate>t.classDate;
-    }).sort(function(a,b){ return a.classDate<b.classDate?-1:a.classDate>b.classDate?1:0; });
-  }
-  function openAdiarModal(t){
-    var sb=findSubject(t.subjectId);
-    var destino=proximaAula(sb, t.classDate);
-    var seguintes=textosDepoisDe(t);
-    var temHorario=!!parseHorario(sb && sb.schedule);
-    var comoTxt = temHorario
-      ? 'A próxima aula de <b>'+esc(sb.name)+'</b> — '+esc(horarioTexto(sb))+'.'
-      : 'Esta matéria não tem horário cadastrado, então vou usar <b>uma semana</b> à frente.'
-        +'<span class="hint" style="display:block;margin-top:4px">Cadastre o código (ex.: 35M12) no menu da matéria para adiar por aula.</span>';
-    var html='<div class="modal" role="dialog" aria-modal="true">'
-      +'<div class="modal-head"><h2>Adiar</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
-      +'<div class="adiar-de">'
-        +'<div class="adiar-nome">'+esc(t.name)+'</div>'
-        +'<div class="adiar-datas"><span class="antes">'+fmtDate(t.classDate)+'</span>'
-        +'<span class="seta" aria-hidden="true">→</span>'
-        +'<span class="depois">'+fmtDate(destino)+'</span></div>'
-        +'<div class="adiar-como">'+comoTxt+'</div>'
-      +'</div>'
-      +(seguintes.length
-        ? '<label class="opt-check"><input type="checkbox" id="ad_todos" checked>'
-          +'<span><b>Adiar também os '+seguintes.length+' seguintes</b>'
-          +'<span class="hint">Cada um anda uma aula para a frente, mantendo a ordem. É o que costuma acontecer quando uma aula cai.</span></span></label>'
-        : '<p class="hint" style="margin:0 0 13px">Não há nada depois deste nesta matéria.</p>')
-      +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Cancelar</button>'
-      +'<button class="btn-wine" data-save>'+svg(IC.cal,15)+' Adiar</button></div>'
-      +'</div>';
-    var overlay=buildOverlay(html);
-    function confirmar(){
-      var cx=document.getElementById('ad_todos');
-      adiarTexto(t, !!(cx && cx.checked));
-      closeModal();
-    }
-    overlay.querySelector('[data-x]').addEventListener('click', closeModal);
-    overlay.querySelector('[data-cancel]').addEventListener('click', closeModal);
-    overlay.querySelector('[data-save]').addEventListener('click', confirmar);
-    overlay.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); confirmar(); } });
-  }
-  function adiarTexto(t, comSeguintes){
-    var sb=findSubject(t.subjectId);
-    var seguintes = comSeguintes ? textosDepoisDe(t) : [];
-    /* De trás para frente: mover o último primeiro evita que dois itens caiam
-       na mesma data no meio do caminho. */
-    var fila=[t].concat(seguintes);
-    for(var i=fila.length-1;i>=0;i--){
-      fila[i].classDate = proximaAula(sb, fila[i].classDate);
-    }
-    anunciar(fila.length===1 ? 'Adiado para '+fmtDate(t.classDate)
-                             : fila.length+' itens adiados uma aula');
-    persist(); renderAll();
   }
   function deleteText(id){
     var t=findText(id); if(!t) return;
@@ -3073,7 +2666,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
       var alvo=subjectTcc(); if(!alvo) return;
       var antes=currentSubjectId; currentSubjectId=alvo.id; openTextModal(null); currentSubjectId=antes; return; }
     if(act==='edit'){ var t=findText(id); if(t) openTextModal(t); return; }
-    if(act==='adiar'){ var ta=findText(id); if(ta && ta.classDate) openAdiarModal(ta); return; }
     if(act==='pill'){ e.stopPropagation(); openMenuId=(openMenuId===id?null:id); renderTcc(); renderStatusMenu(); return; }
   }
 
@@ -3085,18 +2677,12 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
     };
     var html='<div class="modal" role="dialog" aria-modal="true">'
       +'<div class="modal-head"><h2>Preferências</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
-      +'<div class="field"><label for="p_grad">Gradiente</label>'
+      +'<div class="field"><label for="p_grad">Cor da barra de progresso</label>'
         +'<select id="p_grad"><option value="0"'+(!gradiente?' selected':'')+'>Cor do status (padrão)</option>'
         +'<option value="1"'+(gradiente?' selected':'')+'>Do vermelho ao verde conforme avança</option></select>'
-        +'<span class="hint">Como a barra de progresso da leitura é pintada.</span>'
         +'<div class="pref-demo"><div><span class="pref-lbl">20%</span>'+exemplo(20,gradiente)+'</div>'
         +'<div><span class="pref-lbl">60%</span>'+exemplo(60,gradiente)+'</div>'
         +'<div><span class="pref-lbl">95%</span>'+exemplo(95,gradiente)+'</div></div></div>'
-      +'<div class="field"><label for="p_anel">Contornos coloridos</label>'
-        +'<select id="p_anel"><option value="1"'+(contornos?' selected':'')+'>Ligados</option>'
-        +'<option value="0"'+(!contornos?' selected':'')+'>Desligados</option></select>'
-        +'<span class="hint">Contorna a avaliação na cor dela e o próximo texto na cor do status.</span>'
-        +'<div class="pref-anel" id="anelDemo"></div></div>'
       +'<div class="field"><label for="p_pace">Ritmo de leitura</label>'
         +'<select id="p_pace">'+[2,3,4,5].map(function(v){
             return '<option value="'+v+'"'+(pace===v?' selected':'')+'>'+v+' min por página</option>'; }).join('')
@@ -3115,23 +2701,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
         barras[i].firstElementChild.style.background = gradiente ? fundoGradiente(pct) : STATUS.lendo.dot;
       });
     });
-    /* Demonstração ao vivo: a pessoa vê o que o contorno faz antes de decidir. */
-    function pintarDemo(){
-      var box=document.getElementById('anelDemo'); if(!box) return;
-      var linhas=[['Próximo texto','Lendo',STATUS.lendo.dot],
-                  ['Prova 1','Avaliação',PALETTE[0]]];
-      box.innerHTML=linhas.map(function(l){
-        return '<div class="anel-ex'+(contornos?' com-anel':'')+'" style="--anel:'+l[2]+'">'
-          +'<span class="anel-nome">'+esc(l[0])+'</span>'
-          +'<span class="anel-tag" style="color:'+l[2]+'">'+esc(l[1])+'</span></div>';
-      }).join('');
-    }
-    var an=document.getElementById('p_anel');
-    an.addEventListener('change', function(){
-      contornos = an.value==='1'; saveUI(); pintarDemo(); renderMain();
-      anunciar(contornos?'Contornos ligados':'Contornos desligados');
-    });
-    pintarDemo();
     var pc=document.getElementById('p_pace');
     pc.addEventListener('change', function(){
       pace=Number(pc.value)||3;
@@ -3278,8 +2847,8 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
 
   function clearSearch(){
     if(searchTimer){ clearTimeout(searchTimer); searchTimer=null; }
-    query=''; fTag=''; soPendentes=false; searchInput.value=''; clearX.style.display='none';
-    renderPendBtn(); renderTagbar(); renderTable();
+    query=''; fTag=''; searchInput.value=''; clearX.style.display='none';
+    renderTagbar(); renderTable();
   }
 
   // ---- mount ----
@@ -3312,8 +2881,7 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
           +'<option value="author">Autor</option><option value="status">Status</option>'
           +'<option value="priority">Prioridade</option></select></div>'
         +'<div class="tool-right">'
-          +'<button class="btn-ghost sm" id="pend" aria-pressed="false">'+svg(IC.check,14)+' <span id="pendLbl">Falta ler</span></button>'
-          +'<button class="btn-wine" id="add">'+svg(IC.plus,15)+' Adicionar</button>'
+          +'<button class="btn-wine" id="add">'+svg(IC.plus,15)+' Adicionar texto</button>'
         +'</div>'
         +'<input type="file" id="impfile" accept="application/json,.json" style="display:none">'
       +'</div>'
@@ -3352,10 +2920,6 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
       var b=e.target.closest('[data-v]'); if(!b) return;
       view=b.getAttribute('data-v'); openMenuId=null;
       saveUI(); applyView(); renderMain();
-    });
-    document.getElementById('pend').addEventListener('click', function(){
-      soPendentes=!soPendentes; saveUI(); renderPendBtn(); renderTagbar(); renderTable();
-      anunciar(soPendentes?'Mostrando só o que falta ler':'Mostrando tudo');
     });
     document.getElementById('add').addEventListener('click', function(){
       if(!currentSubjectId){ alert('Crie uma matéria primeiro.'); return; }
@@ -3404,11 +2968,9 @@ tbody tr.is-ref.com-anel td:first-child{box-shadow:inset 0 1.5px 0 var(--anel),
         if(sortKey===k) sortDir=(sortDir==='asc'?'desc':'asc'); else { sortKey=k; sortDir='asc'; }
         openMenuId=null; renderTable(); return; }
       if(act==='clearsearch'){ clearSearch(); return; }
-      if(act==='verpend'){ soPendentes=false; saveUI(); renderPendBtn(); renderTable(); return; }
       if(act==='pedit'){ e.stopPropagation(); e.preventDefault(); abrirEdicaoPaginas(el); return; }
       if(act==='tagf'){ e.stopPropagation(); var g=el.getAttribute('data-t'); fTag=(fTag===g?'':g); renderTagbar(); renderTable(); return; }
       if(act==='edit'){ var t=findText(id); if(t) openTextModal(t); return; }
-      if(act==='adiar'){ e.stopPropagation(); var ta=findText(id); if(ta && ta.classDate) openAdiarModal(ta); return; }
       if(act==='pill'){ e.stopPropagation(); openMenuId=(openMenuId===id?null:id); renderMain(); return; }
       if(act==='setstatus'){ e.stopPropagation(); var b=findText(id); if(b) b.status=el.getAttribute('data-s');
         openMenuId=null; persist(); renderAll(); return; }
