@@ -7,11 +7,11 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Leituras UnB">
+<meta name="apple-mobile-web-app-title" content="Leituras">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236E2639'/%3E%3Cpath d='M12 16h15c3 0 4.5 1.5 4.5 4v32c0-2.2-1.8-3.6-4.5-3.6H12zM52 16H37c-3 0-4.5 1.5-4.5 4v32c0-2.2 1.8-3.6 4.5-3.6h15z' fill='none' stroke='%23F6EEDF' stroke-width='3.4' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%236E2639'/%3E%3Cpath d='M12 16h15c3 0 4.5 1.5 4.5 4v32c0-2.2-1.8-3.6-4.5-3.6H12zM52 16H37c-3 0-4.5 1.5-4.5 4v32c0-2.2 1.8-3.6 4.5-3.6h15z' fill='none' stroke='%23F6EEDF' stroke-width='3.4' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="manifest" id="manifest">
-<title>Tracker de Leituras UnB</title>
+<title>Tracker de Leituras</title>
 <style>
 
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&display=swap');
@@ -402,6 +402,70 @@ body.com-teclado .app{padding-bottom:56vh;}
   color:var(--ink); font-family:inherit;}
 
 /* Empty */
+/* Separador com rótulo dentro do menu de preferências */
+/* Dias da semana como botõezinhos: dá para marcar quantos quiser */
+/* Sete colunas iguais: em flex o "sáb" caía sozinho numa linha inteira no
+   celular. Em grade, a semana continua sendo uma semana em qualquer largura. */
+.dias-sem{display:grid; grid-template-columns:repeat(7,1fr); gap:5px;}
+.dia-btn{border:1.5px solid var(--line); background:var(--card); color:var(--ink-soft);
+  border-radius:9px; min-width:0; height:40px; font-size:13px; font-family:inherit;
+  display:inline-flex; align-items:center; justify-content:center; padding:0 2px;}
+.dia-btn:hover{border-color:var(--wine-fg); color:var(--ink);}
+.dia-btn.on{background:var(--wine); border-color:var(--wine); color:#F6EEDF; font-weight:500;}
+
+/* Semestres arquivados */
+.zona-semestre{display:flex; align-items:center; justify-content:space-between; gap:14px;
+  border:1.5px dashed var(--line); border-radius:12px; padding:12px 14px; margin-top:4px;}
+.zona-semestre b{display:block; color:var(--ink); font-weight:500; font-size:14px;}
+.zona-semestre .hint{margin-top:2px;}
+.arq-fechar{display:flex; margin:10px 0 4px;}
+.arq-fechar .btn-wine{flex:1; justify-content:center; min-height:42px;}
+.arq-lista{display:grid; gap:8px;}
+.arq-item{display:flex; align-items:center; justify-content:space-between; gap:12px;
+  border:1.5px solid var(--line); border-radius:11px; padding:10px 12px; background:var(--card);}
+.arq-id b{display:block; color:var(--ink); font-weight:500; font-size:14.5px;}
+.arq-id .hint{margin-top:1px;}
+.arq-acoes{display:flex; gap:6px; align-items:center; flex:none;}
+@media (max-width:520px){
+  .zona-semestre{flex-direction:column; align-items:stretch;}
+  .zona-semestre .btn-ghost{justify-content:center; min-height:42px;}
+  .arq-item{flex-direction:column; align-items:stretch;}
+  .arq-acoes{justify-content:flex-end;}
+}
+
+/* Seletor de cor de destaque */
+.acentos{display:grid; grid-template-columns:repeat(3,1fr); gap:7px;}
+.acento{border:1.5px solid var(--line); background:var(--card); color:var(--ink-soft);
+  border-radius:10px; height:44px; font-size:13px; font-family:inherit; min-width:0;
+  display:inline-flex; align-items:center; gap:8px; padding:0 10px;}
+.acento:hover{border-color:var(--wine-fg); color:var(--ink);}
+.acento.on{border-color:var(--wine-fg); color:var(--ink); background:var(--wine-tint); font-weight:500;}
+.ac-bola{width:17px; height:17px; border-radius:50%; flex:none;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);}
+.ac-nome{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+@media (max-width:380px){ .acentos{grid-template-columns:repeat(2,1fr);} }
+
+.pref-sep{display:flex; align-items:center; gap:10px; margin:20px 0 4px; color:var(--faint);
+  font-size:11px; letter-spacing:.09em; text-transform:uppercase;}
+.pref-sep::before, .pref-sep::after{content:""; height:1px; background:var(--line); flex:1;}
+
+/* Primeira vez: o app abre vazio e esta é a única coisa na tela */
+.bemvindo{background:var(--card); border:1.5px solid var(--line); border-radius:14px;
+  padding:30px 24px; text-align:center; max-width:560px; margin:8px auto 0;}
+.bemvindo h2{font-family:var(--serif); font-weight:500; font-size:23px; margin:0 0 6px; color:var(--ink);}
+.bemvindo p{margin:0 auto 6px; color:var(--ink-soft); font-size:14px; max-width:44ch;}
+.bemvindo .bv-acoes{display:flex; gap:9px; justify-content:center; flex-wrap:wrap; margin-top:18px;}
+.bemvindo .bv-passos{display:grid; gap:11px; text-align:left; margin:20px auto 0; max-width:42ch;}
+.bemvindo .bv-passo{display:flex; gap:11px; align-items:flex-start; font-size:13.5px; color:var(--ink-soft);}
+.bemvindo .bv-n{flex:none; width:23px; height:23px; border-radius:8px; background:var(--wine);
+  color:#F6EEDF; display:grid; place-items:center; font-size:12px; font-family:var(--mono);}
+.bemvindo .bv-passo b{color:var(--ink); font-weight:500;}
+@media (max-width:520px){
+  .bemvindo{padding:24px 16px;}
+  .bemvindo .bv-acoes .btn-wine, .bemvindo .bv-acoes .btn-ghost{flex:1 1 100%; justify-content:center;}
+}
+/* O convite já é um cartão; sem isto ficava um cartão dentro de outro. */
+.table-wrap.so-convite{background:none; border:0; box-shadow:none; overflow:visible;}
 .empty{padding:52px 24px; text-align:center; color:var(--ink-soft);}
 .empty-big{font-family:var(--serif); font-size:20px; color:var(--ink); margin:0 0 6px;}
 .empty p{margin:4px 0;}
@@ -689,6 +753,8 @@ body.com-teclado .app{padding-bottom:56vh;}
    lateral. Aqui tudo encolhe um degrau em vez de transbordar. */
 @media (max-width:380px){
   .app{padding-left:12px; padding-right:12px;}
+  .dias-sem{gap:3px;}
+  .dia-btn{font-size:11.5px; height:38px;}
   .hero-line{gap:9px;}
   .hero-ic{width:34px; height:34px; border-radius:9px;}
   .hero h1{font-size:21px;}
@@ -716,15 +782,70 @@ body.com-teclado .app{padding-bottom:56vh;}
 (function(){ try{
   var icone="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236E2639'/%3E%3Cpath d='M12 16h15c3 0 4.5 1.5 4.5 4v32c0-2.2-1.8-3.6-4.5-3.6H12zM52 16H37c-3 0-4.5 1.5-4.5 4v32c0-2.2 1.8-3.6 4.5-3.6h15z' fill='none' stroke='%23F6EEDF' stroke-width='3.4' stroke-linejoin='round'/%3E%3C/svg%3E";
   var url=location.href.split('#')[0].split('?')[0];
-  var man={ name:"Tracker de Leituras UnB", short_name:"Leituras UnB",
+  /* O nome é escolhido por quem usa e mora junto com os dados. Lido aqui, antes
+     do app subir, para o atalho na tela de início e a aba do navegador já
+     nascerem com o nome certo em vez de piscarem o padrão. */
+  /* O short_name aparece embaixo do ícone e o sistema corta o que passar de
+     ~12 letras. Cortar na letra dava "Tracker de L"; aqui o corte é por
+     palavra, e conectivo sobrando no fim ("de", "da") não conta como nome. */
+  function curtoDe(t){
+    t=String(t||'').trim().replace(/\s+/g,' ');
+    if(t.length<=12) return t;
+    var ps=t.split(' '), acc='';
+    for(var i=0;i<ps.length;i++){
+      var tent = acc ? acc+' '+ps[i] : ps[i];
+      if(tent.length>12) break;
+      acc=tent;
+    }
+    acc=acc.replace(/\s+(de|da|do|das|dos|e|em|para)$/i,'').trim();
+    return acc || t.slice(0,12).trim();
+  }
+  var nome="Tracker de Leituras", curto=curtoDe(nome), cor="#6E2639";
+  /* Mesmas cores da tabela lá embaixo — repetidas aqui porque este trecho roda
+     antes do app, para o ícone e a barra do navegador já nascerem certos. */
+  var CORES={vinho:"#6E2639",azul:"#2e517f",verde:"#296d5a",roxo:"#592f7f",terra:"#814b2c",grafite:"#485665"};
+  try{
+    var d=JSON.parse(localStorage.getItem('tracker-leituras:v1')||'{}');
+    var t=d && d.cfg && d.cfg.titulo;
+    if(typeof t==='string' && t.trim()){ nome=t.trim().slice(0,60); curto=curtoDe(nome); }
+    var ac=d && d.cfg && d.cfg.acento;
+    if(ac && CORES[ac]) cor=CORES[ac];
+  }catch(e){}
+  window.__curtoDe=curtoDe;
+  if(cor!=="#6E2639"){
+    var enc=encodeURIComponent(cor);
+    icone=icone.replace(/fill='%236E2639'/, "fill='"+enc+"'");
+    var mt=document.querySelector('meta[name="theme-color"]'); if(mt) mt.setAttribute('content',cor);
+    document.querySelectorAll('link[rel="icon"],link[rel="apple-touch-icon"]').forEach(function(l){
+      l.setAttribute('href',(l.getAttribute('href')||'').replace(/fill='%236E2639'/, "fill='"+enc+"'"));
+    });
+  }
+  document.title=nome;
+  var ap=document.querySelector('meta[name="apple-mobile-web-app-title"]');
+  if(ap) ap.setAttribute('content', curto);
+  var man={ name:nome, short_name:curto,
     description:"Organizador das leituras e faltas das disciplinas.",
     start_url:url, scope:url.replace(/[^/]*$/,''), display:"standalone",
-    orientation:"portrait-primary", background_color:"#EBE7DE", theme_color:"#6E2639",
+    orientation:"portrait-primary", background_color:"#EBE7DE", theme_color:cor,
     icons:[{src:icone, sizes:"any", type:"image/svg+xml", purpose:"any"}] };
   var el=document.getElementById('manifest');
-  if(el && location.protocol!=='file:'){
-    el.href='data:application/manifest+json;charset=utf-8,'+encodeURIComponent(JSON.stringify(man));
+  function gravarManifesto(){
+    if(el && location.protocol!=='file:'){
+      el.href='data:application/manifest+json;charset=utf-8,'+encodeURIComponent(JSON.stringify(man));
+    }
   }
+  gravarManifesto();
+  /* Trocar a cor ou o nome com o app aberto tem de valer para quem instalar
+     logo em seguida — senão o atalho nasce com a cor antiga. */
+  window.__atualizarManifesto=function(nomeNovo, corNova){
+    if(nomeNovo){ man.name=nomeNovo; man.short_name=curtoDe(nomeNovo); }
+    if(corNova){
+      man.theme_color=corNova;
+      man.icons=[{src:icone.replace(/fill='%23[0-9A-Fa-f]{6}'/, "fill='"+encodeURIComponent(corNova)+"'"),
+                  sizes:"any", type:"image/svg+xml", purpose:"any"}];
+    }
+    gravarManifesto();
+  };
 }catch(e){} })();
 
 /* Aplica o tema salvo antes do app renderizar, para não piscar claro ao abrir no escuro. */
@@ -741,7 +862,9 @@ body.com-teclado .app{padding-bottom:56vh;}
   'use strict';
 
   /* Sobe 0.01 a cada versão entregue. Aparece no rodapé, junto dos atalhos. */
-  var APP_VERSAO = '0.81';
+  /* O tracker deixou de ser um app de uma pessoa só e virou um que qualquer
+     estudante configura: a contagem recomeça do zero aqui, em V0.1. */
+  var APP_VERSAO = '0.11';
   var STORAGE_KEY = 'tracker-leituras:v1';
   var UI_KEY      = 'tracker-leituras:ui';
 
@@ -788,27 +911,106 @@ body.com-teclado .app{padding-bottom:56vh;}
   function tipoAval(t){ return AVAL_TIPO[t.avalType]||AVAL_TIPO.outro; }
 
   var PALETTE = ["#6E2639","#2E6E6A","#B06A1F","#3B5C8A","#7A5AA0","#4C6B44","#B0453E","#8A6D3B","#546E7A","#A0446E"];
+  // ---- configuração do app ----
+  /* Nome, período e a aba do trabalho final ficam junto dos DADOS, não das
+     preferências de tela: assim viajam no Exportar e na sincronização — quem
+     abre no celular vê o mesmo nome que no computador. */
+  /* Acentos. Cada um traz oito cores: no claro e no escuro, o fundo do botão,
+     o hover, o fundo suave e a cor do texto. Não são derivadas na hora de uma
+     cor qualquer porque o contraste no escuro quebra com facilidade — estes
+     foram calculados e conferidos um a um (mínimo 4.5:1 em nove combinações). */
+  var ACENTOS = {
+    vinho:  {rot:'Vinho',     c:['#6E2639','#571E2D','#F0E4E7','#6E2639'], e:['#983a4f','#b13e59','#3b2329','#dfa4b0']},
+    azul:   {rot:'Azul',      c:['#2e517f','#25436a','#e4eaf1','#3a67a1'], e:['#3d679e','#3d6ca9','#242f3d','#87a9d7']},
+    verde:  {rot:'Verde',     c:['#296d5a','#205748','#e4f1ed','#2b715d'], e:['#2e705d','#2d7662','#243c36','#68caae']},
+    roxo:   {rot:'Roxo',      c:['#592f7f','#4a2669','#ebe4f1','#763ea8'], e:['#7340a0','#8345ba','#31243d','#bc98dc']},
+    terra:  {rot:'Terracota', c:['#814b2c','#6b3e24','#f2e9e4','#945633'], e:['#915736','#9a5a35','#3e2d23','#d59b79']},
+    grafite:{rot:'Grafite',   c:['#485665','#3b4754','#e8eaed','#57677a'], e:['#596676','#5b6c80','#2c3035','#98a8bb']}
+  };
+  var ACENTO_ORDEM=['vinho','azul','verde','roxo','terra','grafite'];
+  function acentoAtual(){ return ACENTOS[appCfg.acento] || ACENTOS.vinho; }
+  /* A cor do ícone e da barra do navegador é sempre a versão clara: ela aparece
+     fora do app, onde não existe "modo escuro do app". */
+  function acentoIcone(){ return acentoAtual().c[0]; }
+
+  var CFG_PADRAO={ titulo:'Tracker de Leituras', periodo:'', tccOn:true, tccNome:'TCC', acento:'vinho' };
+  var appCfg=normCfg(null);
+  function normCfg(c){
+    var tem=function(k){ return c && typeof c==='object' && Object.prototype.hasOwnProperty.call(c,k); };
+    var txt=function(k, max){
+      var v = tem(k) ? c[k] : null;
+      return (typeof v==='string') ? v.trim().slice(0,max) : null;
+    };
+    return {
+      titulo : txt('titulo',60) || CFG_PADRAO.titulo,
+      periodo: txt('periodo',40) || '',
+      tccNome: txt('tccNome',24) || CFG_PADRAO.tccNome,
+      acento : (function(){ var v=txt('acento',20);
+        return (v && Object.prototype.hasOwnProperty.call(ACENTOS,v)) ? v : CFG_PADRAO.acento; })(),
+      // só um false explícito desliga; ausente = ligado, como sempre foi
+      tccOn  : tem('tccOn') ? c.tccOn!==false : true
+    };
+  }
+  /* Onde o nome escolhido aparece fora do cabeçalho. */
+  /* As quatro variáveis do acento são escritas direto no #app. Como o tema
+     escuro define as mesmas variáveis numa regra CSS, o valor inline tem de ser
+     reescrito a cada troca de tema — é o que renderAll() faz. */
+  function aplicarAcento(){
+    var el=document.getElementById('app'); if(!el) return;
+    var a=acentoAtual(), v=dark?a.e:a.c;
+    el.style.setProperty('--wine',      v[0]);
+    el.style.setProperty('--wine-dk',   v[1]);
+    el.style.setProperty('--wine-tint', v[2]);
+    el.style.setProperty('--wine-fg',   v[3]);
+    try{
+      var m=document.querySelector('meta[name="theme-color"]');
+      if(m) m.setAttribute('content', acentoIcone());
+      var cor=encodeURIComponent(acentoIcone());
+      document.querySelectorAll('link[rel="icon"],link[rel="apple-touch-icon"]').forEach(function(l){
+        var h=l.getAttribute('href')||'';
+        l.setAttribute('href', h.replace(/fill='%23[0-9A-Fa-f]{6}'/, "fill='"+cor+"'"));
+      });
+      if(window.__atualizarManifesto) window.__atualizarManifesto(appCfg.titulo, acentoIcone());
+    }catch(e){}
+  }
+  function aplicarCfgNaPagina(){
+    try{
+      document.title=appCfg.titulo;
+      aplicarAcento();
+      var curto = (window.__curtoDe ? window.__curtoDe(appCfg.titulo) : appCfg.titulo);
+      var ap=document.querySelector('meta[name="apple-mobile-web-app-title"]');
+      if(ap) ap.setAttribute('content', curto);
+    }catch(e){}
+  }
+  function rotuloTcc(){ return appCfg.tccNome || CFG_PADRAO.tccNome; }
+  function tccLigado(){ return appCfg.tccOn!==false; }
+
   // ---- seed ----
-  /* Conteúdo inicial: backup de 12/08/2026 da Sofia. Só é usado quando o app
-     abre num navegador sem dados salvos — depois disso, manda o que está salvo. */
-  function seedData(){
+  /* O app abre VAZIO num navegador novo: a tela de boas-vindas cuida do resto.
+     Quem quiser ver como fica cheio carrega o exemplo abaixo, que é fictício e
+     não tem nada de ninguém. */
+  function seedData(){ return {subjects:[], texts:[]}; }
+  function exemploData(){
+    var hoje=new Date();
+    var dia=function(n){ var d=new Date(hoje.getTime()); d.setDate(d.getDate()+n); return diaLocal(d); };
     return {
       subjects:[
-        {id:"subj-soc",  name:"Sociologia Urbana",
-         professor:"", color:"#2E6E6A", absenceLimit:7, absences:[]},
-        {id:"subj-hist", name:"História Social e Política Geral",
-         professor:"", color:"#B06A1F", absenceLimit:7, absences:["2026-08-12"]}
+        {id:"ex-a", name:"Teoria Sociológica", professor:"", color:"#2E6E6A",
+         schedule:"35M12", place:"Sala 21", absenceLimit:7, absences:[]},
+        {id:"ex-b", name:"Metodologia", professor:"", color:"#B06A1F",
+         schedule:"24T34", place:"", absenceLimit:7, absences:[]}
       ],
       texts:[
-        {id:"t-msq89364-3qo5", subjectId:"subj-soc", number:1,
-         name:"Restauração da Cidade Subjetiva", originalTitle:"", author:"Félix Guattari",
-         classDate:"2026-08-13",
-         link:"https://drive.google.com/drive/u/0/folders/1jyNpIrJiB2FwRoEkDbSjpZ_UocWyGNFP",
-         color:"", status:"nao_lido", pages:6, priority:"normal", tags:[], notes:""},
-        {id:"t-msq8ak5v-owo7", subjectId:"subj-hist", number:1,
-         name:"Jim Crow visual essay", originalTitle:"", author:"Eric Foner",
-         classDate:"2026-08-12", link:"",
-         color:"#B0453E", status:"parcial", pages:17, priority:"normal", tags:[], notes:""}
+        {id:"ex-1", subjectId:"ex-a", number:1, name:"O suicídio (introdução)",
+         author:"Durkheim", classDate:dia(-6), status:"lido", pages:24, pagesRead:24},
+        {id:"ex-2", subjectId:"ex-a", number:2, name:"A ética protestante",
+         author:"Weber", classDate:dia(1), status:"lendo", pages:40, pagesRead:15},
+        {id:"ex-3", subjectId:"ex-a", number:3, name:"O 18 de brumário",
+         author:"Marx", classDate:dia(4), status:"nao_lido", pages:30},
+        {id:"ex-4", subjectId:"ex-a", number:null, name:"Prova 1", classDate:dia(8),
+         status:"nao_lido", kind:"aval", avalType:"prova"},
+        {id:"ex-5", subjectId:"ex-b", number:1, name:"Como se faz uma tese",
+         author:"Eco", classDate:dia(2), status:"parcial", pages:60, pagesRead:22}
       ]
     };
   }
@@ -904,6 +1106,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   // ---- state ----
   var subjects=[], texts=[];
   var tcc=null;                 // aba TCC: etapas, orientações e prazo
+  var arquivos=[];              // semestres fechados, guardados inteiros
   var view='subject';
   var cronoModo='gantt';        // 'gantt' | 'lista' — preferência salva
   var currentSubjectId=null, query="", fTag="", sortKey="number", sortDir="asc";
@@ -975,6 +1178,8 @@ body.com-teclado .app{padding-bottom:56vh;}
      Ex.: "35M12" = terça e quinta, manhã, 1º e 2º horários (8h–9h50).
      Aceita vários blocos separados por espaço: "35M12 6T34". */
   var DIA_CURTO=['','dom','seg','ter','qua','qui','sex','sáb'];
+  // aqui o índice é o getDay() do JavaScript: 0=domingo … 6=sábado
+  var DIA_LONGO=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
   var TURNO_INI={M:8, T:14, N:19};        // hora do 1º slot de cada turno
   // último slot que ainda termina dentro do dia (o slot n começa às INI+n-1)
   var TURNO_MAX={M:6, T:6, N:4};
@@ -1025,20 +1230,42 @@ body.com-teclado .app{padding-bottom:56vh;}
       return hhmm(ini)+'–'+hhmm(fimReal);
     }).filter(Boolean).join(' e ');
   }
+  /* "08:00" e nada mais. Campo vazio é uma resposta legítima: quem só sabe os
+     dias não deve ser obrigado a inventar um horário. */
+  function horaSegura(v){
+    v=String(v==null?'':v).trim();
+    var m=/^(\d{1,2}):(\d{2})$/.exec(v); if(!m) return '';
+    var h=+m[1], mi=+m[2];
+    if(h<0||h>23||mi<0||mi>59) return '';
+    return pad2(h)+':'+pad2(mi);
+  }
+  function hhmmTxt(v){ v=horaSegura(v); if(!v) return '';
+    var p=v.split(':'); return (+p[0])+'h'+(p[1]==='00'?'':p[1]); }
   // todos os dias da semana (0=dom … 6=sáb) em que a matéria tem aula
   function diasDeAula(sb){
-    var bl=parseHorario(sb && sb.schedule); if(!bl) return [];
-    var set={};
-    bl.forEach(function(b){ b.dias.forEach(function(d){ set[d-1]=1; }); });
-    return Object.keys(set).map(Number).sort(function(a,b){return a-b;});
+    var bl=parseHorario(sb && sb.schedule);
+    if(bl){
+      var set={};
+      bl.forEach(function(b){ b.dias.forEach(function(d){ set[d-1]=1; }); });
+      return Object.keys(set).map(Number).sort(function(a,b){return a-b;});
+    }
+    // sem código válido, valem os dias marcados na mão
+    return (sb && Array.isArray(sb.days)) ? sb.days.slice() : [];
   }
   function horarioTexto(sb){
-    var bl=parseHorario(sb && sb.schedule); if(!bl) return '';
-    return bl.map(function(b){
+    var bl=parseHorario(sb && sb.schedule);
+    if(bl) return bl.map(function(b){
       // no código, 2=segunda … 7=sábado — que é justamente o índice em DIA_CURTO
       var ds=b.dias.map(function(d){ return DIA_CURTO[d]; });
       return listaPt(ds)+' · '+faixaHoraria(b);
     }).join(' | ');
+    var dias=(sb && Array.isArray(sb.days)) ? sb.days : [];
+    if(!dias.length) return '';
+    // DIA_CURTO tem uma casa vazia na frente para casar com o código (2=seg)
+    var nomes=dias.map(function(d){ return DIA_CURTO[d+1]; });
+    var ini=hhmmTxt(sb.startTime), fim=hhmmTxt(sb.endTime);
+    var hora = ini ? (fim ? ini+'–'+fim : 'a partir das '+ini) : '';
+    return listaPt(nomes)+(hora?' · '+hora:'');
   }
   /* Próxima data de aula DEPOIS de uma data dada. Sem horário cadastrado, cai
      no comportamento antigo: uma semana à frente. */
@@ -1056,9 +1283,18 @@ body.com-teclado .app{padding-bottom:56vh;}
   // ---- normalize ----
   function normSubject(s){
     var o=Object.assign({id:"",name:"",professor:"",color:PALETTE[0],absenceLimit:7,absences:[],
-      driveLink:"",tcc:false,schedule:"",place:""}, s);
+      driveLink:"",tcc:false,schedule:"",place:"",days:[],startTime:"",endTime:""}, s);
     o.schedule=String(o.schedule||'').toUpperCase().replace(/\s+/g,' ').trim().slice(0,40);
     o.place=String(o.place||'').trim().slice(0,60);
+    /* Duas formas de dizer a mesma coisa: o código do SIGAA (quem é da UnB) ou
+       os dias marcados na mão (todo o resto). O código, quando existe e é
+       válido, manda — assim ninguém fica com dois horários conflitantes. */
+    o.days = Array.isArray(o.days)
+      ? o.days.map(num).filter(function(d,i,arr){
+          return d!=null && d>=0 && d<=6 && arr.indexOf(d)===i; }).sort(function(a,b){return a-b;})
+      : [];
+    o.startTime=horaSegura(o.startTime);
+    o.endTime=horaSegura(o.endTime);
     o.tcc=!!o.tcc;
     o.id=idSeguro(o.id,'subj');
     o.color=corSegura(o.color, PALETTE[0]);
@@ -1112,6 +1348,20 @@ body.com-teclado .app{padding-bottom:56vh;}
      etapas e orientações nesse caso destrói dados. */
   /* Se um id de matéria precisar ser saneado, os textos que apontam para ele
      têm de ser levados junto — senão viram órfãos invisíveis. */
+  /* Um semestre arquivado é uma cópia completa e independente: matérias, textos
+     e a aba do trabalho final. Passa pela mesma normalização do conteúdo vivo,
+     porque ele volta a ser conteúdo vivo quando for restaurado. */
+  function normArquivo(a){
+    a=(a && typeof a==='object') ? a : {};
+    var d=normalizarTudo(Array.isArray(a.subjects)?a.subjects:[], Array.isArray(a.texts)?a.texts:[]);
+    var em=String(a.em==null?'':a.em);
+    return { id: idSeguro(a.id,'arq'),
+             nome: (String(a.nome==null?'':a.nome).trim().slice(0,60)) || 'Semestre',
+             em: /^\d{4}-\d{2}-\d{2}$/.test(em.slice(0,10)) ? em.slice(0,10) : todayISO(),
+             subjects: d.subjects, texts: d.texts, tcc: normTcc(a.tcc) };
+  }
+  // teto generoso, só para um arquivo corrompido não travar o navegador
+  function normArquivos(v){ return Array.isArray(v) ? v.slice(0,40).map(normArquivo) : []; }
   function normalizarTudo(rawSubjects, rawTexts){
     var mapa={};
     var subs=(rawSubjects||[]).map(function(x){
@@ -1149,7 +1399,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   // ---- sincronização entre aparelhos (GitHub Gist) ----
   var SYNC_KEY='tracker-leituras:sync';
   var GIST_FILE='tracker-leituras.json';
-  var GIST_DESC='Tracker de Leituras UnB — progresso sincronizado';
+  function gistDesc(){ return appCfg.titulo+' — progresso sincronizado'; }
   var syncToken='', gistId='', lastSyncedAt='', dataUpdatedAt='';
   var syncState='off';   // off | on | conflito | erro
   var syncMsg='', syncBusy=false, syncTimer=null, syncAt='';
@@ -1192,7 +1442,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   }
   function corpoDoGist(){
     var files={}; files[GIST_FILE]={content:JSON.stringify(payload(),null,2)};
-    return {description:GIST_DESC, files:files};
+    return {description:gistDesc(), files:files};
   }
   function aplicarRemoto(obj){
     if(!obj || !Array.isArray(obj.subjects) || !obj.subjects.length) return false;
@@ -1334,7 +1584,7 @@ body.com-teclado .app{padding-bottom:56vh;}
       q.onsuccess=function(){ res(q.result); }; q.onerror=function(){ rej(q.error); };
     }); });
   }
-  function payload(){ return {versao:1, updatedAt:dataUpdatedAt, subjects:subjects, texts:texts, tcc:tcc}; }
+  function payload(){ return {versao:1, updatedAt:dataUpdatedAt, cfg:appCfg, subjects:subjects, texts:texts, tcc:tcc, arquivos:arquivos}; }
 
   function escreverArquivo(){
     if(fileState!=='on' || !fileHandle) return Promise.resolve();
@@ -1359,10 +1609,10 @@ body.com-teclado .app{padding-bottom:56vh;}
     if(syncTimer){ clearTimeout(syncTimer); syncTimer=null; try{ syncEnviar(false); }catch(e){} }
   }
   function assinatura(o){
-    try{ return JSON.stringify({s:o.subjects, t:o.texts, c:o.tcc}); }catch(e){ return ''; }
+    try{ return JSON.stringify({s:o.subjects, t:o.texts, c:o.tcc, g:normCfg(o.cfg), a:o.arquivos||[]}); }catch(e){ return ''; }
   }
   function conteudoDiferente(obj){
-    return assinatura(obj) !== assinatura({subjects:subjects, texts:texts, tcc:tcc});
+    return assinatura(obj) !== assinatura({subjects:subjects, texts:texts, tcc:tcc, cfg:appCfg, arquivos:arquivos});
   }
   /* Trocar os dados vivos pelos de um arquivo é destrutivo: se o arquivo for
      mais antigo, some trabalho. Perguntar, mostrando as duas datas. */
@@ -1386,6 +1636,11 @@ body.com-teclado .app{padding-bottom:56vh;}
     var d=normalizarTudo(obj.subjects, obj.texts);
     subjects=d.subjects; texts=d.texts;
     tcc=tccRecebido(obj, tcc);
+    /* Backup antigo não tem "cfg". Isso não é "quero o nome padrão", é "não sei
+       nada sobre isso" — a configuração daqui fica como está. */
+    if(obj.cfg && typeof obj.cfg==='object'){ appCfg=normCfg(obj.cfg); aplicarCfgNaPagina(); }
+    // mesma regra: backup sem a chave não é um pedido para apagar os arquivados
+    if(Array.isArray(obj.arquivos)) arquivos=normArquivos(obj.arquivos);
     ajustarMateriaAtual();
     return true;
   }
@@ -1466,14 +1721,21 @@ body.com-teclado .app{padding-bottom:56vh;}
       var d=normalizarTudo(payload.subjects, payload.texts);
       subjects=d.subjects; texts=d.texts;
       tcc=tccRecebido(payload, null);
+      appCfg=normCfg(payload.cfg);
+      arquivos=normArquivos(payload.arquivos);
       dataUpdatedAt=payload.updatedAt||nowISO();
     } else {
+      /* Navegador novo abre vazio, e NÃO grava nada: só olhar o app não deve
+         criar um registro salvo, senão o backup que a pessoa importa depois
+         disputa "quem é mais recente" com um vazio que ela nunca escreveu. */
       var seed=seedData();
       var ds=normalizarTudo(seed.subjects, seed.texts);
       subjects=ds.subjects; texts=ds.texts;
       tcc=normTcc(null);
-      persist();
+      appCfg=normCfg(null);
+      arquivos=[];
     }
+    aplicarCfgNaPagina();
   }
   /* "Práticas de Pesquisa 1" deixa de ser uma matéria comum: ela passa a ser a
      aba TCC. A matéria em si continua guardada (com os textos e o link do
@@ -1485,7 +1747,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     if(jaFez) return;
     var achou=false;
     subjects.forEach(function(sb){
-      if(!sb.tcc && /pr[áa]ticas de pesquisa|^tcc\b|monografia/i.test(sb.name)){
+      if(!sb.tcc && /pr[áa]ticas de pesquisa|^tcc\b|monografia|disserta[çc][ãa]o|^tese\b/i.test(sb.name)){
         sb.tcc=true; sb.absenceLimit=0; achou=true;
         if(sb.professor && !tcc.orientadora) tcc.orientadora=sb.professor;
       }
@@ -1521,7 +1783,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     opts=opts||{};
     if(!opts.noStamp) dataUpdatedAt=nowISO();
     try{
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({updatedAt:dataUpdatedAt, subjects:subjects, texts:texts, tcc:tcc}));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({updatedAt:dataUpdatedAt, cfg:appCfg, subjects:subjects, texts:texts, tcc:tcc, arquivos:arquivos}));
       storageWarned=false;
       agendarEscrita();
       if(!opts.noSync) agendarSync();
@@ -1746,8 +2008,8 @@ body.com-teclado .app{padding-bottom:56vh;}
     });
     var diaTxt = comAula ? ' · <b>'+emDia+' de '+comAula+'</b> '+(comAula===1?'matéria em dia':'matérias em dia') : '';
     hero.innerHTML='<div class="hero-line"><span class="hero-ic">'+svg(IC.book,22)+'</span><div>'
-      +'<h1>Tracker de Leituras UnB</h1>'
-      +'<p class="sub">10º semestre · '+visiveis.length+' '+(visiveis.length===1?'matéria':'matérias')
+      +'<h1>'+esc(appCfg.titulo)+'</h1>'
+      +'<p class="sub">'+(appCfg.periodo?esc(appCfg.periodo)+' · ':'')+visiveis.length+' '+(visiveis.length===1?'matéria':'matérias')
       +' · '+totalRead+'/'+totalT+' textos lidos'+diaTxt+'</p></div></div>';
   }
 
@@ -1849,13 +2111,44 @@ body.com-teclado .app{padding-bottom:56vh;}
     return '<a class="chip-btn" href="'+esc(u)+'" target="_blank" rel="noopener">'
       +svg(IC.pasta,14)+'<span class="chip-lbl">Pasta no Drive</span></a>';
   }
+  /* Zero matérias E zero textos = ninguém nunca usou este navegador. Aí a tela
+     não é uma lista vazia com um aviso, é o convite para começar. Uma matéria
+     apagada com o resto ainda em pé cai no aviso curto de sempre. */
+  function primeiraVez(){
+    if(subjects.length || texts.length) return false;
+    if(tcc && ((tcc.etapas&&tcc.etapas.length) || (tcc.orientacoes&&tcc.orientacoes.length) || tcc.titulo)) return false;
+    /* O que separa "nunca usou" de "apagou a última matéria" é existir um
+       registro salvo. Sem isto, remover a única matéria fazia a tela de
+       primeira vez voltar como se todo o histórico não tivesse existido. */
+    try{ return !localStorage.getItem(STORAGE_KEY); }catch(e){ return true; }
+  }
+  function bemVindoHtml(){
+    return '<div class="bemvindo" id="bemvindo">'
+      +'<h2>Vamos começar</h2>'
+      +'<p>Este tracker guarda o que você tem para ler em cada matéria, quanto falta e quantas faltas você já usou. Tudo fica <b>neste navegador</b> — nada é enviado para lugar nenhum.</p>'
+      +'<div class="bv-passos">'
+        +'<div class="bv-passo"><span class="bv-n">1</span><span><b>Crie uma matéria</b> — nome, cor e, se quiser, os dias de aula.</span></div>'
+        +'<div class="bv-passo"><span class="bv-n">2</span><span><b>Cadastre as leituras</b> com a data da aula em que serão discutidas.</span></div>'
+        +'<div class="bv-passo"><span class="bv-n">3</span><span><b>Marque o que já leu.</b> O topo da página diz se você está em dia.</span></div>'
+      +'</div>'
+      +'<div class="bv-acoes">'
+        +'<button class="btn-wine" data-act="bv-materia">'+svg(IC.plus,15)+' Criar a primeira matéria</button>'
+        +'<button class="btn-ghost" data-act="bv-importar">'+svg(IC.up,15)+' Tenho um backup</button>'
+        +'<button class="btn-ghost" data-act="bv-exemplo">Ver um exemplo</button>'
+      +'</div>'
+      +'<p class="hint" style="margin-top:16px">O exemplo é fictício e você pode apagar tudo depois no menu.</p>'
+    +'</div>';
+  }
   function renderPanel(){
     var s=findSubject(currentSubjectId);
+    // fora da tela de convite a caixa da lista volta a ser uma caixa
+    tw.classList.toggle('so-convite', !s && primeiraVez());
     if(!s){
       panel.innerHTML=''; tagbar.innerHTML=''; foot.innerHTML='';
-      tw.innerHTML='<div class="empty"><p class="empty-big">Nenhuma matéria por aqui.</p>'
-        +'<p>Crie uma matéria para começar a cadastrar leituras'
-        +(subjectTcc()?' — o seu TCC está na aba <strong>TCC</strong>.':'.')+'</p></div>';
+      tw.innerHTML = primeiraVez() ? bemVindoHtml()
+        : '<div class="empty"><p class="empty-big">Nenhuma matéria por aqui.</p>'
+          +'<p>Crie uma matéria para começar a cadastrar leituras'
+          +(subjectTcc()?' — o seu trabalho final está na aba <strong>'+esc(rotuloTcc())+'</strong>.':'.')+'</p></div>';
       return;
     }
     var chips=driveChip(s)+faltasChip(s);
@@ -2143,7 +2436,8 @@ body.com-teclado .app{padding-bottom:56vh;}
       +(pend?' · '+pend+' por ler'+(pendMin?' ≈ '+fmtMin(pendMin):''):'')
       +(avalPend?' · '+avalPend+' avaliação(ões) por fazer':'')
       +' · salvo neste navegador (use Exportar para backup)<br>'
-      +'<span class="kbd">n</span> novo texto · <span class="kbd">/</span> buscar · <span class="kbd">s</span> alternar visão · <span class="kbd">t</span> TCC · <span class="kbd">Esc</span> fechar'
+      +'<span class="kbd">n</span> novo texto · <span class="kbd">/</span> buscar · <span class="kbd">s</span> alternar visão'
+      +(tccLigado()?' · <span class="kbd">t</span> '+esc(rotuloTcc()):'')+' · <span class="kbd">Esc</span> fechar'
       +selo();
     saveUI();
   }
@@ -2237,7 +2531,8 @@ body.com-teclado .app{padding-bottom:56vh;}
     renderStatusMenu();
     foot.innerHTML='Visão geral de todas as matérias · ritmo de leitura: '+pace+' min por página'
       +' (ajuste no menu ☰) · salvo neste navegador<br>'
-      +'<span class="kbd">n</span> novo texto · <span class="kbd">s</span> alternar visão · <span class="kbd">t</span> TCC · <span class="kbd">Esc</span> fechar'
+      +'<span class="kbd">n</span> novo texto · <span class="kbd">s</span> alternar visão'
+      +(tccLigado()?' · <span class="kbd">t</span> '+esc(rotuloTcc()):'')+' · <span class="kbd">Esc</span> fechar'
       +selo();
     saveUI();
   }
@@ -2440,7 +2735,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     var n=tcc.etapas.length;
     if(!n){
       return '<div class="tcc-vazio"><p>Nenhuma etapa ainda.</p>'
-        +'<span class="hint">Você pode começar do zero ou partir de um roteiro comum de TCC e ajustar depois.</span>'
+        +'<span class="hint">Você pode começar do zero ou partir de um roteiro comum e ajustar depois.</span>'
         +'<div class="acoes"><button class="btn-wine" data-act="etsugerir">'+svg(IC.plus,15)+' Usar etapas sugeridas</button>'
         +'<button class="btn-ghost" data-act="etnova">Criar uma etapa</button></div></div>';
     }
@@ -2527,7 +2822,7 @@ body.com-teclado .app{padding-bottom:56vh;}
       +'<h2'+(tcc.titulo?'':' class="vazio"')+'>'+esc(tcc.titulo||'Sem título ainda')+'</h2>'
       +(tcc.orientadora?'<p class="tcc-orient">Orientação: <b>'+esc(tcc.orientadora)+'</b></p>':'')
       +'</div>'
-      +'<button class="icon-btn" data-act="tccedit" title="Configurar o TCC">'+SVG_GEAR+'</button></div>'
+      +'<button class="icon-btn" data-act="tccedit" title="Configurar">'+SVG_GEAR+'</button></div>'
       +renderPrazo()
       +(drive?'<div class="subj-chips">'+drive+'</div>':'')
       +'</div>';
@@ -2556,7 +2851,7 @@ body.com-teclado .app{padding-bottom:56vh;}
 
     if(leituras.length){
       var lidos=0; leituras.forEach(function(t){ if(t.status==='lido') lidos++; });
-      h+='<section class="tcc-sec"><div class="tcc-sh"><h3>Leituras do TCC</h3>'
+      h+='<section class="tcc-sec"><div class="tcc-sh"><h3>Leituras d'+(/^[aeiou]/i.test(rotuloTcc())?'a ':'o ')+esc(rotuloTcc())+'</h3>'
         +'<span class="conta">'+lidos+'/'+leituras.length+' lidos</span>'
         +'<div class="dir">'
         +'<button class="btn-ghost sm" data-act="editsubj" data-id="'+esc(sTcc.id)+'" title="Configurar a matéria '+esc(sTcc.name)+'">'
@@ -2619,6 +2914,9 @@ body.com-teclado .app{padding-bottom:56vh;}
 
   // ---- alternância de visão ----
   function applyView(){
+    /* Desligar a aba com ela aberta deixaria a tela em branco: a visão volta
+       para a lista antes de qualquer coisa ser escondida. */
+    if(view==='tcc' && !tccLigado()) view='subject';
     var isSubj=view==='subject', isWeek=view==='week', isTcc=view==='tcc';
     subjectsEl.style.display = isSubj?'':'none';
     panel.style.display      = isSubj?'':'none';
@@ -2626,7 +2924,8 @@ body.com-teclado .app{padding-bottom:56vh;}
     tw.style.display         = isSubj?'':'none';
     weekEl.style.display     = isWeek?'':'none';
     tccEl.style.display      = isTcc?'':'none';
-    toolbar.style.display    = isTcc?'none':'';   // a aba TCC tem os botões dela
+    // a aba TCC tem os botões dela; na primeira vez não há o que buscar nem ordenar
+    toolbar.style.display    = (isTcc || (isSubj && primeiraVez()))?'none':'';
     document.getElementById('searchWrap').style.display = isSubj?'':'none';
     document.getElementById('sortMob').style.display = (isSubj && narrow)?'':'none';
     // o filtro só age na lista da matéria: fora dela, some em vez de mentir
@@ -2634,6 +2933,12 @@ body.com-teclado .app{padding-bottom:56vh;}
     document.getElementById('sortSel').value = sortKey;
     renderSortDir();
     var vb=document.getElementById('vswitch');
+    var abaTcc=document.getElementById('tccTab'), sep=document.getElementById('vsep');
+    if(abaTcc){
+      abaTcc.style.display = tccLigado()?'':'none';
+      abaTcc.lastChild.nodeValue = ' '+rotuloTcc();   // o SVG é o primeiro filho
+    }
+    if(sep) sep.style.display = tccLigado()?'':'none';
     Array.prototype.forEach.call(vb.querySelectorAll('button'), function(b){
       var on=b.getAttribute('data-v')===view;
       b.classList.toggle('on', on);
@@ -2727,6 +3032,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   function renderAll(){
     app.classList.toggle('dark', dark);
     document.body.style.background = dark ? '#1b1713' : '#EBE7DE';
+    aplicarAcento();   // o tema escuro reescreve as mesmas variáveis
     renderFileBtn();
     themeBtn.innerHTML = svg(dark?IC.sun:IC.moon,16);
     themeBtn.title = dark?'Modo claro':'Modo escuro';
@@ -2838,6 +3144,87 @@ body.com-teclado .app{padding-bottom:56vh;}
      escolhida na tela. Antes: sem matéria atual o clique não fazia nada (a tecla)
      ou reclamava que não havia matéria (o botão) mesmo com matérias cadastradas.
      Agora cai na primeira matéria e o modal já mostra qual é, em campo editável. */
+  // ---- semestres arquivados ----
+  /* Nome sugerido: o período configurado, ou o ano com o semestre em que estamos.
+     Só uma sugestão — quem arquiva escreve o que quiser. */
+  function periodoSugerido(){
+    if(appCfg.periodo) return appCfg.periodo;
+    var d=new Date();
+    return d.getFullYear()+'/'+(d.getMonth()<6?1:2);
+  }
+  function periodoSeguinte(atual){
+    var m=/^(\d{4})\s*[\/.-]\s*([12])$/.exec(String(atual||'').trim());
+    if(!m) return '';
+    return (m[2]==='1') ? (m[1]+'/2') : ((+m[1]+1)+'/1');
+  }
+  function contaArquivo(a){
+    var n=a.subjects.length, l=a.texts.length;
+    return n+' '+(n===1?'matéria':'matérias')+' · '+l+' '+(l===1?'item':'itens');
+  }
+  function temConteudoVivo(){
+    return !!(subjects.length || texts.length
+      || (tcc && ((tcc.etapas&&tcc.etapas.length) || (tcc.orientacoes&&tcc.orientacoes.length) || tcc.titulo)));
+  }
+  /* Arquivar NÃO apaga: move o semestre inteiro para a lista e deixa a mesa
+     limpa. Restaurar faz o caminho de volta, arquivando antes o que estiver na
+     mesa — em nenhum dos dois sentidos alguma coisa deixa de existir. */
+  function arquivarAtual(nome){
+    if(!temConteudoVivo()) return null;
+    var a=normArquivo({nome:nome, em:todayISO(), subjects:subjects, texts:texts, tcc:tcc});
+    arquivos.unshift(a);
+    subjects=[]; texts=[]; tcc=normTcc(null);
+    currentSubjectId=null; query=''; fTag=''; soPendentes=false; faltasAberta=false;
+    openMenuId=null;
+    if(view==='tcc') view='subject';
+    return a;
+  }
+  function acharArquivo(id){
+    for(var i=0;i<arquivos.length;i++) if(arquivos[i].id===id) return arquivos[i];
+    return null;
+  }
+  function restaurarArquivo(id){
+    var a=acharArquivo(id); if(!a) return;
+    var aviso = temConteudoVivo()
+      ? 'O semestre que está aberto será arquivado, e "'+a.nome+'" toma o lugar dele.\n\nNada é apagado — dá para desfazer restaurando de volta.'
+      : 'Restaurar "'+a.nome+'" como o semestre atual?';
+    if(!confirm(aviso)) return;
+    arquivos=arquivos.filter(function(x){ return x.id!==a.id; });
+    arquivarAtual(periodoSugerido());
+    subjects=a.subjects; texts=a.texts; tcc=normTcc(a.tcc);
+    currentSubjectId = subjects.length ? subjects.filter(function(x){ return !x.tcc; }).concat(subjects)[0].id : null;
+    view='subject';
+    appCfg=normCfg(Object.assign({}, appCfg, {periodo:a.nome}));
+    ajustarMateriaAtual();
+    persist(); saveUI(); aplicarCfgNaPagina(); closeModal(); renderAll();
+    anunciar('Semestre "'+a.nome+'" restaurado');
+  }
+  function removerArquivo(id){
+    var a=acharArquivo(id); if(!a) return;
+    if(!confirm('Apagar de vez o semestre "'+a.nome+'" ('+contaArquivo(a)+')?\n\nEsta ação não pode ser desfeita. Se quiser guardar, use Baixar antes.')) return;
+    arquivos=arquivos.filter(function(x){ return x.id!==a.id; });
+    persist(); abrirArquivos();
+    anunciar('Semestre removido');
+  }
+  function baixarArquivo(id){
+    var a=acharArquivo(id); if(!a) return;
+    // sai no mesmo formato que o Importar lê, para poder virar um tracker à parte
+    downloadJson({versao:1, updatedAt:nowISO(), cfg:Object.assign({}, appCfg, {periodo:a.nome}),
+      subjects:a.subjects, texts:a.texts, tcc:a.tcc, arquivos:[]},
+      'semestre-'+a.nome.replace(/[^\w-]+/g,'-').replace(/^-|-$/g,'')+'.json');
+  }
+
+  /* O exemplo só entra em cima do vazio. Com dados na mesa ele pergunta antes,
+     porque substituir seria perder tudo sem aviso. */
+  function carregarExemplo(){
+    if(!primeiraVez() && !confirm('Isto substitui as matérias e leituras que já estão aqui pelo exemplo.\n\nQuer continuar?')) return;
+    var ex=exemploData();
+    var d=normalizarTudo(ex.subjects, ex.texts);
+    subjects=d.subjects; texts=d.texts;
+    currentSubjectId=subjects.length?subjects[0].id:null;
+    view='subject';
+    persist(); saveUI(); renderAll();
+    anunciar('Exemplo carregado');
+  }
   function novoTexto(){
     if(!subjects.length){ alert('Crie uma matéria primeiro.'); return; }
     if(!currentSubjectId || !findSubject(currentSubjectId)) currentSubjectId=subjects[0].id;
@@ -2853,7 +3240,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     var html='<div class="modal" role="dialog" aria-modal="true">'
       +'<div class="modal-head"><h2>'+(existing?'Editar texto':'Adicionar texto')+'</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
       +'<div class="field"><label for="m_subj">Matéria</label><select id="m_subj">'
-        +subjects.map(function(x){ return '<option value="'+x.id+'"'+(x.id===(b.subjectId||currentSubjectId)?' selected':'')+'>'+esc(x.name)+(x.tcc?' (TCC)':'')+'</option>'; }).join('')
+        +subjects.map(function(x){ return '<option value="'+x.id+'"'+(x.id===(b.subjectId||currentSubjectId)?' selected':'')+'>'+esc(x.name)+(x.tcc?' ('+esc(rotuloTcc())+')':'')+'</option>'; }).join('')
       +'</select></div>'
       +'<div class="field"><div class="segfield" role="radiogroup" aria-label="Tipo de item">'
         +'<button type="button" data-kind="texto" class="'+(b.kind!=='aval'?'on':'')+'" role="radio"'
@@ -3013,18 +3400,40 @@ body.com-teclado .app{padding-bottom:56vh;}
   }
 
   function openSubjectModal(existing){
-    var b=existing||{name:'', professor:'', color:PALETTE[subjects.length % PALETTE.length]};
+    var b=existing||{name:'', professor:'', color:PALETTE[subjects.length % PALETTE.length], days:[]};
     var v=function(x){ return esc(x==null?'':x); };
+    /* Quem já tem código continua vendo o código; todo o resto começa nos dias,
+       que é o que serve para qualquer faculdade. */
+    var modoHor = (b.schedule && String(b.schedule).trim()) ? 'codigo' : 'dias';
     var html='<div class="modal" role="dialog" aria-modal="true">'
       +'<div class="modal-head"><h2>'+(existing?'Editar matéria':'Nova matéria')+'</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
       +'<div class="field"><label for="s_name">Nome da matéria</label><input id="s_name" value="'+v(b.name)+'" placeholder="Ex.: Sociologia Urbana"><span class="err-msg" id="s_err" style="display:none">Dê um nome à matéria.</span></div>'
       +'<div class="field"><label for="s_prof">Professor(a) (opcional)</label><input id="s_prof" value="'+v(b.professor)+'" placeholder="Ex.: Karl Marx da Silva"></div>'
-      +'<div class="row-2"><div class="field"><label for="s_hor">Horário (código da UnB)</label>'
+      +'<div class="field"><span class="fake-label">Dias de aula</span>'
+        +'<div class="segfield" role="radiogroup" aria-label="Como informar o horário">'
+          +'<button type="button" data-modo="dias" class="'+(modoHor==='dias'?'on':'')+'" role="radio"'
+            +' aria-checked="'+(modoHor==='dias')+'" tabindex="'+(modoHor==='dias'?'0':'-1')+'">'+svg(IC.cal,14)+' Escolher os dias</button>'
+          +'<button type="button" data-modo="codigo" class="'+(modoHor==='codigo'?'on':'')+'" role="radio"'
+            +' aria-checked="'+(modoHor==='codigo')+'" tabindex="'+(modoHor==='codigo'?'0':'-1')+'">'+svg(IC.clock,14)+' Código da UnB</button>'
+        +'</div></div>'
+      +'<div id="horDias" class="field"'+(modoHor==='dias'?'':' style="display:none"')+'>'
+        +'<div class="dias-sem" role="group" aria-label="Dias da semana com aula">'
+        +DIA_LONGO.map(function(nome,i){
+            var on=(b.days||[]).indexOf(i)>=0;
+            return '<button type="button" class="dia-btn'+(on?' on':'')+'" data-dia="'+i+'"'
+              +' aria-pressed="'+on+'" title="'+esc(nome)+'">'+esc(DIA_CURTO[i+1])+'</button>'; }).join('')
+        +'</div>'
+        +'<div class="row-2" style="margin-top:9px">'
+          +'<div class="field"><label for="s_ini">Começa às</label><input id="s_ini" type="time" value="'+v(b.startTime)+'"></div>'
+          +'<div class="field"><label for="s_fim">Termina às</label><input id="s_fim" type="time" value="'+v(b.endTime)+'"></div></div>'
+        +'<span class="hint">O horário é opcional — os dias já bastam para o botão de adiar funcionar.</span></div>'
+      +'<div id="horCodigo" class="field"'+(modoHor==='codigo'?'':' style="display:none"')+'>'
+        +'<label for="s_hor">Código de horário</label>'
         +'<input id="s_hor" value="'+v(b.schedule)+'" placeholder="Ex.: 35M12" autocapitalize="characters"'
           +' aria-describedby="s_hor_lida">'
-        +'<span class="hint" id="s_hor_lida" role="status" aria-live="polite">Dias, turno e horários. Ex.: 35M12 = terça e quinta, 8h–9h50.</span></div>'
+        +'<span class="hint" id="s_hor_lida" role="status" aria-live="polite">Formato do SIGAA/UnB. Ex.: 35M12 = terça e quinta, 8h–9h50.</span></div>'
       +'<div class="field"><label for="s_local">Local da aula</label>'
-        +'<input id="s_local" value="'+v(b.place)+'" placeholder="Ex.: PAT AT 099"></div></div>'
+        +'<input id="s_local" value="'+v(b.place)+'" placeholder="Ex.: PAT AT 099"></div>'
       +'<div class="field"><label for="s_drive">Pasta da matéria no Drive (opcional)</label>'
         +'<input id="s_drive" value="'+v(b.driveLink)+'" placeholder="Cole o link de compartilhamento da pasta">'
         +'<span class="hint">Vira um atalho no cabeçalho da matéria. Aceita qualquer link.</span></div>'
@@ -3033,8 +3442,8 @@ body.com-teclado .app{padding-bottom:56vh;}
         +'<span class="hint">0 = não controlar faltas nesta matéria</span></div>'
       +'<div class="field" role="group" aria-label="Cor da matéria"><span class="fake-label">Cor</span>'+swatchesHtml(b.color)+'</div></div>'
       +'<label class="opt-check"><input type="checkbox" id="s_tcc"'+(b.tcc?' checked':'')+'>'
-        +'<span><b>Esta matéria é o meu TCC</b>'
-        +'<span class="hint">Ela sai da faixa de matérias e passa a viver na aba TCC, junto com as etapas e as orientações.</span></span></label>'
+        +'<span><b>Esta matéria é o meu '+esc(rotuloTcc())+'</b>'
+        +'<span class="hint">Ela sai da faixa de matérias e passa a viver na aba '+esc(rotuloTcc())+', junto com as etapas e as orientações.</span></span></label>'
       +(existing?'<div class="zona-risco"><div><b>Remover esta matéria</b>'
         +'<span class="hint">Apaga também os textos e as faltas dela. Não dá para desfazer.</span></div>'
         +'<button class="btn-danger" data-remover>'+SVG_TRASH+' Remover</button></div>':'')
@@ -3044,7 +3453,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     var chosen=wireSwatches(overlay, b.color);
     overlay.querySelector('[data-x]').addEventListener('click', closeModal);
     overlay.querySelector('[data-cancel]').addEventListener('click', closeModal);
-    overlay.querySelector('[data-save]').addEventListener('click', function(){ saveSubject(existing, chosen); });
+    overlay.querySelector('[data-save]').addEventListener('click', function(){ saveSubject(existing, chosen, function(){ return modoHor; }); });
     var rm=overlay.querySelector('[data-remover]');
     if(rm) rm.addEventListener('click', function(){ deleteSubject(existing.id); });
     /* Mostra em português o que o código quer dizer, enquanto ela digita —
@@ -3065,20 +3474,61 @@ body.com-teclado .app{padding-bottom:56vh;}
     }
     inpHor.addEventListener('input', lerHorario);
     lerHorario();
+    /* Alternar entre as duas formas. O modo escolhido é o que vale ao salvar:
+       o outro é zerado, para não sobrar um horário fantasma dizendo outra coisa. */
+    var segHor=overlay.querySelector('.segfield[aria-label="Como informar o horário"]');
+    var caixaDias=document.getElementById('horDias'), caixaCod=document.getElementById('horCodigo');
+    function trocarModo(m){
+      modoHor=m;
+      caixaDias.style.display = (m==='dias')?'':'none';
+      caixaCod.style.display  = (m==='codigo')?'':'none';
+      Array.prototype.forEach.call(segHor.querySelectorAll('[data-modo]'), function(x){
+        var on=x.getAttribute('data-modo')===m;
+        x.classList.toggle('on', on);
+        x.setAttribute('aria-checked', on?'true':'false');
+        x.setAttribute('tabindex', on?'0':'-1');
+      });
+    }
+    segHor.addEventListener('click', function(ev){
+      var x=ev.target.closest('[data-modo]'); if(!x) return;
+      ev.preventDefault(); trocarModo(x.getAttribute('data-modo'));
+    });
+    segHor.addEventListener('keydown', function(ev){
+      if(ev.key!=='ArrowRight' && ev.key!=='ArrowLeft') return;
+      ev.preventDefault();
+      trocarModo(modoHor==='dias'?'codigo':'dias');
+      var alvo=segHor.querySelector('[tabindex="0"]'); if(alvo) alvo.focus();
+    });
+    caixaDias.querySelector('.dias-sem').addEventListener('click', function(ev){
+      var d=ev.target.closest('[data-dia]'); if(!d) return;
+      ev.preventDefault();
+      var on=d.getAttribute('aria-pressed')!=='true';
+      d.setAttribute('aria-pressed', on?'true':'false');
+      d.classList.toggle('on', on);
+    });
     var nm=document.getElementById('s_name'); nm.focus();
     nm.addEventListener('input', function(){ nm.classList.remove('invalid'); var em=document.getElementById('s_err'); if(em) em.style.display='none'; });
-    enterConfirma(overlay, function(){ saveSubject(existing, chosen); });
+    enterConfirma(overlay, function(){ saveSubject(existing, chosen, function(){ return modoHor; }); });
   }
-  function saveSubject(existing, chosen){
+  function saveSubject(existing, chosen, lerModo){
     var g=function(id){ return document.getElementById(id).value; };
     var name=g('s_name').trim();
     if(!name){ var el=document.getElementById('s_name'); el.classList.add('invalid');
       var em=document.getElementById('s_err'); if(em) em.style.display=''; el.focus(); return; }
     var lim=num(g('s_lim')); if(lim==null||lim<0) lim=0;
     var ehTcc=!!document.getElementById('s_tcc').checked;
+    var modo = lerModo ? lerModo() : 'codigo';
+    var dias=[];
+    document.querySelectorAll('#horDias [data-dia][aria-pressed="true"]').forEach(function(x){
+      dias.push(Number(x.getAttribute('data-dia'))); });
     var data={ name:name, professor:g('s_prof').trim(), color:chosen.val,
       absenceLimit:Math.min(lim,30), driveLink:g('s_drive').trim(), tcc:ehTcc,
-      schedule:g('s_hor').trim(), place:g('s_local').trim() };
+      place:g('s_local').trim(),
+      // só o modo escolhido é gravado; o outro sai zerado
+      schedule: modo==='codigo' ? g('s_hor').trim() : '',
+      days:     modo==='dias'   ? dias : [],
+      startTime:modo==='dias'   ? g('s_ini') : '',
+      endTime:  modo==='dias'   ? g('s_fim') : '' };
     // só pode existir uma matéria de TCC — marcar uma desmarca a anterior
     if(ehTcc) subjects.forEach(function(x){ if(x!==existing) x.tcc=false; });
     var eraTcc = !!(existing && existing.tcc);
@@ -3235,12 +3685,12 @@ body.com-teclado .app{padding-bottom:56vh;}
   function openTccModal(){
     var v=function(x){ return esc(x==null?'':x); };
     var html='<div class="modal" role="dialog" aria-modal="true">'
-      +'<div class="modal-head"><h2>Configurar o TCC</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
+      +'<div class="modal-head"><h2>Configurar '+esc(rotuloTcc())+'</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
       +'<div class="field"><label for="c_tit">Título do trabalho</label>'
         +'<input id="c_tit" value="'+v(tcc.titulo)+'" placeholder="Ex.: A cidade como texto: leituras do centro de Brasília"></div>'
       +'<div class="field"><label for="c_ori">Professor(a) orientador(a)</label>'
         +'<input id="c_ori" value="'+v(tcc.orientadora)+'" placeholder="Ex.: Karl Marx da Silva"></div>'
-      +'<div class="field"><label for="c_drv">Pasta do TCC no Drive (opcional)</label>'
+      +'<div class="field"><label for="c_drv">Pasta no Drive (opcional)</label>'
         +'<input id="c_drv" value="'+v(tcc.driveLink)+'" placeholder="Cole o link de compartilhamento da pasta"></div>'
       +'<div class="row-2"><div class="field"><label for="c_plbl">O que é o prazo</label>'
         +'<input id="c_plbl" value="'+v(tcc.prazoLabel)+'" placeholder="Ex.: Entrega final"></div>'
@@ -3453,10 +3903,39 @@ body.com-teclado .app{padding-bottom:56vh;}
         +'<select id="p_pace">'+[2,3,4,5].map(function(v){
             return '<option value="'+v+'"'+(pace===v?' selected':'')+'>'+v+' min por página</option>'; }).join('')
         +'</select><span class="hint">Usado para estimar quanto tempo falta de leitura.</span></div>'
+      +'<div class="pref-sep" role="separator"><span>Este app</span></div>'
+      +'<div class="field"><span class="fake-label">Cor de destaque</span>'
+        +'<div class="acentos" role="radiogroup" aria-label="Cor de destaque">'
+        +ACENTO_ORDEM.map(function(k){
+            var a=ACENTOS[k], v=dark?a.e:a.c, on=(appCfg.acento===k);
+            return '<button type="button" class="acento'+(on?' on':'')+'" data-acento="'+k+'"'
+              +' role="radio" aria-checked="'+on+'" tabindex="'+(on?'0':'-1')+'" title="'+esc(a.rot)+'">'
+              +'<span class="ac-bola" style="background:'+v[0]+'"></span>'
+              +'<span class="ac-nome">'+esc(a.rot)+'</span></button>'; }).join('')
+        +'</div><span class="hint">Vale para os botões, os destaques e o ícone do atalho.</span></div>'
+      +'<div class="row-2"><div class="field"><label for="p_titulo">Nome do app</label>'
+        +'<input id="p_titulo" maxlength="60" value="'+esc(appCfg.titulo)+'" placeholder="Tracker de Leituras">'
+        +'<span class="hint">Aparece no cabeçalho, na aba do navegador e no atalho da tela de início.</span></div>'
+      +'<div class="field"><label for="p_periodo">Período</label>'
+        +'<input id="p_periodo" maxlength="40" value="'+esc(appCfg.periodo)+'" placeholder="Ex.: 2026/2 ou 5º semestre">'
+        +'<span class="hint">Deixe vazio para não mostrar nada.</span></div></div>'
+      +'<div class="row-2"><div class="field"><label for="p_tccon">Aba do trabalho final</label>'
+        +'<select id="p_tccon"><option value="1"'+(tccLigado()?' selected':'')+'>Ligada</option>'
+        +'<option value="0"'+(!tccLigado()?' selected':'')+'>Desligada</option></select>'
+        +'<span class="hint">Etapas, orientações e prazo. Desligue se você ainda não tem um.</span></div>'
+      +'<div class="field"><label for="p_tccnome">Como chamar</label>'
+        +'<input id="p_tccnome" maxlength="24" value="'+esc(rotuloTcc())+'" placeholder="TCC">'
+        +'<span class="hint">TCC, monografia, dissertação, tese…</span></div></div>'
+      +'<div class="pref-sep" role="separator"><span>Semestres</span></div>'
+      +'<div class="zona-semestre"><div><b>Fechar o semestre</b>'
+        +'<span class="hint">Guarda tudo o que está aqui e deixa a mesa limpa para o próximo. Nada é apagado.</span></div>'
+        +'<button class="btn-ghost" id="p_arquivos">'+svg(IC.pasta,15)+' Semestres'
+        +(arquivos.length?' <b>('+arquivos.length+')</b>':'')+'</button></div>'
       +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Fechar</button></div></div>';
     var ov=buildOverlay(html);
     ov.querySelector('[data-x]').addEventListener('click', closeModal);
     ov.querySelector('[data-cancel]').addEventListener('click', closeModal);
+    document.getElementById('p_arquivos').addEventListener('click', abrirArquivos);
     var g=document.getElementById('p_grad');
     g.addEventListener('change', function(){
       gradiente = g.value==='1'; saveUI(); renderMain();
@@ -3489,6 +3968,103 @@ body.com-teclado .app{padding-bottom:56vh;}
     pc.addEventListener('change', function(){
       pace=Number(pc.value)||3;
       saveUI(); renderMain();
+    });
+    /* Estes quatro vão para os DADOS, não para as preferências de tela: cada
+       mudança é um persist(), para viajarem no arquivo e na sincronização. */
+    function mudarCfg(campo, valor){
+      var novo=Object.assign({}, appCfg); novo[campo]=valor;
+      appCfg=normCfg(novo);
+      aplicarCfgNaPagina(); persist(); renderAll();
+    }
+    var tit=document.getElementById('p_titulo');
+    tit.addEventListener('change', function(){ mudarCfg('titulo', tit.value); tit.value=appCfg.titulo; });
+    var per=document.getElementById('p_periodo');
+    per.addEventListener('change', function(){ mudarCfg('periodo', per.value); per.value=appCfg.periodo; });
+    var tn=document.getElementById('p_tccnome');
+    tn.addEventListener('change', function(){ mudarCfg('tccNome', tn.value); tn.value=rotuloTcc(); });
+    var to=document.getElementById('p_tccon');
+    to.addEventListener('change', function(){
+      mudarCfg('tccOn', to.value==='1');
+      anunciar(tccLigado()?'Aba '+rotuloTcc()+' ligada':'Aba do trabalho final desligada');
+    });
+    /* A troca é imediata e a amostra dentro do menu repinta junto: dá para
+       comparar as seis sem fechar nada. */
+    var caixaAc=ov.querySelector('.acentos');
+    function pintarAcentos(){
+      Array.prototype.forEach.call(caixaAc.querySelectorAll('[data-acento]'), function(b){
+        var k=b.getAttribute('data-acento'), a=ACENTOS[k], v=dark?a.e:a.c, on=(appCfg.acento===k);
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-checked', on?'true':'false');
+        b.setAttribute('tabindex', on?'0':'-1');
+        b.querySelector('.ac-bola').style.background=v[0];
+      });
+    }
+    function escolherAcento(k){
+      if(!ACENTOS[k] || appCfg.acento===k) return;
+      mudarCfg('acento', k); pintarAcentos();
+      anunciar('Cor '+ACENTOS[k].rot);
+    }
+    caixaAc.addEventListener('click', function(ev){
+      var b=ev.target.closest('[data-acento]'); if(!b) return;
+      ev.preventDefault(); escolherAcento(b.getAttribute('data-acento'));
+    });
+    caixaAc.addEventListener('keydown', function(ev){
+      if(ev.key!=='ArrowRight' && ev.key!=='ArrowLeft') return;
+      ev.preventDefault();
+      var i=ACENTO_ORDEM.indexOf(appCfg.acento); if(i<0) i=0;
+      i=(i+(ev.key==='ArrowRight'?1:ACENTO_ORDEM.length-1))%ACENTO_ORDEM.length;
+      escolherAcento(ACENTO_ORDEM[i]);
+      var alvo=caixaAc.querySelector('[tabindex="0"]'); if(alvo) alvo.focus();
+    });
+  }
+
+  // ---- modal: semestres arquivados ----
+  function abrirArquivos(){
+    var vivo=temConteudoVivo();
+    var lista = arquivos.length
+      ? '<div class="arq-lista">'+arquivos.map(function(a){
+          return '<div class="arq-item"><div class="arq-id"><b>'+esc(a.nome)+'</b>'
+            +'<span class="hint">'+contaArquivo(a)+' · guardado em '+fmtDate(a.em)+'</span></div>'
+            +'<div class="arq-acoes">'
+            +'<button class="btn-ghost sm" data-arq="restaurar" data-id="'+esc(a.id)+'">Restaurar</button>'
+            +'<button class="btn-ghost sm" data-arq="baixar" data-id="'+esc(a.id)+'" title="Baixar como arquivo .json">'+svg(IC.save,14)+'</button>'
+            +'<button class="icon-btn danger" data-arq="remover" data-id="'+esc(a.id)+'" aria-label="'+esc('Apagar '+a.nome)+'">'+SVG_TRASH+'</button>'
+            +'</div></div>'; }).join('')+'</div>'
+      : '<div class="tcc-vazio"><p>Nenhum semestre guardado ainda.</p>'
+        +'<span class="hint">Ao fechar um semestre, ele vem para cá inteiro e pode voltar quando você quiser.</span></div>';
+    var html='<div class="modal" role="dialog" aria-modal="true">'
+      +'<div class="modal-head"><h2>Semestres</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
+      +'<div class="field"><label for="arq_nome">Fechar o semestre atual como</label>'
+        +'<input id="arq_nome" maxlength="60" value="'+esc(periodoSugerido())+'" placeholder="Ex.: 2026/2"'
+        +(vivo?'':' disabled')+'>'
+        +'<span class="hint">'+(vivo
+            ? 'As matérias, as leituras e o trabalho final saem da tela e ficam guardados aqui. Depois é só restaurar.'
+            : 'Não há nada para guardar: o semestre atual está vazio.')+'</span></div>'
+      +'<div class="arq-fechar"><button class="btn-wine" id="arq_go"'+(vivo?'':' disabled')+'>'
+        +svg(IC.check,15)+' Fechar e começar um novo</button></div>'
+      +'<div class="pref-sep" role="separator"><span>Guardados</span></div>'
+      +lista
+      +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Fechar</button></div></div>';
+    var ov=buildOverlay(html);
+    ov.querySelector('[data-x]').addEventListener('click', closeModal);
+    ov.querySelector('[data-cancel]').addEventListener('click', closeModal);
+    var btn=document.getElementById('arq_go');
+    if(vivo) btn.addEventListener('click', function(){
+      var nome=document.getElementById('arq_nome').value.trim() || periodoSugerido();
+      if(!confirm('Guardar "'+nome+'" e começar um semestre vazio?\n\nNada é apagado — ele fica na lista aqui embaixo.')) return;
+      arquivarAtual(nome);
+      // 2026/1 vira 2026/2; se o nome não tem esse formato, o campo fica vazio
+      appCfg=normCfg(Object.assign({}, appCfg, {periodo:periodoSeguinte(nome)}));
+      persist(); saveUI(); aplicarCfgNaPagina(); renderAll();
+      anunciar('Semestre "'+nome+'" guardado');
+      abrirArquivos();
+    });
+    ov.addEventListener('click', function(e){
+      var b=e.target.closest('[data-arq]'); if(!b) return;
+      var act=b.getAttribute('data-arq'), id=b.getAttribute('data-id');
+      if(act==='restaurar') restaurarArquivo(id);
+      else if(act==='baixar') baixarArquivo(id);
+      else if(act==='remover') removerArquivo(id);
     });
   }
 
@@ -3626,7 +4202,7 @@ body.com-teclado .app{padding-bottom:56vh;}
         return; }
       var levaTcc = Object.prototype.hasOwnProperty.call(obj,'tcc');
       if(!confirm('Importar vai SUBSTITUIR as matérias e os textos atuais'
-        +(levaTcc?', e também tudo da aba TCC (etapas, orientações, prazo)':'')
+        +(levaTcc?', e também tudo da aba '+esc(rotuloTcc())+' (etapas, orientações, prazo)':'')
         +'.\n\nO que está aqui agora: '+subjects.length+' matéria(s) e '+texts.length+' texto(s).'
         +'\nO que vem do arquivo: '+obj.subjects.length+' matéria(s) e '+obj.texts.length+' texto(s).'
         +'\n\nUm backup do estado atual será baixado antes. Continuar?')) return;
@@ -3634,6 +4210,11 @@ body.com-teclado .app{padding-bottom:56vh;}
       var d=normalizarTudo(obj.subjects, temChave(obj,'texts')?obj.texts:texts);
       subjects=d.subjects; texts=d.texts;
       tcc=tccRecebido(obj, tcc);
+      /* O mesmo critério do arquivo e da nuvem: a chave presente manda, a chave
+         ausente não é um pedido para apagar. Sem isto, importar um backup feito
+         nesta versão perdia o nome do app e os semestres guardados. */
+      if(obj.cfg && typeof obj.cfg==='object'){ appCfg=normCfg(obj.cfg); aplicarCfgNaPagina(); }
+      if(Array.isArray(obj.arquivos)) arquivos=normArquivos(obj.arquivos);
       currentSubjectId=null; ajustarMateriaAtual();
       query=''; fTag=''; searchInput.value=''; clearX.style.display='none';
       closeModal();
@@ -3659,8 +4240,8 @@ body.com-teclado .app{padding-bottom:56vh;}
         +'<div class="vswitch" id="vswitch">'
           +'<button data-v="subject" aria-pressed="false">'+svg(IC.list,15)+' Por matéria</button>'
           +'<button data-v="week" aria-pressed="false">'+svg(IC.cal,15)+' Cronograma</button>'
-          +'<span class="vsep" aria-hidden="true"></span>'
-          +'<button class="tcc-tab" data-v="tcc" aria-pressed="false">'+svg(IC.book,15)+' TCC</button>'
+          +'<span class="vsep" id="vsep" aria-hidden="true"></span>'
+          +'<button class="tcc-tab" id="tccTab" data-v="tcc" aria-pressed="false">'+svg(IC.book,15)+' '+esc(rotuloTcc())+'</button>'
         +'</div>'
         +'<div class="viewbar-right">'
           +'<button class="btn-ghost sm" id="fileBtn"></button>'
@@ -3783,6 +4364,9 @@ body.com-teclado .app{padding-bottom:56vh;}
         var sel=document.getElementById('sortSel'); if(sel) sel.value=sortKey;
         renderSortDir();
         openMenuId=null; renderTable(); return; }
+      if(act==='bv-materia'){ openSubjectModal(null); return; }
+      if(act==='bv-importar'){ importFile.click(); return; }
+      if(act==='bv-exemplo'){ carregarExemplo(); return; }
       if(act==='clearsearch'){ soPendentes=false; saveUI(); renderPendBtn(); clearSearch(); return; }
       if(act==='verpend'){ soPendentes=false; saveUI(); renderPendBtn(); renderTable(); return; }
       if(act==='pedit'){ e.stopPropagation(); e.preventDefault(); abrirEdicaoPaginas(el); return; }
@@ -3822,6 +4406,7 @@ body.com-teclado .app{padding-bottom:56vh;}
         novoTexto(); return; }
       // "t" abre e fecha o TCC — ele fica fora do rodízio da tecla "s"
       if(e.key==='t'){ e.preventDefault();
+        if(!tccLigado()) return;
         openMenuId=null;
         view = (view==='tcc') ? 'subject' : 'tcc';
         saveUI(); applyView(); renderMain(); return; }
