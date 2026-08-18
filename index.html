@@ -165,6 +165,15 @@ tbody tr:last-child td{border-bottom:0;}
 tbody tr:hover td{background:var(--hover);}
 .c-num{width:52px;}
 /* Já lido e já passou: some do caminho sem sair do lugar. */
+/* Um item atrasado não desaparece junto com o que já foi resolvido: ele recua
+   menos e ganha uma marca vermelha na data. */
+tr.ja-passou.atrasado td, .tcard.ja-passou.atrasado, .witem.ja-passou.atrasado{opacity:.85;}
+.date-rel.late, .tc-meta .late{color:#B0453E; font-weight:600;}
+.app.dark .date-rel.late, .app.dark .tc-meta .late{color:#f0a49b;}
+tr.atrasado td:first-child{box-shadow:inset 3px 0 0 #B0453E;}
+.app.dark tr.atrasado td:first-child{box-shadow:inset 3px 0 0 #f0a49b;}
+.tcard.atrasado{box-shadow:inset 3px 0 0 #B0453E;}
+.app.dark .tcard.atrasado{box-shadow:inset 3px 0 0 #f0a49b;}
 tr.ja-passou td, .tcard.ja-passou, .witem.ja-passou{opacity:.62;}
 /* o anel some junto com a opacidade da linha; nas que já passaram ele é
    desenhado mais forte para continuar visível */
@@ -466,6 +475,62 @@ body.com-teclado .app{padding-bottom:56vh;}
 }
 /* O convite já é um cartão; sem isto ficava um cartão dentro de outro. */
 .table-wrap.so-convite{background:none; border:0; box-shadow:none; overflow:visible;}
+/* Lembrete de cópia de segurança: firme, mas sem parecer erro */
+.lembrete{max-width:1080px; margin:0 auto 14px;}
+.lembrete-in{display:flex; align-items:center; gap:11px; flex-wrap:wrap;
+  background:var(--wine-tint); border:1.5px solid var(--wine-fg); border-radius:12px;
+  padding:11px 14px; color:var(--ink); font-size:13.5px;}
+.lembrete-in > span:first-of-type{flex:1 1 260px;}
+.lembrete-in b{font-weight:600;}
+.lembrete-acoes{display:flex; gap:7px; flex:none;}
+.lembrete .btn-wine.sm, .lembrete .btn-ghost.sm{height:34px; font-size:12.5px; padding:0 11px;}
+@media (max-width:620px){
+  .lembrete-acoes{width:100%;}
+  .lembrete-acoes button{flex:1; justify-content:center; min-height:40px;}
+}
+/* Convite discreto para instalar na tela de início */
+.instalar{max-width:1080px; margin:0 auto 14px;}
+.instalar-in{display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  background:var(--card); border:1.5px dashed var(--line); border-radius:12px;
+  padding:10px 13px; color:var(--ink-soft); font-size:13px;}
+.instalar-in > span{flex:1 1 220px;}
+.instalar-in b{color:var(--ink);}
+.instalar .btn-ghost.sm{height:34px; font-size:12.5px; padding:0 11px; flex:none;}
+/* Aviso passageiro: confirma o que acabou de acontecer */
+.toast{position:fixed; left:50%; bottom:max(18px,env(safe-area-inset-bottom)); transform:translate(-50%,14px);
+  background:var(--ink); color:var(--paper); padding:12px 18px; border-radius:11px;
+  font-size:13.5px; max-width:min(92vw,460px); text-align:center; z-index:60;
+  opacity:0; pointer-events:none; transition:opacity .18s, transform .18s;
+  box-shadow:0 8px 26px rgba(0,0,0,.28);}
+.toast.on{opacity:1; transform:translate(-50%,0);}
+#helpBtn{font-family:var(--serif); font-size:19px; font-weight:500; line-height:1;}
+.aj{border-bottom:1.5px solid var(--line);}
+.aj:first-of-type{border-top:1.5px solid var(--line);}
+.aj > summary{cursor:pointer; padding:13px 26px 13px 0; font-size:14.5px; color:var(--ink);
+  position:relative; list-style:none; font-weight:500;}
+.aj > summary::-webkit-details-marker{display:none;}
+.aj > summary::after{content:"+"; position:absolute; right:6px; top:11px; font-size:18px;
+  color:var(--faint); font-weight:400;}
+.aj[open] > summary::after{content:"–";}
+.aj-corpo{padding:0 0 14px; font-size:13.5px; color:var(--ink-soft); line-height:1.6;}
+.aj-corpo p{margin:0 0 9px;}
+.aj-corpo ul{margin:0 0 9px; padding-left:19px;}
+.aj-corpo li{margin-bottom:4px;}
+.aj-corpo b{color:var(--ink);}
+.aj-corpo code{font-family:var(--mono); font-size:12.5px; background:var(--chipn);
+  padding:1px 5px; border-radius:4px;}
+.link-btn{border:0; background:none; padding:0; font:inherit; color:var(--wine-fg);
+  text-decoration:underline; text-underline-offset:2px; cursor:pointer;}
+.link-btn:hover{color:var(--ink);}
+.bv-aviso{background:var(--wine-tint); border-radius:10px; padding:11px 13px;
+  font-size:13px; text-align:left; margin-top:12px !important; max-width:none !important;}
+.bv-aviso svg{vertical-align:-2px; margin-right:4px;}
+.fadv{border:1.5px solid var(--line); border-radius:12px; padding:0 14px; margin:16px 0;}
+.fadv > summary{cursor:pointer; padding:12px 0; font-weight:500; color:var(--ink); list-style:none;}
+.fadv > summary::-webkit-details-marker{display:none;}
+.fadv > summary::before{content:"▸ "; color:var(--faint);}
+.fadv[open] > summary::before{content:"▾ ";}
+.fadv[open]{padding-bottom:12px;}
 .nao-salvo{color:#B0453E;}
 .app.dark .nao-salvo{color:#f0a49b;}
 .empty{padding:52px 24px; text-align:center; color:var(--ink-soft);}
@@ -866,7 +931,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   /* Sobe 0.01 a cada versão entregue. Aparece no rodapé, junto dos atalhos. */
   /* O tracker deixou de ser um app de uma pessoa só e virou um que qualquer
      estudante configura: a contagem recomeça do zero aqui, em V0.1. */
-  var APP_VERSAO = '0.12';
+  var APP_VERSAO = '0.13';
   var STORAGE_KEY = 'tracker-leituras:v1';
   var UI_KEY      = 'tracker-leituras:ui';
 
@@ -904,7 +969,11 @@ body.com-teclado .app{padding-bottom:56vh;}
     outro:      'Avaliação'
   };
   var AVAL_ORDER=['prova','trabalho','seminario','apresentacao','outro'];
-  var AVAL_LABEL = { nao_lido:'A fazer', lendo:'Estudando', parcial:'Estudando', lido:'Pronta' };
+  /* Antes "lendo" e "parcial" tinham o MESMO rótulo numa avaliação, e o app
+     precisava esconder uma das opções para não mostrar duas idênticas — coisa
+     que <option hidden> não garante em todo navegador. Rótulos distintos
+     resolvem na raiz e ainda dizem a verdade sobre cada estado. */
+  var AVAL_LABEL = { nao_lido:'A fazer', lendo:'Estudando', parcial:'Estudei em parte', lido:'Pronta' };
   function ehAval(t){ return !!(t && t.kind==='aval'); }
   function rotuloStatus(t){
     var cfg=STATUS[t.status]||STATUS.nao_lido;
@@ -1123,6 +1192,9 @@ body.com-teclado .app{padding-bottom:56vh;}
   var menuScroll={x:0,y:0};   // posição da página quando o menu de status abriu
   var menuPorTeclado=false;   // abriu pelo Enter/Espaço: o foco entra no menu
   var storageWarned=false, naoSalva=false, avisoSalvar=false;
+  /* Quando a pessoa baixou uma cópia pela última vez, e até quando ela pediu
+     para não ser lembrada. Ficam nas preferências de tela: são deste aparelho. */
+  var backupEm='', lembreteAdiado='';
   var curRefIds={}, curRefDiff=null;
   var narrow=false;   // celular: lista vira cartões, sem rolagem lateral
   var faltasAberta=false;   // painel de faltas dentro do card da matéria
@@ -1945,12 +2017,12 @@ body.com-teclado .app{padding-bottom:56vh;}
       /* fileState só vira "precisa" ~400 ms depois, quando a escrita no arquivo
          falha — checar aqui dava um "está tudo bem" que não era verdade. */
       if(!storageWarned){ storageWarned=true;
-        alert('⚠️ Não consegui salvar neste navegador. O armazenamento pode estar cheio ou bloqueado (janela anônima).\n\nO que você fizer a partir de agora se perde ao fechar a aba. Use Exportar para guardar um backup, ou conecte um arquivo em "Arquivo".');
+        alert('⚠️ Não consegui salvar neste navegador. O armazenamento pode estar cheio ou bloqueado (janela anônima).\n\nO que você fizer a partir de agora se perde ao fechar a aba. Use Exportar para guardar um backup, ou toque no botão de dados no topo da tela para guardar uma cópia.');
       }
     }
   }
   function saveUI(){
-    try{ localStorage.setItem(UI_KEY, JSON.stringify({cur:currentSubjectId, sk:sortKey, sd:sortDir, view:view, dark:dark, pace:pace, tag:fTag, grad:gradiente, crono:cronoModo, pend:soPendentes, anel:contornos})); }catch(e){}
+    try{ localStorage.setItem(UI_KEY, JSON.stringify({cur:currentSubjectId, sk:sortKey, sd:sortDir, view:view, dark:dark, pace:pace, tag:fTag, grad:gradiente, crono:cronoModo, pend:soPendentes, anel:contornos, bkp:backupEm, bkpAdiado:lembreteAdiado})); }catch(e){}
   }
   function loadUI(){
     try{
@@ -1963,6 +2035,8 @@ body.com-teclado .app{padding-bottom:56vh;}
       if(u.crono==='lista'||u.crono==='gantt') cronoModo=u.crono;
       soPendentes=!!u.pend;
       if(typeof u.anel==='boolean') contornos=u.anel;
+      if(typeof u.bkp==='string') backupEm=u.bkp;
+      if(typeof u.bkpAdiado==='string') lembreteAdiado=u.bkpAdiado;
       dark=!!u.dark;
       if(u.pace) pace=Number(u.pace)||3;
       if(typeof u.tag==='string') fTag=u.tag;
@@ -2196,9 +2270,13 @@ body.com-teclado .app{padding-bottom:56vh;}
     var cfg=EMDIA[st.kind];
     var title=cfg.label, desc='';
     if(st.kind==='none'){
-      desc = st.undated
-        ? 'Nenhum texto com data de aula à frente. '+st.undated+' texto(s) sem data.'
-        : 'Cadastre a data das aulas para acompanhar suas leituras.';
+      /* "Cadastre a data das aulas" soava como erro para quem tinha acabado de
+         marcar os dias da semana: o que falta é data nas LEITURAS, não na
+         matéria. E o plural de "texto(s)" fica correto. */
+      var n=st.undated||0;
+      desc = n
+        ? ('Nenhuma leitura com data de aula à frente — '+n+(n===1?' está sem data.':' estão sem data.'))
+        : 'Adicione leituras com a data da aula em que serão discutidas para acompanhar o andamento.';
     } else {
       var isToday=st.diff===0;
       if(st.kind==='ok') title = isToday ? 'Em dia — leitura de hoje pronta' : 'Em dia';
@@ -2285,7 +2363,8 @@ body.com-teclado .app{padding-bottom:56vh;}
   function bemVindoHtml(){
     return '<div class="bemvindo" id="bemvindo">'
       +'<h2>Vamos começar</h2>'
-      +'<p>Este tracker guarda o que você tem para ler em cada matéria, quanto falta e quantas faltas você já usou. Tudo fica <b>neste navegador</b> — nada é enviado para lugar nenhum.</p>'
+      +'<p>Este tracker guarda o que você tem para ler em cada matéria, quanto falta e quantas faltas você já usou.</p>'
+      +'<p class="bv-aviso">'+svg(IC.alert,14)+' Tudo fica <b>só neste navegador</b>: nada é enviado para lugar nenhum, e ninguém além de você vê. Em troca, se você limpar o navegador ou trocar de aparelho, <b>some</b> — por isso o app lembra você de baixar uma cópia de vez em quando.</p>'
       +'<div class="bv-passos">'
         +'<div class="bv-passo"><span class="bv-n">1</span><span><b>Crie uma matéria</b> — nome, cor e, se quiser, os dias de aula.</span></div>'
         +'<div class="bv-passo"><span class="bv-n">2</span><span><b>Cadastre as leituras</b> com a data da aula em que serão discutidas.</span></div>'
@@ -2296,7 +2375,7 @@ body.com-teclado .app{padding-bottom:56vh;}
         +'<button class="btn-ghost" data-act="bv-importar">'+svg(IC.up,15)+' Tenho um backup</button>'
         +'<button class="btn-ghost" data-act="bv-exemplo">Ver um exemplo</button>'
       +'</div>'
-      +'<p class="hint" style="margin-top:16px">O exemplo é fictício e você pode apagar tudo depois no menu.</p>'
+      +'<p class="hint" style="margin-top:16px">O exemplo é fictício. Dá para apagar tudo depois, no botão de dados lá em cima.</p>'
     +'</div>';
   }
   function renderPanel(){
@@ -2316,7 +2395,7 @@ body.com-teclado .app{padding-bottom:56vh;}
       +'<div class="subj-top"><div class="subj-id"><h2>'+esc(s.name)+'</h2>'
         +(s.professor?'<span class="subj-prof">Professor(a): <b>'+esc(s.professor)+'</b></span>':'')
         +aulaLinha(s)+'</div>'
-        +'<button class="icon-btn" data-act="editsubj" data-id="'+s.id+'" title="Configurar matéria">'+SVG_GEAR+'</button></div>'
+        +'<button class="icon-btn" data-act="editsubj" data-id="'+s.id+'" title="Configurar matéria" aria-label="'+esc('Configurar '+s.name)+'">'+SVG_GEAR+'</button></div>'
       +emDiaHtml(subjectStatus(s.id))
       +(chips?'<div class="subj-chips">'+chips+'</div>':'')
       +faltasPainel(s)
@@ -2391,11 +2470,7 @@ body.com-teclado .app{padding-bottom:56vh;}
       });
       app.appendChild(el);
     }
-    /* "Estudando" cobre lendo e parcial; se o item JÁ está em parcial, a opção
-       fica visível para o menu não ficar sem nenhum item marcado. */
-    var ordem = (ehAval(t) && t.status!=='parcial')
-      ? STATUS_ORDER.filter(function(st){ return st!=='parcial'; })
-      : STATUS_ORDER;
+    var ordem = STATUS_ORDER;
     el.innerHTML=ordem.map(function(st){
       var atual=(st===t.status);
       var rot = ehAval(t) ? (AVAL_LABEL[st]||STATUS[st].label) : STATUS[st].label;
@@ -2421,11 +2496,21 @@ body.com-teclado .app{padding-bottom:56vh;}
       if(atual) atual.focus();
     }
   }
+  /* Atrasado = a aula já passou e a leitura não foi feita. É a informação mais
+     urgente da lista, e ficava só um cinza mais claro — indistinguível de "já
+     resolvido". Agora a data fica vermelha e diz "atrasado". */
+  function atrasado(t){
+    if(!t.classDate || t.status==='lido' || t.status==='parcial') return false;
+    var d=dayDiff(t.classDate);
+    return d!=null && d<0;
+  }
   function dateCell(t){
     if(!t.classDate) return '<span class="muted">—</span>';
     var d=dayDiff(t.classDate);
-    var cls = d===0 ? 'today' : ((d!=null && d>0 && d<=3) ? 'soon' : '');
-    return fmtDate(t.classDate)+'<span class="date-rel '+cls+'">'+relLabel(d)+'</span>';
+    var atr=atrasado(t);
+    var cls = atr ? 'late' : (d===0 ? 'today' : ((d!=null && d>0 && d<=3) ? 'soon' : ''));
+    return fmtDate(t.classDate)+'<span class="date-rel '+cls+'">'
+      +(atr?'atrasado · ':'')+relLabel(d)+'</span>';
   }
   /* A avaliação se distingue por uma etiqueta com o tipo, não por outra cor de
      linha — assim ela continua lendo como parte da mesma lista. */
@@ -2495,6 +2580,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     if(jaPassou(t)) cls.push('ja-passou');
     var anel=anelAttr(t, isRef);
     if(anel.cls) cls.push(anel.cls.trim());
+    if(atrasado(t)) cls.push('atrasado');
     return '<tr'+(cls.length?' class="'+cls.join(' ')+'"':'')+(anel.style?' style="'+anel.style+'"':'')+'>'
       +'<td class="c-num">'+(t.number!=null
           ? '<span class="num-badge" style="background:'+color+'">'+t.number+'</span>'
@@ -2523,11 +2609,12 @@ body.com-teclado .app{padding-bottom:56vh;}
     var m=estMin(t);
     var meta=[];
     if(t.author && !ehAval(t)) meta.push(esc(t.author));
-    if(t.classDate) meta.push(fmtDate(t.classDate)+' <span class="'+dcls+'">'+relLabel(d)+'</span>');
+    if(t.classDate) meta.push(fmtDate(t.classDate)+' <span class="'+(atrasado(t)?'late':dcls)+'">'
+      +(atrasado(t)?'atrasado · ':'')+relLabel(d)+'</span>');
     if(m!=null) meta.push(t.pages+' p ≈ '+fmtMin(m));
     var anelC=anelAttr(t, isRef);
     // no celular a expectativa é tocar no cartão inteiro, não só no lápis
-    return '<div class="tcard'+(isRef?' is-ref':'')+(ehAval(t)?' is-aval':'')+(jaPassou(t)?' ja-passou':'')
+    return '<div class="tcard'+(isRef?' is-ref':'')+(ehAval(t)?' is-aval':'')+(jaPassou(t)?' ja-passou':'')+(atrasado(t)?' atrasado':'')
       +anelC.cls+'" data-act="abrircard" data-id="'+esc(t.id)+'"'
       +(anelC.style?' style="'+anelC.style+'"':'')+'>'
       +'<div class="tc-top">'+(t.number!=null
@@ -2596,8 +2683,8 @@ body.com-teclado .app{padding-bottom:56vh;}
       +(pend?' · '+pend+' por ler'+(pendMin?' ≈ '+fmtMin(pendMin):''):'')
       +(avalPend?' · '+avalPend+' avaliação(ões) por fazer':'')
       +textoSalvo(true)+'<br>'
-      +'<span class="kbd">n</span> novo texto · <span class="kbd">/</span> buscar · <span class="kbd">s</span> alternar visão'
-      +(tccLigado()?' · <span class="kbd">t</span> '+esc(rotuloTcc()):'')+' · <span class="kbd">Esc</span> fechar'
+      +atalhos('<span class="kbd">n</span> novo texto · <span class="kbd">/</span> buscar · <span class="kbd">s</span> alternar visão'
+      +(tccLigado()?' · <span class="kbd">t</span> '+esc(rotuloTcc()):'')+' · <span class="kbd">Esc</span> fechar')
       +selo();
     saveUI();
   }
@@ -2631,7 +2718,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     var m=estMin(t);
     var link=ehAval(t)?'':safeUrl(t.link);
     var anelW=anelAttr(t, false);
-    return '<div class="witem'+(ehAval(t)?' is-aval':'')+(jaPassou(t)?' ja-passou':'')
+    return '<div class="witem'+(ehAval(t)?' is-aval':'')+(jaPassou(t)?' ja-passou':'')+(atrasado(t)?' atrasado':'')
       +anelW.cls+'"'+(anelW.style?' style="'+anelW.style+'"':'')+'>'
       +'<span class="wsub" title="'+esc(s?s.name:'')+'"><span class="sdot" style="background:'+(s?s.color:'#999')+'"></span>'+esc(s?s.name:'—')+'</span>'
       +'<div class="wmain"><span class="wname">'+esc(t.name)+'</span>'
@@ -2691,8 +2778,8 @@ body.com-teclado .app{padding-bottom:56vh;}
     renderStatusMenu();
     foot.innerHTML='Visão geral de todas as matérias · ritmo de leitura: '+pace+' min por página'
       +' (ajuste no menu ☰)'+textoSalvo(false)+'<br>'
-      +'<span class="kbd">n</span> novo texto · <span class="kbd">s</span> alternar visão'
-      +(tccLigado()?' · <span class="kbd">t</span> '+esc(rotuloTcc()):'')+' · <span class="kbd">Esc</span> fechar'
+      +atalhos('<span class="kbd">n</span> novo texto · <span class="kbd">s</span> alternar visão'
+      +(tccLigado()?' · <span class="kbd">t</span> '+esc(rotuloTcc()):'')+' · <span class="kbd">Esc</span> fechar')
       +selo();
     saveUI();
   }
@@ -3128,13 +3215,17 @@ body.com-teclado .app{padding-bottom:56vh;}
     else if(syncState==='on')       t={txt:'Sincronizado'+(syncAt?' · '+quandoTxt(syncAt):''), ic:IC.check, cls:'ok'};
     else if(fileState==='on')       t={txt:(fileName||'arquivo')+' · salvando', ic:IC.check, cls:'ok'};
     else if(fileState==='precisa')  t={txt:'Reconectar arquivo', ic:IC.alert, cls:'warn'};
-    else                            t={txt:'Salvar e sincronizar', ic:IC.sync, cls:''};
+    /* Sem sincronia nem arquivo, o botão fala do que realmente importa ali:
+       a cópia de segurança. Antes prometia "sincronizar" para quem nunca ia
+       configurar sincronia nenhuma. */
+    else if(precisaLembrete())      t={txt:'Guardar uma cópia', ic:IC.alert, cls:'warn'};
+    else                            t={txt:'Seus dados',        ic:IC.save,  cls:''};
     b.className='btn-ghost sm file-btn '+t.cls;
     b.innerHTML=svg(t.ic,14)+' <span class="file-lbl">'+esc(t.txt)+'</span>';
     anunciar(t.txt, true);
     b.title = naoSalva ? 'O navegador está recusando gravar. Use Exportar para não perder o que fez.'
             : (syncState==='on' ? 'Sincronizando com o GitHub automaticamente'
-            : (fileState==='on' ? 'Gravando em '+fileName : 'Salvar e sincronizar o progresso'));
+            : (fileState==='on' ? 'Gravando em '+fileName : 'Cópia de segurança, sincronização e apagar tudo'));
   }
   /* Muda de texto = leitor de tela fala. "sóSeMudou" evita repetir o mesmo
      aviso a cada re-render. */
@@ -3145,10 +3236,16 @@ body.com-teclado .app{padding-bottom:56vh;}
     ultimoAviso=txt; el.textContent=txt;
   }
   function selo(){ return ' · <span class="versao">V'+esc(APP_VERSAO)+'</span>'; }
+  /* Lista de atalhos de teclado num aparelho sem teclado é ruído puro, e ocupa
+     duas linhas de uma tela pequena. */
+  function atalhos(html){ return isNarrow() ? '' : html; }
   // o rodapé para de prometer que está salvo quando não está
   function textoSalvo(comDica){
     if(naoSalva) return ' · <b class="nao-salvo">NÃO estou conseguindo salvar — use Exportar</b>';
-    return ' · salvo neste navegador'+(comDica?' (use Exportar para backup)':'');
+    /* Antes isto era só texto mandando usar um botão chamado "Exportar" que
+       não existia em tela nenhuma. Agora a própria frase é o botão. */
+    return ' · salvo <b>só neste navegador</b>'
+      +(comDica?' · <button type="button" class="link-btn" data-act="bkp-rodape">baixar uma cópia</button>':'');
   }
   function renderPendBtn(){
     var b=document.getElementById('pend'); if(!b) return;
@@ -3164,6 +3261,78 @@ body.com-teclado .app{padding-bottom:56vh;}
     b.title = asc ? 'Ordem crescente — clique para inverter'
                   : 'Ordem decrescente — clique para inverter';
     b.setAttribute('aria-label', b.title);
+  }
+  /* Lembrete de cópia de segurança. Só aparece quando há algo real a perder,
+     quando o aparelho NÃO está sincronizando nem gravando em arquivo (nesses
+     casos já existe uma cópia viva), e quando faz tempo demais. */
+  var DIAS_LEMBRETE=14;
+  function diasDesde(iso){
+    if(!iso) return null;
+    var d=new Date(iso); if(isNaN(d.getTime())) return null;
+    return Math.floor((Date.now()-d.getTime())/86400000);
+  }
+  function precisaLembrete(){
+    if(!temConteudoVivo()) return false;
+    if(syncState==='on' || fileState==='on') return false;
+    if(texts.length<3) return false;              // ainda é brincadeira, não atrapalha
+    var adiado=diasDesde(lembreteAdiado);
+    if(adiado!=null && adiado<DIAS_LEMBRETE) return false;
+    var d=diasDesde(backupEm);
+    return d==null || d>=DIAS_LEMBRETE;
+  }
+  function renderLembrete(){
+    var el=document.getElementById('lembrete'); if(!el) return;
+    if(!precisaLembrete()){ el.innerHTML=''; el.style.display='none'; return; }
+    var d=diasDesde(backupEm);
+    var quando = d==null ? 'Você ainda não guardou nenhuma cópia.'
+                         : 'Sua última cópia é de '+d+' dias atrás.';
+    el.style.display='';
+    el.innerHTML='<div class="lembrete-in">'+svg(IC.alert,15)
+      +'<span><b>'+esc(quando)+'</b> Tudo isto vive só neste navegador — se ele for limpo, some.</span>'
+      +'<span class="lembrete-acoes">'
+      +'<button class="btn-wine sm" data-act="bkp-agora">'+svg(IC.down,14)+' Baixar cópia</button>'
+      +'<button class="btn-ghost sm" data-act="bkp-depois">Depois</button></span></div>';
+  }
+  /* Convite para instalar. Aparece só no celular, só a partir da segunda
+     visita (na primeira a pessoa ainda está entendendo o que é o app), só se
+     ela já tiver algum conteúdo, e some para sempre depois de dispensado. */
+  var INSTALL_KEY='tracker-leituras:instalar';
+  function estadoInstalar(){
+    try{ return localStorage.getItem(INSTALL_KEY)||''; }catch(e){ return 'nao'; }
+  }
+  function marcarInstalar(v){ try{ localStorage.setItem(INSTALL_KEY, v); }catch(e){} }
+  function jaEhApp(){
+    try{
+      return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+        || window.navigator.standalone===true;
+    }catch(e){ return false; }
+  }
+  function podeConvidarInstalar(){
+    if(!isNarrow() || jaEhApp()) return false;
+    /* Duas faixas empilhadas no topo do celular comem meia tela. O lembrete de
+       cópia é mais urgente: enquanto ele estiver lá, o convite espera. */
+    if(precisaLembrete()) return false;
+    if(estadoInstalar()==='nao') return false;
+    if(!temConteudoVivo()) return false;
+    // '' = nunca abriu, 'visto1' = está na primeira visita, 'visto2' = já voltou
+    return estadoInstalar()==='visto2';
+  }
+  function contarVisita(){
+    var e=estadoInstalar();
+    if(e==='' ) marcarInstalar('visto1');
+    else if(e==='visto1') marcarInstalar('visto2');
+  }
+  function renderInstalar(){
+    var el=document.getElementById('instalar'); if(!el) return;
+    if(!podeConvidarInstalar()){ el.innerHTML=''; el.style.display='none'; return; }
+    var iOS = /iphone|ipad|ipod/i.test(navigator.userAgent||'');
+    var como = iOS
+      ? 'toque em <b>Compartilhar</b> e escolha <b>Adicionar à Tela de Início</b>'
+      : 'abra o menu do navegador (⋮) e escolha <b>Adicionar à tela inicial</b>';
+    el.style.display='';
+    el.innerHTML='<div class="instalar-in">'+svg(IC.book,15)
+      +'<span>Para abrir mais rápido, '+como+'. Vira um ícone e abre em tela cheia.</span>'
+      +'<button class="btn-ghost sm" data-act="inst-nao">Não, obrigada</button></div>';
   }
   function renderMain(){
     var foco=marcaDoFoco();
@@ -3205,8 +3374,9 @@ body.com-teclado .app{padding-bottom:56vh;}
     renderFileBtn();
     themeBtn.innerHTML = svg(dark?IC.sun:IC.moon,16);
     themeBtn.title = dark?'Modo claro':'Modo escuro';
+    themeBtn.setAttribute('aria-label', themeBtn.title);
     var foco=marcaDoFoco();
-    renderHero(); renderSubjects(); renderPendBtn(); applyView();
+    renderHero(); renderSubjects(); renderPendBtn(); renderLembrete(); renderInstalar(); applyView();
     if(view==='tcc') renderTcc(); else if(view==='week') renderWeek(); else renderPanel();
     devolverFoco(foco);
   }
@@ -3405,6 +3575,24 @@ body.com-teclado .app{padding-bottom:56vh;}
     persist(); saveUI(); renderAll();
     anunciar('Exemplo carregado');
   }
+  /* A tela de boas-vindas prometia um "apagar tudo" no menu e não havia nada
+     que apagasse: a única saída era remover matéria por matéria.
+     Sempre baixa uma cópia antes — voltar atrás depende disso. */
+  function apagarTudo(){
+    if(!temConteudoVivo() && !arquivos.length){
+      alert('Não há nada para apagar: este tracker já está vazio.'); return;
+    }
+    if(!confirm('Apagar TUDO deste navegador?\n\nMatérias: '+subjects.length
+      +'\nLeituras e avaliações: '+texts.length
+      +'\nSemestres guardados: '+arquivos.length
+      +'\n\nUma cópia de segurança será baixada antes. Fora ela, não dá para desfazer.')) return;
+    if(temConteudoVivo() || arquivos.length) doExport();
+    subjects=[]; texts=[]; tcc=normTcc(null); arquivos=[];
+    limparFiltros();
+    view='subject';
+    persist(); saveUI(); closeModal(); renderAll();
+    avisoNaTela('Tudo apagado. A cópia de segurança foi baixada.');
+  }
   function novoTexto(){
     if(!subjects.length){ alert('Crie uma matéria primeiro.'); return; }
     if(!currentSubjectId || !findSubject(currentSubjectId)) currentSubjectId=subjects[0].id;
@@ -3499,19 +3687,9 @@ body.com-teclado .app{padding-bottom:56vh;}
       var aval = kindAtual==='aval';
       Array.prototype.forEach.call(sel.options, function(op){
         op.textContent = aval ? (AVAL_LABEL[op.value]||STATUS[op.value].label) : STATUS[op.value].label;
-        /* "lendo" e "parcial" têm o mesmo rótulo numa avaliação: mostrar os dois
-           deixava duas opções idênticas no select. A duplicata só aparece se o
-           item já estiver nela. */
-        var duplicada = aval && op.value==='parcial' && sel.value!=='parcial';
-        op.hidden = duplicada;
-        op.style.display = duplicada ? 'none' : '';
+        // com rótulos distintos, nenhuma opção precisa mais ser escondida
+        op.hidden=false; op.disabled=false; op.style.display='';
       });
-      // 'parcial' e 'lendo' têm o mesmo rótulo numa avaliação; a opção só é
-      // escondida quando o item não está nela — nada é reescrito em silêncio
-      if(aval && sel.value==='parcial'){
-        var op=sel.querySelector('option[value="parcial"]');
-        if(op) op.style.display='';
-      }
     }
     function trocarKind(novo, focar){
       kindAtual=novo; aplicarKind(); attProgresso();
@@ -4216,6 +4394,69 @@ body.com-teclado .app{padding-bottom:56vh;}
     });
   }
 
+  // ---- modal: ajuda ----
+  /* Um app que a pessoa usa sozinha, sem ninguém para perguntar, precisa
+     responder as próprias perguntas. Cada bloco existe porque alguém que abriu
+     o app pela primeira vez travou exatamente ali. */
+  function abrirAjuda(){
+    var tcz=esc(rotuloTcc());
+    var bloco=function(titulo, corpo){
+      return '<details class="aj"><summary>'+titulo+'</summary><div class="aj-corpo">'+corpo+'</div></details>';
+    };
+    var html='<div class="modal" role="dialog" aria-modal="true">'
+      +'<div class="modal-head"><h2>Ajuda</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
+      +'<p>Este app organiza o que você tem para ler em cada matéria e mostra se você está acompanhando. Nada aqui é obrigatório: use só as partes que ajudarem.</p>'
+
+      +bloco('Onde ficam os meus dados?',
+        '<p>No <b>seu navegador</b>, neste aparelho. Nada é enviado para nenhum servidor e ninguém além de você vê — nem quem fez o app.</p>'
+        +'<p>O outro lado disso: <b>limpar os dados do navegador apaga tudo</b>, e trocar de celular não leva nada junto. Por isso o app pede de vez em quando para você <b>baixar uma cópia</b> — é um arquivo que fica com você e restaura tudo depois.</p>'
+        +'<p>O botão de dados fica no topo da tela. Lá dentro também ficam a sincronização automática e o "apagar tudo".</p>')
+
+      +bloco('Como levo para outro celular ou computador?',
+        '<p><b>Do jeito simples:</b> no aparelho antigo, botão de dados → <b>Baixar uma cópia</b>. Mande o arquivo para você mesma (e-mail, WhatsApp, Drive). No aparelho novo, abra o app → <b>Restaurar de uma cópia</b>.</p>'
+        +'<p><b>Do jeito automático:</b> dentro de "Modos automáticos" existe a sincronização por GitHub. Ela mantém os aparelhos iguais sozinha, mas exige criar uma conta e um token — só vale a pena se você usa os dois aparelhos toda semana.</p>')
+
+      +bloco('O que quer dizer "em dia"?',
+        '<p>É o resumo no alto da página. Uma matéria está <b>em dia</b> quando você já leu tudo o que estava marcado para a <b>próxima aula</b> dela (ou para a aula de hoje, se houver uma).</p>'
+        +'<p>Leituras de aulas que <b>já passaram</b> e não foram lidas não entram nessa conta — senão um atraso de março deixaria a matéria vermelha até o fim do semestre. Elas continuam aparecendo na lista, mais apagadas, com a data em vermelho.</p>')
+
+      +bloco('O que significa cada status?',
+        '<ul><li><b>A ler</b> — ainda não comecei.</li>'
+        +'<li><b>Lendo</b> — comecei e vou continuar.</li>'
+        +'<li><b>Lido parcialmente</b> — parei no meio e não pretendo terminar (o professor pediu só um trecho, por exemplo).</li>'
+        +'<li><b>Lido</b> — terminei.</li></ul>'
+        +'<p>Numa <b>avaliação</b> os mesmos status aparecem com outros nomes: <i>A fazer</i>, <i>Estudando</i>, <i>Estudei em parte</i> e <i>Pronta</i>.</p>'
+        +'<p>Se você preencher <b>páginas</b>, dá para tocar no número na lista e anotar em que página parou. Chegando na última, o texto vira "Lido" sozinho.</p>')
+
+      +bloco('Para que serve o controle de faltas?',
+        '<p>Para você saber quanto ainda pode faltar antes de reprovar por presença. O limite vem preenchido com <b>7</b>, que é o caso mais comum numa disciplina de duas aulas por semana — <b>confira o da sua</b> e troque no menu da matéria (engrenagem).</p>'
+        +'<p>Colocar <b>0</b> desliga o controle naquela matéria.</p>')
+
+      +bloco('Como digo os dias de aula?',
+        '<p>No menu da matéria (engrenagem), em <b>Dias de aula</b>. O jeito normal é marcar os dias da semana e, se quiser, o horário.</p>'
+        +'<p>Quem é da <b>UnB</b> pode usar o botão <b>Código da UnB</b> e colar o código do horário direto do Matrícula Web — por exemplo <code>35M12</code>. Nele os números são os dias (<b>2</b>=segunda, <b>3</b>=terça… <b>7</b>=sábado), a letra é o turno (<b>M</b>anhã, <b>T</b>arde, <b>N</b>oite) e os últimos números são os horários seguidos. O app mostra embaixo o que entendeu, em português.</p>'
+        +'<p>Com os dias cadastrados, o botão <b>↺</b> de cada leitura passa a adiar para a <b>próxima aula</b> em vez de somar sete dias — útil quando a aula cai.</p>')
+
+      +bloco('O que é a aba do trabalho final?',
+        '<p>Um espaço separado para o '+tcz+': etapas com prazo, registro das orientações e a contagem até a entrega.</p>'
+        +'<p>Se você ainda não tem um, <b>desligue a aba</b> no menu ☰ → Este app. Lá também dá para trocar o nome dela (monografia, dissertação, tese).</p>')
+
+      +bloco('E quando o semestre acaba?',
+        '<p>Menu ☰ → <b>Semestres</b> → "Fechar e começar um novo". Tudo o que está na tela é guardado inteiro e a mesa fica limpa para o semestre seguinte.</p>'
+        +'<p>Nada é apagado: os semestres guardados ficam listados ali e podem voltar a qualquer momento pelo <b>Restaurar</b>.</p>')
+
+      +bloco('Dá para virar um aplicativo no celular?',
+        '<p>Sim, e não precisa instalar nada de loja nenhuma. Com o app aberto no navegador do celular:</p>'
+        +'<ul><li><b>iPhone (Safari):</b> botão de compartilhar (o quadradinho com a seta) → <b>Adicionar à Tela de Início</b>.</li>'
+        +'<li><b>Android (Chrome):</b> menu de três pontinhos → <b>Adicionar à tela inicial</b>.</li></ul>'
+        +'<p>Ele passa a abrir em tela cheia, com ícone próprio, como qualquer outro aplicativo. Os dados continuam sendo os mesmos.</p>')
+
+      +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Fechar</button></div></div>';
+    var ov=buildOverlay(html);
+    ov.querySelector('[data-x]').addEventListener('click', closeModal);
+    ov.querySelector('[data-cancel]').addEventListener('click', closeModal);
+  }
+
   // ---- modal: semestres arquivados ----
   function abrirArquivos(){
     var vivo=temConteudoVivo();
@@ -4295,12 +4536,8 @@ body.com-teclado .app{padding-bottom:56vh;}
         +'<p class="hint2">Por aqui o progresso fica salvo <b>neste navegador</b> e não some ao fechar. Para levar para outro aparelho, use <b>Exportar</b> e <b>Importar</b>.</p>';
 
     var drive='<div class="fdrive"><b>Abrir no celular</b>'
-      +'<p class="hint2">O Google Drive <b>não executa</b> páginas HTML — ele só guarda e baixa o arquivo. Por isso, abrir por lá não mostra nada. Para usar no celular, publique este arquivo em um link:</p>'
-      +'<ol class="hint2"><li>Acesse <b>app.netlify.com/drop</b> no computador.</li>'
-      +'<li>Arraste este arquivo <b>.html</b> para a página.</li>'
-      +'<li>Ele devolve um link. Abra esse link no celular.</li>'
-      +'<li>No navegador do celular, use <b>Adicionar à tela de início</b> — ele vira um ícone e abre em tela cheia.</li></ol>'
-      +'<p class="hint2">Cada aparelho guarda o próprio progresso. Para passar de um para outro, use Exportar e Importar.</p></div>';
+      +'<p class="hint2">Se você tem o app como <b>arquivo</b> e quer abri-lo no celular: o Google Drive não executa páginas HTML, então é preciso publicá-lo em um link. Em <b>app.netlify.com/drop</b>, arraste o arquivo <b>.html</b> e ele devolve um endereço para abrir em qualquer aparelho.</p>'
+      +'<p class="hint2">Cada aparelho guarda o próprio progresso. Para passar de um para outro, use a cópia de segurança lá em cima.</p></div>';
 
     var sync;
     var conectado = !!(syncToken && gistId);
@@ -4341,23 +4578,42 @@ body.com-teclado .app{padding-bottom:56vh;}
         +'<p class="hint2">O token fica guardado só neste aparelho e nunca entra no Exportar. Se perder o celular, dá para revogá-lo no GitHub com um clique.</p></details>';
     }
 
+    /* A cópia de segurança vem PRIMEIRO: é a única coisa aqui que qualquer
+       pessoa consegue fazer, e é a que protege o semestre. O GitHub e o arquivo
+       do computador viram "Avançado", recolhidos — antes eram as duas primeiras
+       paredes que quem chegava tinha de atravessar. */
+    var d=diasDesde(backupEm);
+    var estadoBkp = d==null
+      ? '<div class="fstat warn">'+svg(IC.alert,14)+' <span>Você ainda não guardou nenhuma cópia deste tracker.</span></div>'
+      : (d>=DIAS_LEMBRETE
+        ? '<div class="fstat warn">'+svg(IC.alert,14)+' <span>Sua última cópia é de <b>'+d+' dias</b> atrás.</span></div>'
+        : '<div class="fstat ok">'+svg(IC.check,14)+' <span>Última cópia: <b>'+(d===0?'hoje':(d===1?'ontem':'há '+d+' dias'))+'</b>.</span></div>');
+
     var html='<div class="modal" role="dialog" aria-modal="true">'
-      +'<div class="modal-head"><h2>Salvar e sincronizar</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
-      +'<h3 class="fsec">Entre aparelhos</h3>'+sync
-      +'<h3 class="fsec">Neste computador</h3>'
-      +estado+corpo
-      +(acoes?'<div class="fileacts">'+acoes+'</div>':'')
-      +'<h3 class="fsec">Cópia de segurança</h3>'
-      +'<p class="hint2">Baixa ou carrega um arquivo com tudo: matérias, textos, faltas e progresso. Serve para guardar por fora ou levar para um aparelho que não usa a sincronização.</p>'
-      +'<div class="fileacts"><button class="btn-ghost" data-exportar>'+svg(IC.down,15)+' Exportar</button>'
-      +'<button class="btn-ghost" data-importar>'+svg(IC.up,15)+' Importar</button></div>'
-      +drive
+      +'<div class="modal-head"><h2>Seus dados</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
+      +'<p>Tudo o que você registra fica guardado <b>só neste navegador</b>. É rápido e privado — mas se você limpar o navegador, trocar de celular ou perder o aparelho, <b>some</b>. Baixar uma cópia de vez em quando resolve isso.</p>'
+      +estadoBkp
+      +'<div class="fileacts"><button class="btn-wine" data-exportar>'+svg(IC.down,15)+' Baixar uma cópia</button>'
+      +'<button class="btn-ghost" data-importar>'+svg(IC.up,15)+' Restaurar de uma cópia</button></div>'
+      +'<p class="hint2">A cópia é um arquivo com tudo: matérias, leituras, faltas, progresso e o trabalho final. Serve também para levar para outro aparelho — baixe aqui, mande para você mesma e use <b>Restaurar</b> lá.</p>'
+      +'<details class="fadv"><summary>Modos automáticos <span class="hint">(avançado)</span></summary>'
+        +'<p class="hint2">Os dois modos abaixo mantêm a cópia sempre em dia sozinhos, sem você precisar lembrar. Exigem algum preparo — se não quiser mexer, a cópia manual acima já protege seus dados.</p>'
+        +'<h3 class="fsec">Sincronizar entre aparelhos <span class="hint">— precisa de conta no GitHub</span></h3>'+sync
+        +(sup ? ('<h3 class="fsec">Gravar direto num arquivo <span class="hint">— só no computador</span></h3>'
+                +estado+corpo+(acoes?'<div class="fileacts">'+acoes+'</div>':''))
+              : '')
+        +drive
+      +'</details>'
+      +'<div class="zona-risco"><div><b>Começar do zero</b>'
+        +'<span class="hint">Apaga todas as matérias, leituras, faltas e o trabalho final deste navegador. Os semestres guardados também. Não dá para desfazer.</span></div>'
+        +'<button class="btn-danger" data-apagartudo>'+SVG_TRASH+' Apagar tudo</button></div>'
       +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Fechar</button></div></div>';
 
     var ov=buildOverlay(html);
     ov.querySelector('[data-x]').addEventListener('click', closeModal);
     ov.querySelector('[data-cancel]').addEventListener('click', closeModal);
     var b;
+    if((b=ov.querySelector('[data-apagartudo]')))  b.addEventListener('click', apagarTudo);
     if((b=ov.querySelector('[data-novo]')))        b.addEventListener('click', function(){ conectarArquivo(true); });
     if((b=ov.querySelector('[data-abrir]')))       b.addEventListener('click', function(){ conectarArquivo(false); });
     if((b=ov.querySelector('[data-reconectar]')))  b.addEventListener('click', reconectarArquivo);
@@ -4388,7 +4644,24 @@ body.com-teclado .app{padding-bottom:56vh;}
   }
   // mesmo formato do arquivo e do gist — inclui updatedAt, que é o que permite
   // avisar "este arquivo é mais antigo que o que está aberto"
-  function doExport(){ downloadJson(payload(), 'tracker-leituras-'+stamp()+'.json'); }
+  /* Tocar em Exportar e não ver nada acontecer parece falha: no celular o
+     download some numa barrinha do navegador. Aqui a confirmação é da tela. */
+  function doExport(){
+    downloadJson(payload(), 'tracker-leituras-'+stamp()+'.json');
+    backupEm=nowISO(); saveUI(); renderLembrete();
+    avisoNaTela('Cópia de segurança baixada. Guarde o arquivo em algum lugar seguro.');
+  }
+  var toastTimer=null;
+  function avisoNaTela(msg, tipo){
+    anunciar(msg);
+    var el=document.getElementById('toast');
+    if(!el){ el=document.createElement('div'); el.id='toast'; el.className='toast';
+      el.setAttribute('role','status'); document.body.appendChild(el); }
+    el.className='toast '+(tipo||'ok')+' on';
+    el.textContent=msg;
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer=setTimeout(function(){ toastTimer=null; el.className='toast '+(tipo||'ok'); }, 4200);
+  }
   function doImport(file){
     var reader=new FileReader();
     reader.onload=function(){
@@ -4437,6 +4710,8 @@ body.com-teclado .app{padding-bottom:56vh;}
     app=document.getElementById('app');
     app.innerHTML=
       '<header class="hero" id="hero"></header>'
+      +'<div class="lembrete" id="lembrete" style="display:none"></div>'
+      +'<div class="instalar" id="instalar" style="display:none"></div>'
       +'<div class="viewbar">'
         +'<div class="vswitch" id="vswitch">'
           +'<button data-v="subject" aria-pressed="false">'+svg(IC.list,15)+' Por matéria</button>'
@@ -4447,8 +4722,9 @@ body.com-teclado .app{padding-bottom:56vh;}
         +'<div class="viewbar-right">'
           +'<button class="btn-ghost sm" id="fileBtn"></button>'
           +'<span id="avisos" class="sr-only" role="status" aria-live="polite"></span>'
-          +'<button class="icon-toggle" id="prefsBtn" title="Menu e preferências">'+svg(IC.menu,17)+'</button>'
-          +'<button class="icon-toggle" id="theme" title="Modo escuro"></button></div>'
+          +'<button class="icon-toggle" id="helpBtn" title="Ajuda" aria-label="Ajuda">?</button>'
+          +'<button class="icon-toggle" id="prefsBtn" title="Menu e preferências" aria-label="Menu e preferências">'+svg(IC.menu,17)+'</button>'
+          +'<button class="icon-toggle" id="theme" title="Modo escuro" aria-label="Modo escuro"></button></div>'
       +'</div>'
       +'<div class="subjects" id="subjects"></div>'
       +'<section class="panel" id="panel"></section>'
@@ -4523,8 +4799,26 @@ body.com-teclado .app{padding-bottom:56vh;}
     document.getElementById('add').addEventListener('click', novoTexto);
     document.getElementById('fileBtn').addEventListener('click', abrirModalArquivo);
     document.getElementById('prefsBtn').addEventListener('click', abrirPreferencias);
+    document.getElementById('helpBtn').addEventListener('click', abrirAjuda);
     importFile.addEventListener('change', function(){ if(importFile.files && importFile.files[0]){ doImport(importFile.files[0]); importFile.value=''; } });
 
+    /* O rodapé é reescrito por três funções diferentes; um só ouvinte no
+       elemento pai cobre todas sem cada uma ter de religar o botão. */
+    foot.addEventListener('click', function(e){
+      var b=e.target.closest('[data-act="bkp-rodape"]'); if(!b) return;
+      doExport();
+    });
+    document.getElementById('lembrete').addEventListener('click', function(e){
+      var b=e.target.closest('[data-act]'); if(!b) return;
+      var act=b.getAttribute('data-act');
+      if(act==='bkp-agora'){ doExport(); return; }
+      if(act==='bkp-depois'){ lembreteAdiado=nowISO(); saveUI(); renderLembrete();
+        anunciar('Lembrete adiado por duas semanas'); return; }
+    });
+    document.getElementById('instalar').addEventListener('click', function(e){
+      if(!e.target.closest('[data-act="inst-nao"]')) return;
+      marcarInstalar('nao'); renderInstalar();
+    });
     subjectsEl.addEventListener('click', function(e){
       var el=e.target.closest('[data-act]'); if(!el) return;
       var act=el.getAttribute('data-act');
@@ -4643,6 +4937,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     });
 
     narrow=isNarrow();
+    contarVisita();
     ouvirOutrasAbas();
     load();
     migrarFaltas();
