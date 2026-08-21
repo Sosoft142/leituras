@@ -502,7 +502,14 @@ body.com-teclado .app{padding-bottom:56vh;}
   font-size:13.5px; max-width:min(92vw,460px); text-align:center; z-index:60;
   opacity:0; pointer-events:none; transition:opacity .18s, transform .18s;
   box-shadow:0 8px 26px rgba(0,0,0,.28);}
-.toast.on{opacity:1; transform:translate(-50%,0);}
+.toast.on{opacity:1; transform:translate(-50%,0); pointer-events:auto;}
+.toast{display:flex; align-items:center; gap:12px; justify-content:space-between;
+  text-align:left; width:max-content; max-width:min(92vw,460px);}
+.toast > span{flex:1 1 auto; min-width:0;}
+.toast-btn{border:1.5px solid var(--paper); background:none; color:var(--paper);
+  border-radius:8px; padding:6px 12px; font:inherit; font-size:13px; flex:none;
+  min-height:34px; cursor:pointer;}
+.toast-btn:hover{background:var(--paper); color:var(--ink);}
 #helpBtn{font-family:var(--serif); font-size:19px; font-weight:500; line-height:1;}
 .aj{border-bottom:1.5px solid var(--line);}
 .aj:first-of-type{border-top:1.5px solid var(--line);}
@@ -931,7 +938,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   /* Sobe 0.01 a cada versão entregue. Aparece no rodapé, junto dos atalhos. */
   /* O tracker deixou de ser um app de uma pessoa só e virou um que qualquer
      estudante configura: a contagem recomeça do zero aqui, em V0.1. */
-  var APP_VERSAO = '0.13';
+  var APP_VERSAO = '0.15';
   var STORAGE_KEY = 'tracker-leituras:v1';
   var UI_KEY      = 'tracker-leituras:ui';
 
@@ -1129,6 +1136,9 @@ body.com-teclado .app{padding-bottom:56vh;}
   /* isFinite também barra Infinity: um "1e400" vindo de um arquivo virava
      Infinity, passava por todas as contas e sumia no JSON.stringify seguinte. */
   function num(v){ if(v===''||v==null) return null; var n=Number(v); return isFinite(n)?n:null; }
+  /* "1 texto(s)" é a marca de app inacabado. Um lugar só decide o plural. */
+  function plural(n, um, muitos){ return n===1 ? um : muitos; }
+  function conta(n, um, muitos){ return n+' '+plural(n, um, muitos); }
   // teto para qualquer campo livre: um único import não pode encher o navegador
   function txtSeguro(v, max){ return String(v==null?'':v).slice(0, max||200); }
   function uid(p){ return (p||'x')+'-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,6); }
@@ -1566,7 +1576,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     return fetch('https://api.github.com'+caminho, req).then(function(r){
       if(r.status===401) throw new Error('Token inválido ou expirado. Gere um novo no GitHub.');
       if(r.status===403) throw new Error('O GitHub recusou (limite de uso ou permissão faltando).');
-      if(r.status===404) throw new Error('O arquivo de sincronização não foi encontrado na sua conta.');
+      if(r.status===404) throw new Error('O arquivo de sincronização não foi encontrado na conta informada.');
       if(!r.ok) throw new Error('O GitHub respondeu com erro '+r.status+'.');
       return r.json();
     });
@@ -1676,7 +1686,7 @@ body.com-teclado .app{padding-bottom:56vh;}
      entra sozinho) ou cria um novo com o que há neste aparelho. */
   function syncConectar(token){
     token=(token||'').trim();
-    if(!token){ alert('Cole o token do GitHub para conectar.'); return; }
+    if(!token){ alert('O token do GitHub é necessário para conectar.'); return; }
     syncToken=token; syncBusy=true; syncMsg=''; renderFileBtn();
     return gh('/gists?per_page=100').then(function(lista){
       var achado=null;
@@ -1811,7 +1821,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     return confirm('Substituir o que está aberto agora pelo conteúdo do arquivo?\n\n'
       +'Neste aparelho: '+quando(daMemoria)+'\n'
       +'No arquivo: '+quando(doArquivo)
-      +(maisVelho?'\n\nATENÇÃO: o arquivo é MAIS ANTIGO. Você perde o que fez desde então.':'')
+      +(maisVelho?'\n\nATENÇÃO: o arquivo é MAIS ANTIGO. Tudo o que foi registrado desde então será perdido.':'')
       +'\n\nEsta ação não pode ser desfeita.');
   }
   function aplicarConteudo(obj){
@@ -1944,7 +1954,11 @@ body.com-teclado .app{padding-bottom:56vh;}
       var ds=normalizarTudo(seed.subjects, seed.texts);
       subjects=ds.subjects; texts=ds.texts;
       tcc=normTcc(null);
-      appCfg=normCfg(null);
+      /* Quem instala hoje pode estar no primeiro semestre: a aba do trabalho
+         final começa DESLIGADA e é ligada quando fizer sentido. Para quem já
+         usava, a ausência da chave continua valendo "ligada" (normCfg), senão a
+         aba sumiria com o conteúdo dentro na primeira atualização. */
+      appCfg=normCfg({tccOn:false});
       arquivos=[];
       /* Navegador novo não tem nada a migrar. Sem queimar os selos aqui, a
          migração do TCC voltava a rodar em todo boot e convertia em "matéria do
@@ -2017,7 +2031,7 @@ body.com-teclado .app{padding-bottom:56vh;}
       /* fileState só vira "precisa" ~400 ms depois, quando a escrita no arquivo
          falha — checar aqui dava um "está tudo bem" que não era verdade. */
       if(!storageWarned){ storageWarned=true;
-        alert('⚠️ Não consegui salvar neste navegador. O armazenamento pode estar cheio ou bloqueado (janela anônima).\n\nO que você fizer a partir de agora se perde ao fechar a aba. Use Exportar para guardar um backup, ou toque no botão de dados no topo da tela para guardar uma cópia.');
+        alert('Não foi possível gravar neste navegador. O armazenamento pode estar cheio ou bloqueado (janela anônima).\n\nA partir de agora, nenhuma alteração sobrevive ao fechamento da aba. Em "Seus dados", no alto da tela, é possível baixar uma cópia de segurança.');
       }
     }
   }
@@ -2276,7 +2290,7 @@ body.com-teclado .app{padding-bottom:56vh;}
       var n=st.undated||0;
       desc = n
         ? ('Nenhuma leitura com data de aula à frente — '+n+(n===1?' está sem data.':' estão sem data.'))
-        : 'Adicione leituras com a data da aula em que serão discutidas para acompanhar o andamento.';
+        : 'O acompanhamento começa quando as leituras recebem a data da aula em que serão discutidas.';
     } else {
       var isToday=st.diff===0;
       if(st.kind==='ok') title = isToday ? 'Em dia — leitura de hoje pronta' : 'Em dia';
@@ -2294,7 +2308,8 @@ body.com-teclado .app{padding-bottom:56vh;}
       +'<span class="emdia-dot" style="background:'+cfg.dot+'"></span>'
       +'<div class="emdia-main"><div class="emdia-title">'+esc(title)+'</div>'
       +'<div class="emdia-desc">'+desc+'</div></div></div>'
-      +(st.late?'<p class="late-note"><b>'+st.late+'</b> texto(s) de aulas passadas ainda não lidos — não contam para o "em dia".</p>':'');
+      +(st.late?'<p class="late-note"><b>'+st.late+'</b> '+plural(st.late,'leitura atrasada','leituras atrasadas')
+        +' de aulas que já passaram — não '+plural(st.late,'conta','contam')+' para o "em dia".</p>':'');
   }
 
   /* Fechado, o botão já entrega o essencial: as barrinhas e a contagem.
@@ -2362,20 +2377,20 @@ body.com-teclado .app{padding-bottom:56vh;}
   }
   function bemVindoHtml(){
     return '<div class="bemvindo" id="bemvindo">'
-      +'<h2>Vamos começar</h2>'
-      +'<p>Este tracker guarda o que você tem para ler em cada matéria, quanto falta e quantas faltas você já usou.</p>'
-      +'<p class="bv-aviso">'+svg(IC.alert,14)+' Tudo fica <b>só neste navegador</b>: nada é enviado para lugar nenhum, e ninguém além de você vê. Em troca, se você limpar o navegador ou trocar de aparelho, <b>some</b> — por isso o app lembra você de baixar uma cópia de vez em quando.</p>'
+      +'<h2>Primeiros passos</h2>'
+      +'<p>Este tracker reúne as leituras de cada matéria, o quanto falta de cada uma e o total de faltas já utilizado.</p>'
+      +'<p class="bv-aviso">'+svg(IC.alert,14)+' Os dados ficam <b>só neste navegador</b>: nada é enviado a servidor algum e ninguém mais tem acesso a eles. Em contrapartida, limpar o navegador ou trocar de aparelho <b>apaga tudo</b> — daí o lembrete periódico para baixar uma cópia de segurança.</p>'
       +'<div class="bv-passos">'
-        +'<div class="bv-passo"><span class="bv-n">1</span><span><b>Crie uma matéria</b> — nome, cor e, se quiser, os dias de aula.</span></div>'
-        +'<div class="bv-passo"><span class="bv-n">2</span><span><b>Cadastre as leituras</b> com a data da aula em que serão discutidas.</span></div>'
-        +'<div class="bv-passo"><span class="bv-n">3</span><span><b>Marque o que já leu.</b> O topo da página diz se você está em dia.</span></div>'
+        +'<div class="bv-passo"><span class="bv-n">1</span><span><b>Criar uma matéria</b> — nome, cor e, opcionalmente, os dias de aula.</span></div>'
+        +'<div class="bv-passo"><span class="bv-n">2</span><span><b>Cadastrar as leituras</b> com a data da aula em que serão discutidas.</span></div>'
+        +'<div class="bv-passo"><span class="bv-n">3</span><span><b>Marcar o que já foi lido.</b> O topo da página indica se a matéria está em dia.</span></div>'
       +'</div>'
       +'<div class="bv-acoes">'
         +'<button class="btn-wine" data-act="bv-materia">'+svg(IC.plus,15)+' Criar a primeira matéria</button>'
-        +'<button class="btn-ghost" data-act="bv-importar">'+svg(IC.up,15)+' Tenho um backup</button>'
+        +'<button class="btn-ghost" data-act="bv-importar">'+svg(IC.up,15)+' Restaurar de uma cópia</button>'
         +'<button class="btn-ghost" data-act="bv-exemplo">Ver um exemplo</button>'
       +'</div>'
-      +'<p class="hint" style="margin-top:16px">O exemplo é fictício. Dá para apagar tudo depois, no botão de dados lá em cima.</p>'
+      +'<p class="hint" style="margin-top:16px">O exemplo é fictício e pode ser apagado depois, em "Seus dados", no alto da tela.</p>'
     +'</div>';
   }
   function renderPanel(){
@@ -2386,8 +2401,8 @@ body.com-teclado .app{padding-bottom:56vh;}
       panel.innerHTML=''; tagbar.innerHTML=''; foot.innerHTML='';
       tw.innerHTML = primeiraVez() ? bemVindoHtml()
         : '<div class="empty"><p class="empty-big">Nenhuma matéria por aqui.</p>'
-          +'<p>Crie uma matéria para começar a cadastrar leituras'
-          +(subjectTcc()?' — o seu trabalho final está na aba <strong>'+esc(rotuloTcc())+'</strong>.':'.')+'</p></div>';
+          +'<p>O cadastro de leituras começa pela criação de uma matéria'
+          +(subjectTcc()?' — o trabalho final fica na aba <strong>'+esc(rotuloTcc())+'</strong>.':'.')+'</p></div>';
       return;
     }
     var chips=driveChip(s)+faltasChip(s);
@@ -2678,10 +2693,10 @@ body.com-teclado .app{padding-bottom:56vh;}
       if(ehAval(t)){ avalPend++; return; }        // prova não é "página por ler"
       pend++; var m=estMinRest(t); if(m!=null) pendMin+=m;
     });
-    foot.innerHTML='Mostrando '+list.length+' de '+totalSubj+' item(ns)'
+    foot.innerHTML='Mostrando '+list.length+' de '+conta(totalSubj,'item','itens')
       +(soPendentes?' · filtro "falta ler" ligado':'')
       +(pend?' · '+pend+' por ler'+(pendMin?' ≈ '+fmtMin(pendMin):''):'')
-      +(avalPend?' · '+avalPend+' avaliação(ões) por fazer':'')
+      +(avalPend?' · '+avalPend+' '+plural(avalPend,'avaliação','avaliações')+' por fazer':'')
       +textoSalvo(true)+'<br>'
       +atalhos('<span class="kbd">n</span> novo texto · <span class="kbd">/</span> buscar · <span class="kbd">s</span> alternar visão'
       +(tccLigado()?' · <span class="kbd">t</span> '+esc(rotuloTcc()):'')+' · <span class="kbd">Esc</span> fechar')
@@ -2756,11 +2771,13 @@ body.com-teclado .app{padding-bottom:56vh;}
     var atrasadasLeitura=g.late.filter(function(t){ return !ehAval(t); }).length;
     var LATER_CAP=6;
     var laterShown=g.later.slice(0,LATER_CAP);
-    var laterNote=g.later.length>LATER_CAP ? ('+ '+(g.later.length-LATER_CAP)+' texto(s) mais adiante não exibidos aqui — veja na matéria.') : '';
+    var maisTarde=g.later.length-LATER_CAP;
+    var laterNote=g.later.length>LATER_CAP
+      ? ('+ '+maisTarde+' '+plural(maisTarde,'leitura mais adiante não exibida','leituras mais adiante não exibidas')+' aqui — visíveis na página da matéria.') : '';
 
     var stats='<div class="wstats">'
       +'<div class="wstat"><div class="wstat-n">'+semanaLeitura.length+'</div><div class="wstat-l">textos nos próximos 7 dias'
-        +(avalSemana?'<br><span class="wstat-extra">+ '+avalSemana+' avaliação(ões)</span>':'')+'</div></div>'
+        +(avalSemana?'<br><span class="wstat-extra">+ '+avalSemana+' '+plural(avalSemana,'avaliação','avaliações')+'</span>':'')+'</div></div>'
       +'<div class="wstat"><div class="wstat-n">'+lidos+'</div><div class="wstat-l">já lidos</div></div>'
       +'<div class="wstat"><div class="wstat-n">'+(pendMin?fmtMin(pendMin):'—')+'</div><div class="wstat-l">tempo estimado por ler</div></div>'
       +'<div class="wstat"><div class="wstat-n" style="color:'+(atrasadasLeitura?EMDIA.todo.dot:'inherit')+'">'+atrasadasLeitura+'</div><div class="wstat-l">atrasados (aulas passadas)</div></div>'
@@ -2795,7 +2812,7 @@ body.com-teclado .app{padding-bottom:56vh;}
      é esse número que decide reprovação por falta. */
   function addFalta(sid, d){
     var sb=findSubject(sid); if(!sb) return;
-    if(!/^\d{4}-\d{2}-\d{2}$/.test(d||'')){ alert('Escolha uma data válida para a falta.'); return; }
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(d||'')){ alert('A data da falta é inválida.'); return; }
     if(sb.absences.indexOf(d)>=0){
       anunciar('Já existe uma falta em '+fmtDate(d));
       alert('Já há uma falta registrada em '+fmtDate(d)+'.\n\nCada dia conta uma vez só.');
@@ -2808,8 +2825,11 @@ body.com-teclado .app{padding-bottom:56vh;}
   function delFalta(sid, d){
     var sb=findSubject(sid); if(!sb) return;
     var i=sb.absences.indexOf(d);
-    if(i>=0) sb.absences.splice(i,1);
+    if(i<0) return;
+    guardarDesfazer('a falta de '+fmtDate(d));
+    sb.absences.splice(i,1);
     persist(); renderAll();
+    avisoNaTela('Falta de '+fmtDate(d)+' removida.', 'ok', true);
   }
 
 
@@ -2982,7 +3002,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     var n=tcc.etapas.length;
     if(!n){
       return '<div class="tcc-vazio"><p>Nenhuma etapa ainda.</p>'
-        +'<span class="hint">Você pode começar do zero ou partir de um roteiro comum e ajustar depois.</span>'
+        +'<span class="hint">É possível começar do zero ou partir de um roteiro comum e ajustá-lo depois.</span>'
         +'<div class="acoes"><button class="btn-wine" data-act="etsugerir">'+svg(IC.plus,15)+' Usar etapas sugeridas</button>'
         +'<button class="btn-ghost" data-act="etnova">Criar uma etapa</button></div></div>';
     }
@@ -2992,7 +3012,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     var podeGantt=!!j;
     var corpo = (cronoModo==='gantt' && podeGantt) ? renderGantt(j)
       : (cronoModo==='gantt'
-          ? '<div class="crono-aviso">'+svg(IC.alert,14)+' Nenhuma etapa tem data ainda — dá para ver em barras assim que você preencher os prazos.</div>'
+          ? '<div class="crono-aviso">'+svg(IC.alert,14)+' Nenhuma etapa tem data. A visão em barras aparece assim que os prazos forem preenchidos.</div>'
             +renderEtapasLista()
           : renderEtapasLista());
     return '<div class="tcc-prog" title="'+feitas+' de '+n+' concluídas"><span style="width:'+pct+'%"></span></div>'+corpo;
@@ -3122,9 +3142,10 @@ body.com-teclado .app{padding-bottom:56vh;}
     tcc.etapas.forEach(function(e){ if(e.status==='done') feitas++; });
     var atrasadas=tcc.etapas.filter(etapaAtrasada).length;
     var partes=[];
-    partes.push(n ? feitas+' de '+n+' etapa(s) concluída(s)' : 'Nenhuma etapa cadastrada');
+    partes.push(n ? (feitas+' de '+n+' '+plural(n,'etapa concluída','etapas concluídas')) : 'Nenhuma etapa cadastrada');
     if(atrasadas) partes.push(atrasadas+' em atraso');
-    if(tcc.orientacoes.length) partes.push(tcc.orientacoes.length+' orientação(ões) registrada(s)');
+    var no=tcc.orientacoes.length;
+    if(no) partes.push(no+' '+plural(no,'orientação registrada','orientações registradas'));
     return esc(partes.join(' · '))+textoSalvo(false)+'<br>'
       +'<span class="kbd">n</span> nova etapa · <span class="kbd">t</span> voltar · <span class="kbd">Esc</span> fechar'
       +selo();
@@ -3208,7 +3229,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     var t;
     /* Nada importa mais do que isto: se a gravação está falhando, o botão para
        de falar de sincronia e passa a dizer o que está acontecendo. */
-    if(naoSalva)                    t={txt:'Não estou salvando', ic:IC.alert, cls:'warn'};
+    if(naoSalva)                    t={txt:'Sem gravação',       ic:IC.alert, cls:'warn'};
     else if(syncBusy)               t={txt:'Sincronizando…',   ic:IC.sync,  cls:''};
     else if(syncState==='conflito') t={txt:'Versões diferentes',ic:IC.alert, cls:'warn'};
     else if(syncState==='erro')     t={txt:'Erro de sincronia', ic:IC.alert, cls:'warn'};
@@ -3223,7 +3244,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     b.className='btn-ghost sm file-btn '+t.cls;
     b.innerHTML=svg(t.ic,14)+' <span class="file-lbl">'+esc(t.txt)+'</span>';
     anunciar(t.txt, true);
-    b.title = naoSalva ? 'O navegador está recusando gravar. Use Exportar para não perder o que fez.'
+    b.title = naoSalva ? 'O navegador está recusando gravar. Baixar uma cópia evita a perda do que foi registrado.'
             : (syncState==='on' ? 'Sincronizando com o GitHub automaticamente'
             : (fileState==='on' ? 'Gravando em '+fileName : 'Cópia de segurança, sincronização e apagar tudo'));
   }
@@ -3241,7 +3262,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   function atalhos(html){ return isNarrow() ? '' : html; }
   // o rodapé para de prometer que está salvo quando não está
   function textoSalvo(comDica){
-    if(naoSalva) return ' · <b class="nao-salvo">NÃO estou conseguindo salvar — use Exportar</b>';
+    if(naoSalva) return ' · <b class="nao-salvo">GRAVAÇÃO BLOQUEADA — baixar uma cópia</b>';
     /* Antes isto era só texto mandando usar um botão chamado "Exportar" que
        não existia em tela nenhuma. Agora a própria frase é o botão. */
     return ' · salvo <b>só neste navegador</b>'
@@ -3284,11 +3305,11 @@ body.com-teclado .app{padding-bottom:56vh;}
     var el=document.getElementById('lembrete'); if(!el) return;
     if(!precisaLembrete()){ el.innerHTML=''; el.style.display='none'; return; }
     var d=diasDesde(backupEm);
-    var quando = d==null ? 'Você ainda não guardou nenhuma cópia.'
-                         : 'Sua última cópia é de '+d+' dias atrás.';
+    var quando = d==null ? 'Nenhuma cópia de segurança foi feita até agora.'
+                         : 'A última cópia de segurança tem '+conta(d,'dia','dias')+'.';
     el.style.display='';
     el.innerHTML='<div class="lembrete-in">'+svg(IC.alert,15)
-      +'<span><b>'+esc(quando)+'</b> Tudo isto vive só neste navegador — se ele for limpo, some.</span>'
+      +'<span><b>'+esc(quando)+'</b> Os dados existem apenas neste navegador — limpá-lo apaga tudo.</span>'
       +'<span class="lembrete-acoes">'
       +'<button class="btn-wine sm" data-act="bkp-agora">'+svg(IC.down,14)+' Baixar cópia</button>'
       +'<button class="btn-ghost sm" data-act="bkp-depois">Depois</button></span></div>';
@@ -3327,12 +3348,12 @@ body.com-teclado .app{padding-bottom:56vh;}
     if(!podeConvidarInstalar()){ el.innerHTML=''; el.style.display='none'; return; }
     var iOS = /iphone|ipad|ipod/i.test(navigator.userAgent||'');
     var como = iOS
-      ? 'toque em <b>Compartilhar</b> e escolha <b>Adicionar à Tela de Início</b>'
-      : 'abra o menu do navegador (⋮) e escolha <b>Adicionar à tela inicial</b>';
+      ? 'em <b>Compartilhar</b>, escolher <b>Adicionar à Tela de Início</b>'
+      : 'no menu do navegador (⋮), escolher <b>Adicionar à tela inicial</b>';
     el.style.display='';
     el.innerHTML='<div class="instalar-in">'+svg(IC.book,15)
-      +'<span>Para abrir mais rápido, '+como+'. Vira um ícone e abre em tela cheia.</span>'
-      +'<button class="btn-ghost sm" data-act="inst-nao">Não, obrigada</button></div>';
+      +'<span>Para abrir mais rápido, '+como+'. O tracker ganha um ícone próprio e passa a abrir em tela cheia.</span>'
+      +'<button class="btn-ghost sm" data-act="inst-nao">Agora não</button></div>';
   }
   function renderMain(){
     var foco=marcaDoFoco();
@@ -3532,7 +3553,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   function restaurarArquivo(id){
     var a=acharArquivo(id); if(!a) return;
     var aviso = temConteudoVivo()
-      ? 'O semestre que está aberto será arquivado, e "'+a.nome+'" toma o lugar dele.\n\nNada é apagado — dá para desfazer restaurando de volta.'
+      ? 'O semestre aberto será arquivado e "'+a.nome+'" tomará o lugar dele.\n\nNada é apagado: a operação pode ser revertida restaurando o outro semestre.'
       : 'Restaurar "'+a.nome+'" como o semestre atual?';
     if(!confirm(aviso)) return;
     arquivos=arquivos.filter(function(x){ return x.id!==a.id; });
@@ -3548,7 +3569,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   }
   function removerArquivo(id){
     var a=acharArquivo(id); if(!a) return;
-    if(!confirm('Apagar de vez o semestre "'+a.nome+'" ('+contaArquivo(a)+')?\n\nEsta ação não pode ser desfeita. Se quiser guardar, use Baixar antes.')) return;
+    if(!confirm('Apagar de vez o semestre "'+a.nome+'" ('+contaArquivo(a)+')?\n\nA operação é irreversível; para preservar o conteúdo, convém baixá-lo antes.')) return;
     arquivos=arquivos.filter(function(x){ return x.id!==a.id; });
     persist(); abrirArquivos();
     anunciar('Semestre removido');
@@ -3585,7 +3606,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     if(!confirm('Apagar TUDO deste navegador?\n\nMatérias: '+subjects.length
       +'\nLeituras e avaliações: '+texts.length
       +'\nSemestres guardados: '+arquivos.length
-      +'\n\nUma cópia de segurança será baixada antes. Fora ela, não dá para desfazer.')) return;
+      +'\n\nUma cópia de segurança será baixada antes. Fora ela, a operação é irreversível.')) return;
     if(temConteudoVivo() || arquivos.length) doExport();
     subjects=[]; texts=[]; tcc=normTcc(null); arquivos=[];
     limparFiltros();
@@ -3594,7 +3615,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     avisoNaTela('Tudo apagado. A cópia de segurança foi baixada.');
   }
   function novoTexto(){
-    if(!subjects.length){ alert('Crie uma matéria primeiro.'); return; }
+    if(!subjects.length){ alert('É preciso ter ao menos uma matéria cadastrada.'); return; }
     if(!currentSubjectId || !findSubject(currentSubjectId)) currentSubjectId=subjects[0].id;
     openTextModal(null);
   }
@@ -3621,16 +3642,17 @@ body.com-teclado .app{padding-bottom:56vh;}
             return '<option value="'+k+'"'+(k===b.avalType?' selected':'')+'>'+esc(AVAL_TIPO[k])+'</option>'; }).join('')
         +'</select></div>'
       +'<div class="row-3"><div class="field"><label for="m_num">Nº <span id="numOpc" style="font-weight:400"></span></label><input id="m_num" type="number" min="0" value="'+v(b.number)+'"></div>'
-      +'<div class="field" style="grid-column:span 2"><label for="m_name">Nome do texto</label><input id="m_name" value="'+v(b.name)+'" placeholder="Ex.: A metrópole e a vida mental"><span class="err-msg" id="m_err" style="display:none">Dê um nome ao texto para salvar.</span></div></div>'
+      +'<div class="field" style="grid-column:span 2"><label for="m_name">Nome do texto</label><input id="m_name" value="'+v(b.name)+'" placeholder="Ex.: A metrópole e a vida mental"><span class="err-msg" id="m_err" style="display:none">O nome do texto é obrigatório.</span></div></div>'
       +'<div class="field"><label for="m_orig">Título original (opcional)</label><input id="m_orig" value="'+v(b.originalTitle)+'" placeholder="Ex.: Die Großstädte und das Geistesleben"></div>'
       +'<div class="row-2"><div class="field"><label for="m_author">Autor</label><input id="m_author" value="'+v(b.author)+'" placeholder="Ex.: Georg Simmel"></div>'
-      +'<div class="field"><label for="m_date">Data da aula</label><input id="m_date" type="date" value="'+v(b.classDate)+'"></div></div>'
+      +'<div class="field"><label for="m_date">Data da aula</label><input id="m_date" type="date" value="'+v(b.classDate)+'" aria-describedby="m_date_lida">'
+        +'<span class="hint" id="m_date_lida" role="status" aria-live="polite"></span></div></div>'
       +'<div class="field"><label for="m_link">Link para o texto</label><input id="m_link" value="'+v(b.link)+'" placeholder="https://…"></div>'
       +'<div class="row-3"><div class="field"><label for="m_pages">Páginas</label><input id="m_pages" type="number" min="0" value="'+v(b.pages)+'" placeholder="18"></div>'
       +'<div class="field"><label for="m_prio">Prioridade</label><select id="m_prio">'+opts(PRIO,b.priority)+'</select></div>'
       +'<div class="field"><label for="m_status">Status</label><select id="m_status">'+opts(STATUS,b.status)+'</select></div></div>'
       +'<div class="field" id="lidoWrap" style="display:none">'
-        +'<label for="m_pagesread">Páginas lidas <span style="font-weight:400">— onde você parou (opcional)</span></label>'
+        +'<label for="m_pagesread">Páginas lidas <span style="font-weight:400">— até onde a leitura chegou (opcional)</span></label>'
         +'<div class="row-2"><input id="m_pagesread" type="number" min="0" value="'+v(b.pagesRead)+'" placeholder="Ex.: 8">'
         +'<div class="prog-prev" id="m_prog"></div></div></div>'
       +'<div class="field"><label for="m_tags">Tags <span style="font-weight:400">(separadas por vírgula)</span></label><input id="m_tags" value="'+v(b.tags.join(', '))+'" placeholder="Ex.: metodologia, tcc"></div>'
@@ -3638,7 +3660,7 @@ body.com-teclado .app{padding-bottom:56vh;}
         +'<span class="hint">"A" acompanha sempre a cor da matéria</span></div>'
       +'<div class="field"><label for="m_notes">Notas (opcional)</label><textarea id="m_notes" rows="2" placeholder="Anotações, tradução, capítulo…">'+v(b.notes)+'</textarea></div>'
       +(existing?'<div class="zona-risco"><div><b>Remover este texto</b>'
-        +'<span class="hint">Apaga o texto e o progresso de leitura dele. Não dá para desfazer.</span></div>'
+        +'<span class="hint">Apaga o texto e o progresso de leitura registrado nele.</span></div>'
         +'<button class="btn-danger" data-remover>'+SVG_TRASH+' Remover</button></div>':'')
       +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Cancelar</button><button class="btn-wine" data-save>'+(existing?'Salvar':'Adicionar')+'</button></div>'
       +'</div>';
@@ -3649,6 +3671,24 @@ body.com-teclado .app{padding-bottom:56vh;}
     overlay.querySelector('[data-save]').addEventListener('click', function(){ saveText(existing, chosen, kindAtual); });
     var rmT=overlay.querySelector('[data-remover]');
     if(rmT) rmT.addEventListener('click', function(){ deleteText(existing.id); });
+
+    /* O seletor de data nativo segue o idioma do APARELHO, não o da página: num
+       celular em inglês ele mostra mm/dd e "03/09" vira 9 de março sem ninguém
+       notar, porque a lista depois exibe tudo em dd/mm. Aqui o app repete em
+       português o que entendeu, como já faz com o código de horário. */
+    var inpData=document.getElementById('m_date'), dicaData=document.getElementById('m_date_lida');
+    function lerData(){
+      var v=inpData.value;
+      if(!v){ dicaData.textContent='Quando este texto será discutido em aula. Deixe vazio se ainda não sabe.';
+        dicaData.classList.remove('hint-ok'); return; }
+      if(!isoOk(v)){ dicaData.textContent='Data inválida.'; dicaData.classList.remove('hint-ok'); return; }
+      var d=parseISO(v);
+      dicaData.textContent = d ? (DIA_LONGO[d.getDay()]+', '+fmtDate(v)) : fmtDate(v);
+      dicaData.classList.add('hint-ok');
+    }
+    inpData.addEventListener('input', lerData);
+    inpData.addEventListener('change', lerData);
+    lerData();
 
     /* Alternar entre leitura e avaliação troca o vocabulário do formulário:
        uma prova não tem autor nem título original, e o número é opcional. */
@@ -3717,7 +3757,7 @@ body.com-teclado .app{padding-bottom:56vh;}
       if(!emCurso) return;
       var tot=num(inpPags.value), lidas=num(inpLidas.value), box=document.getElementById('m_prog');
       if(lidas==null){ box.innerHTML='<span>Deixe em branco se não quiser marcar.</span>'; return; }
-      if(tot==null || tot<=0){ box.innerHTML='<span>Parou na página <b>'+lidas+'</b>. Preencha "Páginas" para ver a porcentagem.</span>'; return; }
+      if(tot==null || tot<=0){ box.innerHTML='<span>Parou na página <b>'+lidas+'</b>. O campo "Páginas" é necessário para calcular a porcentagem.</span>'; return; }
       if(lidas>tot){ box.innerHTML='<span>Maior que o total — vou ajustar para <b>'+tot+'</b>.</span>'; return; }
       var pct=Math.max(0, Math.min(100, Math.round(lidas/tot*100)));
       var cor=(STATUS[selStatus.value]||STATUS.lendo).dot;
@@ -3765,7 +3805,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     var modoHor = (b.schedule && String(b.schedule).trim()) ? 'codigo' : 'dias';
     var html='<div class="modal" role="dialog" aria-modal="true">'
       +'<div class="modal-head"><h2>'+(existing?'Editar matéria':'Nova matéria')+'</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
-      +'<div class="field"><label for="s_name">Nome da matéria</label><input id="s_name" value="'+v(b.name)+'" placeholder="Ex.: Sociologia Urbana"><span class="err-msg" id="s_err" style="display:none">Dê um nome à matéria.</span></div>'
+      +'<div class="field"><label for="s_name">Nome da matéria</label><input id="s_name" value="'+v(b.name)+'" placeholder="Ex.: Sociologia Urbana"><span class="err-msg" id="s_err" style="display:none">O nome da matéria é obrigatório.</span></div>'
       +'<div class="field"><label for="s_prof">Professor(a) (opcional)</label><input id="s_prof" value="'+v(b.professor)+'" placeholder="Ex.: Karl Marx da Silva"></div>'
       +'<div class="field"><span class="fake-label">Dias de aula</span>'
         +'<div class="segfield" role="radiogroup" aria-label="Como informar o horário">'
@@ -3793,17 +3833,18 @@ body.com-teclado .app{padding-bottom:56vh;}
       +'<div class="field"><label for="s_local">Local da aula</label>'
         +'<input id="s_local" value="'+v(b.place)+'" placeholder="Ex.: PAT AT 099"></div>'
       +'<div class="field"><label for="s_drive">Pasta da matéria no Drive (opcional)</label>'
-        +'<input id="s_drive" value="'+v(b.driveLink)+'" placeholder="Cole o link de compartilhamento da pasta">'
-        +'<span class="hint">Vira um atalho no cabeçalho da matéria. Aceita qualquer link.</span></div>'
+        +'<input id="s_drive" value="'+v(b.driveLink)+'" placeholder="Link de compartilhamento da pasta">'
+        +'<span class="hint">Aparece como atalho no cabeçalho da matéria. Aceita qualquer link.</span></div>'
       +'<div class="row-2"><div class="field"><label for="s_lim">Limite de faltas</label>'
         +'<input id="s_lim" type="number" min="0" max="30" value="'+v(b.absenceLimit==null?7:b.absenceLimit)+'">'
-        +'<span class="hint">0 = não controlar faltas nesta matéria</span></div>'
+        +'<span class="hint">Número de ausências admitidas antes da reprovação por presença. O padrão <b>7</b> vale para disciplinas de duas aulas semanais — <b>convém conferir o limite da disciplina</b>. O valor 0 desativa o controle.</span></div>'
       +'<div class="field" role="group" aria-label="Cor da matéria"><span class="fake-label">Cor</span>'+swatchesHtml(b.color)+'</div></div>'
       +'<label class="opt-check"><input type="checkbox" id="s_tcc"'+(b.tcc?' checked':'')+'>'
         +'<span><b>Esta matéria é o meu '+esc(rotuloTcc())+'</b>'
-        +'<span class="hint">Ela sai da faixa de matérias e passa a viver na aba '+esc(rotuloTcc())+', junto com as etapas e as orientações.</span></span></label>'
+        +'<span class="hint">A matéria sai da faixa superior e passa a ocupar uma aba própria, junto das etapas, das orientações e do prazo.'
+        +(tccLigado()?'':' A aba está desligada e será ligada ao salvar.')+'</span></span></label>'
       +(existing?'<div class="zona-risco"><div><b>Remover esta matéria</b>'
-        +'<span class="hint">Apaga também os textos e as faltas dela. Não dá para desfazer.</span></div>'
+        +'<span class="hint">Apaga também os textos e as faltas vinculados a ela.</span></div>'
         +'<button class="btn-danger" data-remover>'+SVG_TRASH+' Remover</button></div>':'')
       +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Cancelar</button><button class="btn-wine" data-save>'+(existing?'Salvar':'Criar matéria')+'</button></div>'
       +'</div>';
@@ -3885,7 +3926,7 @@ body.com-teclado .app{padding-bottom:56vh;}
         var eh=document.getElementById('s_hor');
         eh.classList.add('invalid'); eh.focus(); eh.select();
         var dica=document.getElementById('s_hor_lida');
-        if(dica){ dica.textContent='Não reconheci esse código, então não dá para salvar assim. Formato: dias + turno + horários, como 35M12. Se preferir, use "Escolher os dias".';
+        if(dica){ dica.textContent='Código não reconhecido: o salvamento está bloqueado. O formato é dias + turno + horários, como 35M12. A alternativa é "Escolher os dias".';
           dica.classList.add('hint-erro'); }
         return;
       }
@@ -3904,6 +3945,9 @@ body.com-teclado .app{padding-bottom:56vh;}
       endTime:  modo==='dias'   ? g('s_fim') : '' };
     // só pode existir uma matéria de TCC — marcar uma desmarca a anterior
     if(ehTcc) subjects.forEach(function(x){ if(x!==existing) x.tcc=false; });
+    /* Marcar a caixa e não ver nada acontecer seria o pior dos mundos: se a aba
+       estiver desligada, ela se liga sozinha aqui. */
+    if(ehTcc && !tccLigado()){ appCfg=normCfg(Object.assign({}, appCfg, {tccOn:true})); }
     var eraTcc = !!(existing && existing.tcc);
     // normalizar também ao EDITAR: senão "  35m12  " ficava salvo cru
     if(existing) Object.assign(existing, normSubject(Object.assign({}, existing, data)));
@@ -3949,7 +3993,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     var comoTxt = temHorario
       ? 'A próxima aula de <b>'+esc(sb.name)+'</b> — '+esc(horarioTexto(sb))+'.'
       : 'Esta matéria não tem dias de aula cadastrados, então vou usar <b>uma semana</b> à frente.'
-        +'<span class="hint" style="display:block;margin-top:4px">Marque os dias no menu da matéria (ou cadastre o código, ex.: 35M12) para adiar por aula.</span>';
+        +'<span class="hint" style="display:block;margin-top:4px">O adiamento por aula exige os dias marcados no menu da matéria, ou o código de horário (ex.: 35M12).</span>';
     var html='<div class="modal" role="dialog" aria-modal="true">'
       +'<div class="modal-head"><h2>Adiar</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
       +'<div class="adiar-de">'
@@ -4025,33 +4069,41 @@ body.com-teclado .app{padding-bottom:56vh;}
   }
   function adiarTexto(t, comLeituras, comAvaliacoes){
     var plano=planoAdiamento(t, comLeituras, comAvaliacoes);
+    if(!plano.length) return;
+    // adiar em cadeia mexe em muitos itens de uma vez: é o que mais merece volta
+    guardarDesfazer(plano.length===1 ? 'o adiamento' : 'o adiamento de '+plano.length+' itens');
     var destino=plano.length?plano[0].para:t.classDate;
     plano.forEach(function(p){ if(p.item===t) destino=p.para; });
     plano.forEach(function(p){ p.item.classDate=p.para; });
-    anunciar(plano.length===1 ? 'Adiado para '+fmtDate(destino)
-                              : plano.length+' itens adiados uma aula');
     persist(); renderAll();
+    avisoNaTela(plano.length===1 ? 'Adiado para '+fmtDate(destino)
+                                 : plural(plano.length,'1 item adiado',plano.length+' itens adiados')+' uma aula.',
+                'ok', true);
   }
   function deleteText(id){
     var t=findText(id); if(!t) return;
-    if(!confirm('Remover o texto "'+t.name+'"?\n\nEsta ação não pode ser desfeita.')) return;
+    if(!confirm('Remover "'+t.name+'"?')) return;
+    guardarDesfazer('"'+t.name+'" removido');
     closeModal();
     texts=texts.filter(function(x){ return x.id!==id; });
     openMenuId=null;
     persist(); renderAll();
+    avisoNaTela('"'+t.name+'" removido.', 'ok', true);
   }
   function deleteSubject(id){
     var s=findSubject(id); if(!s) return;
     var n=textsOf(id).length;
-    if(!confirm('Remover a matéria "'+s.name+'"'+(n?' e seus '+n+' texto(s)':'')+'?\n\nEsta ação não pode ser desfeita.')) return;
+    if(!confirm('Remover a matéria "'+s.name+'"'+(n?' e '+plural(n,'a leitura dela','as '+n+' leituras dela'):'')+'?')) return;
+    guardarDesfazer('a matéria "'+s.name+'"');
     closeModal();
     var eraTcc=!!s.tcc;
     texts=texts.filter(function(t){ return t.subjectId!==id; });
     subjects=subjects.filter(function(x){ return x.id!==id; });
     if(currentSubjectId===id){ currentSubjectId=null; }
     ajustarMateriaAtual();
-    if(eraTcc) view='tcc';   // apagou a matéria do TCC: a aba continua, agora sem matéria vinculada
+    if(eraTcc && tccLigado()) view='tcc';   // a aba continua, agora sem matéria vinculada
     persist(); renderAll();
+    avisoNaTela('Matéria "'+s.name+'" removida.', 'ok', true);
   }
 
 
@@ -4065,7 +4117,7 @@ body.com-teclado .app{padding-bottom:56vh;}
       +'<div class="field"><label for="c_ori">Professor(a) orientador(a)</label>'
         +'<input id="c_ori" value="'+v(tcc.orientadora)+'" placeholder="Ex.: Karl Marx da Silva"></div>'
       +'<div class="field"><label for="c_drv">Pasta no Drive (opcional)</label>'
-        +'<input id="c_drv" value="'+v(tcc.driveLink)+'" placeholder="Cole o link de compartilhamento da pasta"></div>'
+        +'<input id="c_drv" value="'+v(tcc.driveLink)+'" placeholder="Link de compartilhamento da pasta"></div>'
       +'<div class="row-2"><div class="field"><label for="c_plbl">O que é o prazo</label>'
         +'<input id="c_plbl" value="'+v(tcc.prazoLabel)+'" placeholder="Ex.: Entrega final"></div>'
       +'<div class="field"><label for="c_prz">Data-limite</label><input id="c_prz" type="date" value="'+v(tcc.prazo)+'">'
@@ -4095,13 +4147,13 @@ body.com-teclado .app{padding-bottom:56vh;}
     var html='<div class="modal" role="dialog" aria-modal="true">'
       +'<div class="modal-head"><h2>'+(existing?'Editar etapa':'Nova etapa')+'</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
       +'<div class="field"><label for="e_name">Nome da etapa</label><input id="e_name" value="'+v(b.name)+'" placeholder="Ex.: Escrita do capítulo 2">'
-        +'<span class="err-msg" id="e_err" style="display:none">Dê um nome à etapa para salvar.</span></div>'
+        +'<span class="err-msg" id="e_err" style="display:none">O nome da etapa é obrigatório.</span></div>'
       +'<div class="row-2"><div class="field"><label for="e_ini">Começa em</label><input id="e_ini" type="date" value="'+v(b.start)+'"></div>'
       +'<div class="field"><label for="e_fim">Termina em</label><input id="e_fim" type="date" value="'+v(b.end)+'"></div></div>'
       +'<div class="field"><label for="e_st">Status</label><select id="e_st">'+opts(ETAPA,b.status)+'</select></div>'
       +'<div class="field"><label for="e_notes">Notas (opcional)</label><textarea id="e_notes" rows="2" placeholder="O que precisa acontecer nesta etapa…">'+v(b.notes)+'</textarea></div>'
       +(existing?'<div class="zona-risco"><div><b>Remover esta etapa</b>'
-        +'<span class="hint">Sai do cronograma. Não dá para desfazer.</span></div>'
+        +'<span class="hint">A etapa sai do cronograma. Irreversível.</span></div>'
         +'<button class="btn-danger" data-remover>'+SVG_TRASH+' Remover</button></div>':'')
       +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Cancelar</button><button class="btn-wine" data-save>'+(existing?'Salvar':'Adicionar')+'</button></div>'
       +'</div>';
@@ -4145,7 +4197,7 @@ body.com-teclado .app{padding-bottom:56vh;}
         +'<span class="hint">Os passos do registro mais recente ficam destacados na aba.</span></div>'
       +'<span class="err-msg" id="o_err" style="display:none">Preencha ao menos a data ou uma anotação.</span>'
       +(existing?'<div class="zona-risco"><div><b>Remover este registro</b>'
-        +'<span class="hint">Apaga as anotações desta conversa. Não dá para desfazer.</span></div>'
+        +'<span class="hint">Apaga as anotações deste registro. Irreversível.</span></div>'
         +'<button class="btn-danger" data-remover>'+SVG_TRASH+' Remover</button></div>':'')
       +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Cancelar</button><button class="btn-wine" data-save>'+(existing?'Salvar':'Registrar')+'</button></div>'
       +'</div>';
@@ -4298,7 +4350,7 @@ body.com-teclado .app{padding-bottom:56vh;}
       +'<div class="row-2"><div class="field"><label for="p_tccon">Aba do trabalho final</label>'
         +'<select id="p_tccon"><option value="1"'+(tccLigado()?' selected':'')+'>Ligada</option>'
         +'<option value="0"'+(!tccLigado()?' selected':'')+'>Desligada</option></select>'
-        +'<span class="hint">Etapas, orientações e prazo. Desligue se você ainda não tem um.</span></div>'
+        +'<span class="hint">Etapas, orientações e prazo. Mantenha desligada enquanto não houver um trabalho final em curso.</span></div>'
       +'<div class="field"><label for="p_tccnome">Como chamar</label>'
         +'<input id="p_tccnome" maxlength="24" value="'+esc(rotuloTcc())+'" placeholder="TCC">'
         +'<span class="hint">TCC, monografia, dissertação, tese…</span></div></div>'
@@ -4405,51 +4457,51 @@ body.com-teclado .app{padding-bottom:56vh;}
     };
     var html='<div class="modal" role="dialog" aria-modal="true">'
       +'<div class="modal-head"><h2>Ajuda</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
-      +'<p>Este app organiza o que você tem para ler em cada matéria e mostra se você está acompanhando. Nada aqui é obrigatório: use só as partes que ajudarem.</p>'
+      +'<p>Este tracker organiza as leituras de cada matéria e indica se elas estão em dia. Nenhum recurso é obrigatório.</p>'
 
-      +bloco('Onde ficam os meus dados?',
-        '<p>No <b>seu navegador</b>, neste aparelho. Nada é enviado para nenhum servidor e ninguém além de você vê — nem quem fez o app.</p>'
-        +'<p>O outro lado disso: <b>limpar os dados do navegador apaga tudo</b>, e trocar de celular não leva nada junto. Por isso o app pede de vez em quando para você <b>baixar uma cópia</b> — é um arquivo que fica com você e restaura tudo depois.</p>'
-        +'<p>O botão de dados fica no topo da tela. Lá dentro também ficam a sincronização automática e o "apagar tudo".</p>')
+      +bloco('Onde ficam os dados?',
+        '<p>No <b>navegador deste aparelho</b>. Nada é enviado a servidor algum e ninguém mais tem acesso ao conteúdo — nem quem desenvolveu o tracker.</p>'
+        +'<p>A contrapartida: <b>limpar os dados do navegador apaga tudo</b>, e a troca de aparelho não leva nada junto. Daí o lembrete periódico para <b>baixar uma cópia de segurança</b>, um arquivo capaz de restaurar todo o conteúdo depois.</p>'
+        +'<p>O painel <b>Seus dados</b> fica no alto da tela e reúne também a sincronização automática e a opção de apagar tudo.</p>')
 
-      +bloco('Como levo para outro celular ou computador?',
-        '<p><b>Do jeito simples:</b> no aparelho antigo, botão de dados → <b>Baixar uma cópia</b>. Mande o arquivo para você mesma (e-mail, WhatsApp, Drive). No aparelho novo, abra o app → <b>Restaurar de uma cópia</b>.</p>'
-        +'<p><b>Do jeito automático:</b> dentro de "Modos automáticos" existe a sincronização por GitHub. Ela mantém os aparelhos iguais sozinha, mas exige criar uma conta e um token — só vale a pena se você usa os dois aparelhos toda semana.</p>')
+      +bloco('Como transferir para outro aparelho?',
+        '<p><b>Pela cópia de segurança:</b> no aparelho antigo, <b>Seus dados</b> → <b>Baixar uma cópia</b>. O arquivo pode ser transferido por e-mail, mensagem ou nuvem. No aparelho novo, <b>Restaurar de uma cópia</b>.</p>'
+        +'<p><b>Pela sincronização:</b> em "Modos automáticos" há a sincronização por GitHub, que mantém os aparelhos idênticos sem intervenção. Exige conta e token, e só compensa com uso frequente dos dois aparelhos.</p>')
 
-      +bloco('O que quer dizer "em dia"?',
-        '<p>É o resumo no alto da página. Uma matéria está <b>em dia</b> quando você já leu tudo o que estava marcado para a <b>próxima aula</b> dela (ou para a aula de hoje, se houver uma).</p>'
-        +'<p>Leituras de aulas que <b>já passaram</b> e não foram lidas não entram nessa conta — senão um atraso de março deixaria a matéria vermelha até o fim do semestre. Elas continuam aparecendo na lista, mais apagadas, com a data em vermelho.</p>')
+      +bloco('O que significa "em dia"?',
+        '<p>É o resumo exibido no alto da página. Uma matéria está <b>em dia</b> quando todas as leituras marcadas para a <b>próxima aula</b> — ou para a aula de hoje, se houver — já foram concluídas.</p>'
+        +'<p>Leituras de aulas <b>já passadas</b> e não concluídas ficam fora dessa conta; do contrário, um atraso de março manteria a matéria em vermelho até o fim do semestre. Elas seguem na lista, esmaecidas e com a data em vermelho.</p>')
 
       +bloco('O que significa cada status?',
-        '<ul><li><b>A ler</b> — ainda não comecei.</li>'
-        +'<li><b>Lendo</b> — comecei e vou continuar.</li>'
-        +'<li><b>Lido parcialmente</b> — parei no meio e não pretendo terminar (o professor pediu só um trecho, por exemplo).</li>'
-        +'<li><b>Lido</b> — terminei.</li></ul>'
-        +'<p>Numa <b>avaliação</b> os mesmos status aparecem com outros nomes: <i>A fazer</i>, <i>Estudando</i>, <i>Estudei em parte</i> e <i>Pronta</i>.</p>'
-        +'<p>Se você preencher <b>páginas</b>, dá para tocar no número na lista e anotar em que página parou. Chegando na última, o texto vira "Lido" sozinho.</p>')
+        '<ul><li><b>A ler</b> — leitura ainda não iniciada.</li>'
+        +'<li><b>Lendo</b> — leitura em andamento.</li>'
+        +'<li><b>Lido parcialmente</b> — leitura interrompida sem previsão de conclusão, como no caso de um trecho pedido pelo professor.</li>'
+        +'<li><b>Lido</b> — leitura concluída.</li></ul>'
+        +'<p>Em uma <b>avaliação</b> os mesmos status recebem outros nomes: <i>A fazer</i>, <i>Estudando</i>, <i>Estudei em parte</i> e <i>Pronta</i>.</p>'
+        +'<p>Com o número de <b>páginas</b> preenchido, um toque sobre ele na lista registra a página em que a leitura parou. Ao chegar à última, o texto passa a "Lido" automaticamente.</p>')
 
       +bloco('Para que serve o controle de faltas?',
-        '<p>Para você saber quanto ainda pode faltar antes de reprovar por presença. O limite vem preenchido com <b>7</b>, que é o caso mais comum numa disciplina de duas aulas por semana — <b>confira o da sua</b> e troque no menu da matéria (engrenagem).</p>'
-        +'<p>Colocar <b>0</b> desliga o controle naquela matéria.</p>')
+        '<p>Para acompanhar quantas ausências ainda cabem antes da reprovação por presença. O limite vem preenchido com <b>7</b>, o caso mais comum em disciplinas de duas aulas semanais — <b>convém conferir o limite da disciplina</b> e ajustá-lo no menu da matéria (engrenagem).</p>'
+        +'<p>O valor <b>0</b> desativa o controle naquela matéria.</p>')
 
-      +bloco('Como digo os dias de aula?',
-        '<p>No menu da matéria (engrenagem), em <b>Dias de aula</b>. O jeito normal é marcar os dias da semana e, se quiser, o horário.</p>'
-        +'<p>Quem é da <b>UnB</b> pode usar o botão <b>Código da UnB</b> e colar o código do horário direto do Matrícula Web — por exemplo <code>35M12</code>. Nele os números são os dias (<b>2</b>=segunda, <b>3</b>=terça… <b>7</b>=sábado), a letra é o turno (<b>M</b>anhã, <b>T</b>arde, <b>N</b>oite) e os últimos números são os horários seguidos. O app mostra embaixo o que entendeu, em português.</p>'
-        +'<p>Com os dias cadastrados, o botão <b>↺</b> de cada leitura passa a adiar para a <b>próxima aula</b> em vez de somar sete dias — útil quando a aula cai.</p>')
+      +bloco('Como registrar os dias de aula?',
+        '<p>No menu da matéria (engrenagem), em <b>Dias de aula</b>. O modo padrão é marcar os dias da semana e, opcionalmente, o horário.</p>'
+        +'<p>Na <b>UnB</b>, o botão <b>Código da UnB</b> aceita o código de horário do Matrícula Web — por exemplo <code>35M12</code>. Nele os números indicam os dias (<b>2</b>=segunda, <b>3</b>=terça… <b>7</b>=sábado), a letra indica o turno (<b>M</b>anhã, <b>T</b>arde, <b>N</b>oite) e os últimos números são os horários seguidos. A interpretação do código aparece logo abaixo, por extenso.</p>'
+        +'<p>Com os dias cadastrados, o botão <b>↺</b> de cada leitura passa a adiá-la para a <b>próxima aula</b> em vez de somar sete dias — útil quando uma aula é cancelada.</p>')
 
       +bloco('O que é a aba do trabalho final?',
-        '<p>Um espaço separado para o '+tcz+': etapas com prazo, registro das orientações e a contagem até a entrega.</p>'
-        +'<p>Se você ainda não tem um, <b>desligue a aba</b> no menu ☰ → Este app. Lá também dá para trocar o nome dela (monografia, dissertação, tese).</p>')
+        '<p>Um espaço separado para o trabalho de conclusão: etapas com prazo, registro das orientações e contagem regressiva até a entrega.</p>'
+        +'<p>A aba vem <b>desligada</b>. Pode ser ativada em ☰ → Este app, ou automaticamente ao marcar uma matéria como o '+tcz+' no menu dela. No mesmo lugar é possível renomeá-la: monografia, dissertação, tese.</p>')
 
-      +bloco('E quando o semestre acaba?',
-        '<p>Menu ☰ → <b>Semestres</b> → "Fechar e começar um novo". Tudo o que está na tela é guardado inteiro e a mesa fica limpa para o semestre seguinte.</p>'
-        +'<p>Nada é apagado: os semestres guardados ficam listados ali e podem voltar a qualquer momento pelo <b>Restaurar</b>.</p>')
+      +bloco('E ao fim do semestre?',
+        '<p>Menu ☰ → <b>Semestres</b> → "Fechar e começar um novo". Todo o conteúdo em tela é guardado por inteiro e a área fica livre para o semestre seguinte.</p>'
+        +'<p>Nada é apagado: os semestres guardados ficam listados ali e podem ser trazidos de volta a qualquer momento pelo <b>Restaurar</b>.</p>')
 
-      +bloco('Dá para virar um aplicativo no celular?',
-        '<p>Sim, e não precisa instalar nada de loja nenhuma. Com o app aberto no navegador do celular:</p>'
-        +'<ul><li><b>iPhone (Safari):</b> botão de compartilhar (o quadradinho com a seta) → <b>Adicionar à Tela de Início</b>.</li>'
-        +'<li><b>Android (Chrome):</b> menu de três pontinhos → <b>Adicionar à tela inicial</b>.</li></ul>'
-        +'<p>Ele passa a abrir em tela cheia, com ícone próprio, como qualquer outro aplicativo. Os dados continuam sendo os mesmos.</p>')
+      +bloco('É possível usar como aplicativo no celular?',
+        '<p>Sim, sem instalar nada de loja alguma. Com o tracker aberto no navegador do celular:</p>'
+        +'<ul><li><b>iPhone (Safari):</b> botão de compartilhar → <b>Adicionar à Tela de Início</b>.</li>'
+        +'<li><b>Android (Chrome):</b> menu de três pontos → <b>Adicionar à tela inicial</b>.</li></ul>'
+        +'<p>O tracker passa a abrir em tela cheia, com ícone próprio, como qualquer outro aplicativo. Os dados permanecem os mesmos.</p>')
 
       +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Fechar</button></div></div>';
     var ov=buildOverlay(html);
@@ -4470,14 +4522,14 @@ body.com-teclado .app{padding-bottom:56vh;}
             +'<button class="icon-btn danger" data-arq="remover" data-id="'+esc(a.id)+'" aria-label="'+esc('Apagar '+a.nome)+'">'+SVG_TRASH+'</button>'
             +'</div></div>'; }).join('')+'</div>'
       : '<div class="tcc-vazio"><p>Nenhum semestre guardado ainda.</p>'
-        +'<span class="hint">Ao fechar um semestre, ele vem para cá inteiro e pode voltar quando você quiser.</span></div>';
+        +'<span class="hint">Ao ser fechado, um semestre vem para cá por inteiro e pode ser restaurado a qualquer momento.</span></div>';
     var html='<div class="modal" role="dialog" aria-modal="true">'
       +'<div class="modal-head"><h2>Semestres</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
       +'<div class="field"><label for="arq_nome">Fechar o semestre atual como</label>'
         +'<input id="arq_nome" maxlength="60" value="'+esc(periodoSugerido())+'" placeholder="Ex.: 2026/2"'
         +(vivo?'':' disabled')+'>'
         +'<span class="hint">'+(vivo
-            ? 'As matérias, as leituras e o trabalho final saem da tela e ficam guardados aqui. Depois é só restaurar.'
+            ? 'As matérias, as leituras e o trabalho final saem da tela e ficam guardados aqui, prontos para serem restaurados.'
             : 'Não há nada para guardar: o semestre atual está vazio.')+'</span></div>'
       +'<div class="arq-fechar"><button class="btn-wine" id="arq_go"'+(vivo?'':' disabled')+'>'
         +svg(IC.check,15)+' Fechar e começar um novo</button></div>'
@@ -4516,7 +4568,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     var estado = fileState==='on'
       ? '<div class="fstat ok">'+svg(IC.check,14)+' Conectado a <b>'+esc(fileName)+'</b>. Toda alteração é gravada nele automaticamente.</div>'
       : (fileState==='precisa'
-        ? '<div class="fstat warn">'+svg(IC.alert,14)+' O arquivo <b>'+esc(fileName)+'</b> está configurado, mas o navegador precisa que você autorize a gravação de novo nesta sessão.'
+        ? '<div class="fstat warn">'+svg(IC.alert,14)+' O arquivo <b>'+esc(fileName)+'</b> está configurado, mas o navegador exige nova autorização de gravação nesta sessão.'
           +(fileErr?'<br><span class="hint">Último erro: '+esc(fileErr)+'</span>':'')+'</div>'
         : '');
 
@@ -4529,53 +4581,53 @@ body.com-teclado .app{padding-bottom:56vh;}
     }
 
     var corpo = sup
-      ? '<p>Você escolhe um arquivo <b>.json</b> uma única vez e o app passa a gravar nele a cada mudança — sem exportar nada. Ao reabrir, ele lê esse mesmo arquivo.</p>'
-        +'<p class="hint2">Dica: salve o arquivo dentro da pasta do <b>Google Drive</b>, <b>OneDrive</b> ou <b>Dropbox</b> do seu computador. Assim o progresso sincroniza entre seus aparelhos sozinho.</p>'
-        +'<p class="hint2">O navegador pode pedir sua autorização uma vez por sessão — é uma proteção dele, não dá para evitar. Evite deixar o tracker aberto em duas abas ao mesmo tempo, porque a última a gravar vence.</p>'
-      : '<p>Neste navegador não dá para gravar direto em um arquivo seu — isso funciona no <b>Chrome</b>, <b>Edge</b> ou <b>Opera</b> <b>no computador</b>. Em celular, nenhum navegador permite.</p>'
-        +'<p class="hint2">Por aqui o progresso fica salvo <b>neste navegador</b> e não some ao fechar. Para levar para outro aparelho, use <b>Exportar</b> e <b>Importar</b>.</p>';
+      ? '<p>Um arquivo <b>.json</b> é escolhido uma única vez e passa a receber cada alteração automaticamente, sem exportação manual. Na reabertura, o tracker lê esse mesmo arquivo.</p>'
+        +'<p class="hint2">Salvo dentro da pasta do <b>Google Drive</b>, <b>OneDrive</b> ou <b>Dropbox</b>, o arquivo sincroniza entre aparelhos por conta própria.</p>'
+        +'<p class="hint2">O navegador pode solicitar autorização uma vez por sessão — é uma proteção dele, inevitável. Duas abas abertas ao mesmo tempo devem ser evitadas: a última gravação prevalece.</p>'
+      : '<p>Este navegador não permite gravar diretamente em um arquivo. O recurso existe no <b>Chrome</b>, <b>Edge</b> e <b>Opera</b> <b>de computador</b>; em celular, nenhum navegador o oferece.</p>'
+        +'<p class="hint2">Neste caso o progresso continua salvo <b>neste navegador</b> e permanece após o fechamento. A transferência para outro aparelho é feita pela cópia de segurança.</p>';
 
     var drive='<div class="fdrive"><b>Abrir no celular</b>'
-      +'<p class="hint2">Se você tem o app como <b>arquivo</b> e quer abri-lo no celular: o Google Drive não executa páginas HTML, então é preciso publicá-lo em um link. Em <b>app.netlify.com/drop</b>, arraste o arquivo <b>.html</b> e ele devolve um endereço para abrir em qualquer aparelho.</p>'
-      +'<p class="hint2">Cada aparelho guarda o próprio progresso. Para passar de um para outro, use a cópia de segurança lá em cima.</p></div>';
+      +'<p class="hint2">Para abrir no celular uma cópia que só existe como <b>arquivo</b>: o Google Drive não executa páginas HTML, de modo que é preciso publicá-la em um endereço. Em <b>app.netlify.com/drop</b>, o arquivo <b>.html</b> arrastado para a página devolve um link acessível de qualquer aparelho.</p>'
+      +'<p class="hint2">Cada aparelho guarda o próprio progresso. A migração entre eles é feita pela cópia de segurança, no início deste painel.</p></div>';
 
     var sync;
     var conectado = !!(syncToken && gistId);
     if(conectado && syncState==='erro'){
       // segue configurado: o problema é temporário (rede, limite, token vencido)
       sync='<div class="fstat warn">'+svg(IC.alert,14)+' <span>Não consegui sincronizar agora.<br>'+esc(syncMsg)+'</span></div>'
-        +'<p class="hint2">Suas alterações continuam salvas neste aparelho. Assim que a conexão voltar, use <b>Tentar de novo</b> — nada se perde no meio do caminho.</p>'
+        +'<p class="hint2">As alterações seguem salvas neste aparelho. Com a conexão restabelecida, <b>Tentar de novo</b> retoma o envio — nada se perde no intervalo.</p>'
         +'<div class="fileacts"><button class="btn-wine" data-syncpush>'+svg(IC.sync,15)+' Tentar de novo</button>'
         +'<button class="btn-ghost" data-syncpull>'+svg(IC.down,15)+' Baixar da nuvem</button>'
         +'<button class="btn-ghost" data-syncoff>Desconectar</button></div>';
     } else if(conectado && syncState==='on'){
       sync='<div class="fstat ok">'+svg(IC.check,14)+' Sincronizando com o GitHub'
         +(syncAt?'. Última vez: <b>'+esc(quandoTxt(syncAt))+'</b>':'')+'.</div>'
-        +'<p class="hint2">Tudo que você mudar aqui aparece nos seus outros aparelhos. Para ligar em outro aparelho, cole o mesmo token lá — ele acha esta cópia sozinho.</p>'
+        +'<p class="hint2">Cada alteração feita aqui aparece nos demais aparelhos. Para ativar em outro, basta informar o mesmo token: a cópia existente é localizada automaticamente.</p>'
         +'<div class="fileacts"><button class="btn-ghost" data-syncpush>'+svg(IC.up,15)+' Enviar agora</button>'
         +'<button class="btn-ghost" data-syncpull>'+svg(IC.down,15)+' Baixar da nuvem</button>'
         +'<button class="btn-ghost" data-syncoff>Desconectar</button></div>';
     } else if(conectado && syncState==='conflito'){
-      sync='<div class="fstat warn">'+svg(IC.alert,14)+' <span>Este aparelho e a nuvem foram alterados separadamente. Escolha qual vale — a outra versão será substituída.</span></div>'
+      sync='<div class="fstat warn">'+svg(IC.alert,14)+' <span>Este aparelho e a nuvem foram alterados separadamente. Uma das versões precisa ser escolhida; a outra será substituída.</span></div>'
         +'<div class="fileacts"><button class="btn-wine" data-syncpull>'+svg(IC.down,15)+' Usar a da nuvem</button>'
         +'<button class="btn-ghost" data-syncforce>'+svg(IC.up,15)+' Usar a deste aparelho</button></div>';
     } else {
-      sync='<p>Cole um token do GitHub para o progresso viajar entre o computador e o celular sozinho. Sem isso, dá para levar os dados na mão em <b>Cópia de segurança</b>, mais abaixo.</p>'
+      sync='<p>Um token do GitHub faz o progresso circular entre computador e celular automaticamente. Sem ele, a transferência continua possível pela cópia de segurança.</p>'
         +(syncState==='erro'?'<div class="fstat warn">'+svg(IC.alert,14)+' '+esc(syncMsg)+'</div>':'')
         +'<div class="field"><label for="sync_tok">Token do GitHub</label>'
         +'<input id="sync_tok" type="password" placeholder="ghp_…" autocomplete="off"></div>'
         +'<div class="fileacts"><button class="btn-wine" data-syncon>'+svg(IC.sync,15)+' Conectar</button></div>'
-        +'<details class="abnt" open><summary>Como criar o token (uma vez só)</summary>'
+        +'<details class="abnt" open><summary>Como criar o token (uma única vez)</summary>'
         +'<ol class="hint2" style="margin:0 0 10px;padding-left:20px">'
         +'<li>No GitHub: foto do perfil → <b>Settings</b>.</li>'
         +'<li>No fim do menu da esquerda: <b>Developer settings</b>.</li>'
         +'<li><b>Personal access tokens</b> → <b>Tokens (classic)</b>.</li>'
         +'<li>Botão <b>Generate new token</b> → <b>Generate new token (classic)</b>.</li>'
-        +'<li>Em <b>Note</b> escreva algo como "tracker" e escolha a validade em <b>Expiration</b>.</li>'
-        +'<li>Na lista de caixinhas, marque <b>somente</b> <code>gist</code>. Nenhuma outra.</li>'
-        +'<li>Role até o fim → <b>Generate token</b> → copie. Começa com <code>ghp_</code> e o GitHub só mostra uma vez.</li></ol>'
-        +'<p class="hint2"><b>Precisa ser o clássico.</b> Os <i>Fine-grained tokens</i>, que aparecem primeiro na tela, ainda não oferecem permissão de Gists — lá a opção simplesmente não existe. Marcando só <code>gist</code> no clássico, o token fica igualmente restrito: alcança seus gists e nada mais.</p>'
-        +'<p class="hint2">O token fica guardado só neste aparelho e nunca entra no Exportar. Se perder o celular, dá para revogá-lo no GitHub com um clique.</p></details>';
+        +'<li>Em <b>Note</b>, um nome qualquer (por exemplo "tracker"); a validade fica em <b>Expiration</b>.</li>'
+        +'<li>Na lista de permissões, marcar <b>somente</b> <code>gist</code>.</li>'
+        +'<li>Ao fim da página → <b>Generate token</b> → copiar. O token começa com <code>ghp_</code> e é exibido uma única vez.</li></ol>'
+        +'<p class="hint2"><b>O token precisa ser do tipo clássico.</b> Os <i>Fine-grained tokens</i>, exibidos primeiro na tela do GitHub, ainda não oferecem permissão de Gists — a opção não existe lá. Com apenas <code>gist</code> marcado, o token clássico fica igualmente restrito: alcança os gists da conta e nada mais.</p>'
+        +'<p class="hint2">O token é guardado somente neste aparelho e nunca entra na cópia de segurança. Em caso de perda do aparelho, pode ser revogado no GitHub.</p></details>';
     }
 
     /* A cópia de segurança vem PRIMEIRO: é a única coisa aqui que qualquer
@@ -4584,20 +4636,20 @@ body.com-teclado .app{padding-bottom:56vh;}
        paredes que quem chegava tinha de atravessar. */
     var d=diasDesde(backupEm);
     var estadoBkp = d==null
-      ? '<div class="fstat warn">'+svg(IC.alert,14)+' <span>Você ainda não guardou nenhuma cópia deste tracker.</span></div>'
+      ? '<div class="fstat warn">'+svg(IC.alert,14)+' <span>Nenhuma cópia de segurança foi feita até agora.</span></div>'
       : (d>=DIAS_LEMBRETE
-        ? '<div class="fstat warn">'+svg(IC.alert,14)+' <span>Sua última cópia é de <b>'+d+' dias</b> atrás.</span></div>'
+        ? '<div class="fstat warn">'+svg(IC.alert,14)+' <span>A última cópia de segurança tem <b>'+conta(d,'dia','dias')+'</b>.</span></div>'
         : '<div class="fstat ok">'+svg(IC.check,14)+' <span>Última cópia: <b>'+(d===0?'hoje':(d===1?'ontem':'há '+d+' dias'))+'</b>.</span></div>');
 
     var html='<div class="modal" role="dialog" aria-modal="true">'
       +'<div class="modal-head"><h2>Seus dados</h2><button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
-      +'<p>Tudo o que você registra fica guardado <b>só neste navegador</b>. É rápido e privado — mas se você limpar o navegador, trocar de celular ou perder o aparelho, <b>some</b>. Baixar uma cópia de vez em quando resolve isso.</p>'
+      +'<p>Todo o conteúdo registrado fica guardado <b>só neste navegador</b>: é rápido e privado, mas limpar o navegador, trocar de aparelho ou perdê-lo <b>apaga tudo</b>. Uma cópia de segurança periódica resolve o problema.</p>'
       +estadoBkp
       +'<div class="fileacts"><button class="btn-wine" data-exportar>'+svg(IC.down,15)+' Baixar uma cópia</button>'
       +'<button class="btn-ghost" data-importar>'+svg(IC.up,15)+' Restaurar de uma cópia</button></div>'
-      +'<p class="hint2">A cópia é um arquivo com tudo: matérias, leituras, faltas, progresso e o trabalho final. Serve também para levar para outro aparelho — baixe aqui, mande para você mesma e use <b>Restaurar</b> lá.</p>'
+      +'<p class="hint2">A cópia é um arquivo único com matérias, leituras, faltas, progresso e trabalho final. Serve também para migrar de aparelho: basta baixá-la aqui, transferir o arquivo e usar <b>Restaurar</b> no outro aparelho.</p>'
       +'<details class="fadv"><summary>Modos automáticos <span class="hint">(avançado)</span></summary>'
-        +'<p class="hint2">Os dois modos abaixo mantêm a cópia sempre em dia sozinhos, sem você precisar lembrar. Exigem algum preparo — se não quiser mexer, a cópia manual acima já protege seus dados.</p>'
+        +'<p class="hint2">Os dois modos abaixo mantêm a cópia sempre atualizada sem intervenção manual. Ambos exigem alguma configuração inicial; a cópia manual acima já garante a proteção dos dados.</p>'
         +'<h3 class="fsec">Sincronizar entre aparelhos <span class="hint">— precisa de conta no GitHub</span></h3>'+sync
         +(sup ? ('<h3 class="fsec">Gravar direto num arquivo <span class="hint">— só no computador</span></h3>'
                 +estado+corpo+(acoes?'<div class="fileacts">'+acoes+'</div>':''))
@@ -4605,7 +4657,7 @@ body.com-teclado .app{padding-bottom:56vh;}
         +drive
       +'</details>'
       +'<div class="zona-risco"><div><b>Começar do zero</b>'
-        +'<span class="hint">Apaga todas as matérias, leituras, faltas e o trabalho final deste navegador. Os semestres guardados também. Não dá para desfazer.</span></div>'
+        +'<span class="hint">Apaga deste navegador todas as matérias, leituras, faltas e o trabalho final, além dos semestres guardados. Irreversível.</span></div>'
         +'<button class="btn-danger" data-apagartudo>'+SVG_TRASH+' Apagar tudo</button></div>'
       +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Fechar</button></div></div>';
 
@@ -4649,18 +4701,70 @@ body.com-teclado .app{padding-bottom:56vh;}
   function doExport(){
     downloadJson(payload(), 'tracker-leituras-'+stamp()+'.json');
     backupEm=nowISO(); saveUI(); renderLembrete();
-    avisoNaTela('Cópia de segurança baixada. Guarde o arquivo em algum lugar seguro.');
+    avisoNaTela('Cópia de segurança baixada. Convém guardar o arquivo em local seguro.');
   }
   var toastTimer=null;
-  function avisoNaTela(msg, tipo){
-    anunciar(msg);
+  function caixaToast(){
     var el=document.getElementById('toast');
     if(!el){ el=document.createElement('div'); el.id='toast'; el.className='toast';
-      el.setAttribute('role','status'); document.body.appendChild(el); }
+      el.setAttribute('role','status');
+      /* Dentro do #app, e não do body: as variáveis de cor (e o tema escuro)
+         são declaradas em .app — pendurado no body, o aviso saía sem fundo
+         nenhum e com texto preto por cima da lista. */
+      (document.getElementById('app')||document.body).appendChild(el);
+      el.addEventListener('click', function(e){
+        if(e.target.closest('[data-desfazer]')) aplicarDesfazer();
+      });
+    }
+    return el;
+  }
+  function avisoNaTela(msg, tipo, comDesfazer){
+    anunciar(msg);
+    var el=caixaToast();
     el.className='toast '+(tipo||'ok')+' on';
-    el.textContent=msg;
+    el.innerHTML='<span>'+esc(msg)+'</span>'
+      +(comDesfazer?'<button type="button" class="toast-btn" data-desfazer>Desfazer</button>':'');
     if(toastTimer) clearTimeout(toastTimer);
-    toastTimer=setTimeout(function(){ toastTimer=null; el.className='toast '+(tipo||'ok'); }, 4200);
+    var vida = comDesfazer ? 12000 : 4200;
+    toastTimer=setTimeout(function(){
+      toastTimer=null; el.className='toast '+(tipo||'ok');
+      /* O desfazer vale enquanto o aviso está na tela. Guardá-lo além disso
+         faria "Desfazer" reverter, meia hora depois, algo que a pessoa já
+         esqueceu que fez — o que é mais assustador do que útil. */
+      memoriaDesfazer=null;
+    }, vida);
+  }
+
+  /* Uma casa de memória, com o estado inteiro de antes da última ação
+     destrutiva. Guardar tudo é barato (são poucos kB) e evita ter de escrever
+     um "inverso" para cada operação — que é onde esse tipo de recurso costuma
+     ganhar bugs próprios. */
+  var memoriaDesfazer=null;
+  function guardarDesfazer(rotulo){
+    try{
+      memoriaDesfazer={
+        rotulo: rotulo,
+        subjects: JSON.parse(JSON.stringify(subjects)),
+        texts:    JSON.parse(JSON.stringify(texts)),
+        tcc:      JSON.parse(JSON.stringify(tcc)),
+        arquivos: JSON.parse(JSON.stringify(arquivos)),
+        cfg:      JSON.parse(JSON.stringify(appCfg)),
+        cur:      currentSubjectId,
+        view:     view
+      };
+    }catch(e){ memoriaDesfazer=null; }
+  }
+  function aplicarDesfazer(){
+    var m=memoriaDesfazer; if(!m) return;
+    memoriaDesfazer=null;
+    var d=normalizarTudo(m.subjects, m.texts);
+    subjects=d.subjects; texts=d.texts;
+    tcc=normTcc(m.tcc); arquivos=normArquivos(m.arquivos); appCfg=normCfg(m.cfg);
+    currentSubjectId=m.cur; view=m.view;
+    ajustarMateriaAtual();
+    aplicarCfgNaPagina();
+    persist(); saveUI(); closeModal(); renderAll();
+    avisoNaTela('Desfeito: '+m.rotulo);
   }
   function doImport(file){
     var reader=new FileReader();
@@ -4677,8 +4781,8 @@ body.com-teclado .app{padding-bottom:56vh;}
       var levaTcc = Object.prototype.hasOwnProperty.call(obj,'tcc');
       if(!confirm('Importar vai SUBSTITUIR as matérias e os textos atuais'
         +(levaTcc?', e também tudo da aba '+esc(rotuloTcc())+' (etapas, orientações, prazo)':'')
-        +'.\n\nO que está aqui agora: '+subjects.length+' matéria(s) e '+texts.length+' texto(s).'
-        +'\nO que vem do arquivo: '+obj.subjects.length+' matéria(s) e '+obj.texts.length+' texto(s).'
+        +'.\n\nO que está aqui agora: '+conta(subjects.length,'matéria','matérias')+' e '+conta(texts.length,'leitura','leituras')+'.'
+        +'\nO que vem do arquivo: '+conta(obj.subjects.length,'matéria','matérias')+' e '+conta(obj.texts.length,'leitura','leituras')+'.'
         +'\n\nUm backup do estado atual será baixado antes. Continuar?')) return;
       downloadJson(payload(), 'backup-antes-de-importar-'+stamp()+'.json');
       var d=normalizarTudo(obj.subjects, temChave(obj,'texts')?obj.texts:texts);
@@ -4693,7 +4797,7 @@ body.com-teclado .app{padding-bottom:56vh;}
       query=''; fTag=''; searchInput.value=''; clearX.style.display='none';
       closeModal();
       persist(); renderAll();
-      alert('Importado: '+subjects.length+' matéria(s) e '+texts.length+' texto(s).');
+      alert('Importado: '+conta(subjects.length,'matéria','matérias')+' e '+conta(texts.length,'leitura','leituras')+'.');
     };
     reader.readAsText(file);
   }
