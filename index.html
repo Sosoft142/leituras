@@ -3,7 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#6E2639">
+<!-- theme-color pinta a barra do navegador no celular. Com a cor de destaque
+     ela virava um bloco forte no alto da tela, chamando mais atenção que o
+     próprio conteúdo. Aqui ela recebe a cor do papel do app: a barra deixa de
+     aparecer como faixa e se confunde com a página. O valor é reescrito logo
+     abaixo conforme o tema claro ou escuro guardado. -->
+<meta name="theme-color" content="#EBE7DE">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -933,7 +938,10 @@ body.com-teclado .app{padding-bottom:56vh;}
     start_url:url, scope:base, display:"standalone",
     /* Sem "orientation": o tracker também é usado no computador e no celular
        deitado, e travar em retrato só atrapalharia. */
-    background_color:"#EBE7DE", theme_color:cor,
+    /* theme_color pinta a barra de estado do app instalado. Mesma escolha da
+       meta lá em cima: a cor do papel, para não virar uma faixa forte no topo.
+       background_color é a tela de abertura, que já era o papel. */
+    background_color:"#EBE7DE", theme_color:"#EBE7DE",
     icons:[{src:svgIcone(cor,false), sizes:"any", type:"image/svg+xml", purpose:"any"}] };
 
   var el=document.getElementById('manifest'), urlAntiga=null;
@@ -994,7 +1002,6 @@ body.com-teclado .app{padding-bottom:56vh;}
   }
   gerarIcones(cor);
   if(cor!=="#6E2639"){
-    var mt=document.querySelector('meta[name="theme-color"]'); if(mt) mt.setAttribute('content',cor);
     var ls=document.getElementById('ico-svg'); if(ls) ls.href=svgIcone(cor,false);
   }
 
@@ -1002,7 +1009,7 @@ body.com-teclado .app{padding-bottom:56vh;}
      logo em seguida — senão o atalho nasce com a cor antiga. */
   window.__atualizarManifesto=function(nomeNovo, corNova){
     if(nomeNovo){ man.name=nomeNovo; man.short_name=curtoDe(nomeNovo); }
-    if(corNova){ man.theme_color=corNova; gerarIcones(corNova); }
+    if(corNova){ gerarIcones(corNova); }   // a barra não segue o acento; o ícone sim
     gravarManifesto();
   };
 
@@ -1036,6 +1043,8 @@ body.com-teclado .app{padding-bottom:56vh;}
   if(u && u.dark){
     document.getElementById('app').classList.add('dark');
     document.body.style.background='#1b1713';
+    var m=document.querySelector('meta[name="theme-color"]');
+    if(m) m.setAttribute('content','#1b1713');
   }
 }catch(e){} })();
 </script>
@@ -1046,7 +1055,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   /* Sobe 0.01 a cada versão entregue. Aparece no rodapé, junto dos atalhos. */
   /* O tracker deixou de ser um app de uma pessoa só e virou um que qualquer
      estudante configura: a contagem recomeça do zero aqui, em V0.1. */
-  var APP_VERSAO = '0.18';
+  var APP_VERSAO = '0.19';
   var STORAGE_KEY = 'tracker-leituras:v1';
   var UI_KEY      = 'tracker-leituras:ui';
 
@@ -1155,13 +1164,16 @@ body.com-teclado .app{padding-bottom:56vh;}
     el.style.setProperty('--wine-tint', v[2]);
     el.style.setProperty('--wine-fg',   v[3]);
     try{
+      /* A barra do navegador segue o PAPEL, não o acento: com a cor de destaque
+         ela virava uma faixa forte no alto do celular. Como o papel muda com o
+         tema, o valor é reescrito aqui, que roda a cada renderAll. */
       var m=document.querySelector('meta[name="theme-color"]');
-      if(m) m.setAttribute('content', acentoIcone());
+      if(m) m.setAttribute('content', dark ? '#1b1713' : '#EBE7DE');
+      /* O ícone, esse continua acompanhando o acento. Só o SVG é reescrito por
+         regex; os PNG são redesenhados do zero em __atualizarManifesto. */
       var cor=encodeURIComponent(acentoIcone());
-      document.querySelectorAll('link[rel="icon"],link[rel="apple-touch-icon"]').forEach(function(l){
-        var h=l.getAttribute('href')||'';
-        l.setAttribute('href', h.replace(/fill='%23[0-9A-Fa-f]{6}'/, "fill='"+cor+"'"));
-      });
+      var ls=document.getElementById('ico-svg');
+      if(ls) ls.setAttribute('href', (ls.getAttribute('href')||'').replace(/fill='%23[0-9A-Fa-f]{6}'/, "fill='"+cor+"'"));
       if(window.__atualizarManifesto) window.__atualizarManifesto(appCfg.titulo, acentoIcone());
     }catch(e){}
   }
