@@ -551,7 +551,9 @@ body.com-teclado .app{padding-bottom:56vh;}
 
 /* Modal */
 .overlay{position:fixed; inset:0; background:rgba(20,16,13,.5); backdrop-filter:blur(2px);
-  display:grid; place-items:center; padding:16px; z-index:100;}
+  display:grid; place-items:center; z-index:100;
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px))
+          max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));}
 .modal{background:var(--card); border-radius:16px; width:100%; max-width:520px; padding:22px;
   box-shadow:0 24px 60px rgba(0,0,0,.4); max-height:92vh; overflow:auto;}
 .modal.wide{max-width:660px;}
@@ -793,9 +795,20 @@ body.com-teclado .app{padding-bottom:56vh;}
   .table-wrap{overflow:visible;}
   .sort-mob{display:inline-flex;}
   /* Salvar/Cancelar sempre à vista: o modal de texto tem ~1200px de conteúdo e
-     o botão nascia fora da tela. */
-  .modal-foot{position:sticky; bottom:0; background:var(--pop); z-index:2;
-    margin:0 -18px -18px; padding:12px 18px 18px; border-top:1.5px solid var(--line);}
+     o botão nascia fora da tela.
+     O padding de baixo do modal precisa ir a zero: "bottom:0" num elemento
+     grudado mede a caixa de PADDING, e os 22px que havia ali deixavam uma faixa
+     de conteúdo rolando visível por baixo dos botões. A barra devolve esse
+     espaço no próprio padding, somado à área segura do aparelho. As margens
+     laterais têm de bater com os 22px do modal, senão sobra uma tira
+     descoberta de cada lado; e o fundo é --card, o mesmo do modal, para não
+     abrir um degrau de cor no fim da caixa.
+     Todos os dez modais terminam em .modal-foot — se um dia algum não
+     terminar, ele precisa do próprio espaçamento embaixo. */
+  .modal{padding-bottom:0;}
+  .modal-foot{position:sticky; bottom:0; background:var(--card); z-index:3;
+    margin:8px -22px 0; padding:12px 22px calc(16px + env(safe-area-inset-bottom,0px));
+    border-top:1.5px solid var(--line);}
   /* abaixo de 16px o Safari do iPhone dá zoom ao focar, e depois do zoom a
      página passa a exigir arrasto lateral */
   .field input, .field select, .field textarea{font-size:16px;}
@@ -806,7 +819,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   .chip-btn{flex:1 1 100%; justify-content:center; min-height:44px; box-sizing:border-box;}
   .zona-risco{flex-direction:column; align-items:stretch; gap:10px;}
   .btn-danger{justify-content:center; min-height:44px;}
-  .modal{max-height:94vh;}
+  .modal{max-height:100%;}
   .hero h1{font-size:26px;}
   .wsub{width:100%; order:-1;}
   .witem{flex-wrap:wrap; gap:8px;}
@@ -938,7 +951,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   /* Sobe 0.01 a cada versão entregue. Aparece no rodapé, junto dos atalhos. */
   /* O tracker deixou de ser um app de uma pessoa só e virou um que qualquer
      estudante configura: a contagem recomeça do zero aqui, em V0.1. */
-  var APP_VERSAO = '0.15';
+  var APP_VERSAO = '0.17';
   var STORAGE_KEY = 'tracker-leituras:v1';
   var UI_KEY      = 'tracker-leituras:ui';
 
@@ -946,9 +959,15 @@ body.com-teclado .app{padding-bottom:56vh;}
     nao_lido:{label:"A ler",             dot:"#A79E92", text:"#6B6156", chip:"#E7E3DA", textD:"#b8afa3", chipD:"#3f3a34"},
     lendo:   {label:"Lendo",             dot:"#C08324", text:"#8A5B10", chip:"#F5EAD4", textD:"#cca65c", chipD:"#423a29"},
     parcial: {label:"Lido parcialmente", dot:"#55749A", text:"#3C5877", chip:"#E2E9F1", textD:"#97b3d4", chipD:"#2f3c4c"},
-    lido:    {label:"Lido",              dot:"#5A8A4E", text:"#3F6A36", chip:"#E2EEDD", textD:"#85b474", chipD:"#2f3f29"}
+    lido:    {label:"Lido",              dot:"#5A8A4E", text:"#3F6A36", chip:"#E2EEDD", textD:"#85b474", chipD:"#2f3f29"},
+    /* A chave "nao_lido" já é o "A ler" — pendente, ainda vai acontecer. Este
+       aqui é o oposto: a aula passou e a leitura não foi feita nem será. Vem
+       com chave própria ("pulado") de propósito: renomear a antiga faria um
+       backup guardado marcar todas as leituras pendentes como definitivamente
+       não lidas, sem aviso. */
+    pulado:  {label:"Não lido",          dot:"#9A85A0", text:"#6A5470", chip:"#EDE5EE", textD:"#bda6c0", chipD:"#3b3340"}
   };
-  var STATUS_ORDER = ["nao_lido","lendo","parcial","lido"];
+  var STATUS_ORDER = ["nao_lido","lendo","parcial","lido","pulado"];
 
   /* Veredito de leituras em dia. Só existe "em dia" quando TODOS os textos da
      aula de referência estão lidos — qualquer outro caso é pendente. */
@@ -980,7 +999,7 @@ body.com-teclado .app{padding-bottom:56vh;}
      precisava esconder uma das opções para não mostrar duas idênticas — coisa
      que <option hidden> não garante em todo navegador. Rótulos distintos
      resolvem na raiz e ainda dizem a verdade sobre cada estado. */
-  var AVAL_LABEL = { nao_lido:'A fazer', lendo:'Estudando', parcial:'Estudei em parte', lido:'Pronta' };
+  var AVAL_LABEL = { nao_lido:'A fazer', lendo:'Estudando', parcial:'Estudei em parte', lido:'Pronta', pulado:'Não feita' };
   function ehAval(t){ return !!(t && t.kind==='aval'); }
   function rotuloStatus(t){
     var cfg=STATUS[t.status]||STATUS.nao_lido;
@@ -2083,6 +2102,10 @@ body.com-teclado .app{padding-bottom:56vh;}
   function estMin(t){ if(ehAval(t)) return null; var p=num(t.pages); if(!p||p<=0) return null; return Math.round(p*pace); }
   /* A marcação de onde parou só faz sentido enquanto a leitura está em curso. */
   function emCurso(t){ return t.status==='lendo' || t.status==='parcial'; }
+  /* Encerrado: não há mais nada a fazer com este item. Vale para o que foi
+     lido e para o que foi dado por não lido. Não é o mesmo que "lido" — as
+     contagens de progresso continuam somando só o que foi de fato lido. */
+  function resolvido(t){ return t.status==='lido' || t.status==='pulado'; }
   function temProgresso(t){ return !ehAval(t) && emCurso(t) && num(t.pagesRead)!=null; }
   function readPct(t){
     var p=num(t.pages), r=num(t.pagesRead);
@@ -2093,7 +2116,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   function pagesLeft(t){
     if(ehAval(t)) return null;
     var p=num(t.pages); if(!p||p<=0) return null;
-    if(t.status==='lido') return 0;
+    if(resolvido(t)) return 0;
     var r=num(t.pagesRead);
     if(emCurso(t) && r!=null) return Math.max(0, p-Math.min(r,p));
     return p;
@@ -2157,7 +2180,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     // avaliação não é leitura: fica fora do veredito de "leituras em dia"
     var lista=leiturasDe(subjectId);
     var dated=lista.filter(function(t){ return !!t.classDate; });
-    var late=dated.filter(function(t){ return t.classDate<t0 && t.status!=='lido'; }).length;
+    var late=dated.filter(function(t){ return t.classDate<t0 && !resolvido(t); }).length;
     var undated=lista.length - dated.length;
 
     var refDate=null;
@@ -2168,9 +2191,12 @@ body.com-teclado .app{padding-bottom:56vh;}
 
     var group=dated.filter(function(t){ return t.classDate===refDate; })
       .sort(function(a,b){ return (a.number==null?Infinity:a.number)-(b.number==null?Infinity:b.number); });
-    var read=0;
-    group.forEach(function(t){ if(t.status==='lido') read++; });
-    return {kind: read===group.length ? 'ok' : 'todo', late:late, undated:undated, group:group,
+    /* "read" é o que aparece na frase ("2 de 3 textos lidos") e só conta
+       leitura de verdade. O veredito olha para "encerrados": senão uma aula com
+       uma leitura dada por não lida ficaria vermelha para sempre. */
+    var read=0, encerrados=0;
+    group.forEach(function(t){ if(t.status==='lido') read++; if(resolvido(t)) encerrados++; });
+    return {kind: encerrados===group.length ? 'ok' : 'todo', late:late, undated:undated, group:group,
             refDate:refDate, diff:dayDiff(refDate,t0), read:read, total:group.length};
   }
 
@@ -2184,7 +2210,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   function currentTexts(){
     var q=query.trim().toLowerCase();
     var out=textsOf(currentSubjectId).filter(function(t){
-      if(soPendentes && t.status==='lido') return false;
+      if(soPendentes && resolvido(t)) return false;
       if(fTag && t.tags.indexOf(fTag)<0) return false;
       if(!q) return true;
       return (t.name+' '+(t.originalTitle||'')+' '+(t.author||'')+' '+(t.notes||'')+' '+t.tags.join(' ')).toLowerCase().indexOf(q)>=0;
@@ -2300,7 +2326,7 @@ body.com-teclado .app{padding-bottom:56vh;}
         return '<span class="refname">'+esc(t.name)+'</span> ('+STATUS[t.status].label.toLowerCase()+')';
       }).join(' · ');
       var totMin=0, anyMin=false;
-      st.group.forEach(function(t){ if(t.status!=='lido'){ var m=estMinRest(t); if(m!=null){ totMin+=m; anyMin=true; } } });
+      st.group.forEach(function(t){ if(!resolvido(t)){ var m=estMinRest(t); if(m!=null){ totMin+=m; anyMin=true; } } });
       desc = (isToday?'Aula de hoje':'Próxima aula')+' <span class="emdia-when">'+fmtDate(st.refDate)+' · '+relLabel(st.diff)+'</span> — '+names
            + (anyMin?' · falta ler ≈ <b>'+fmtMin(totMin)+'</b>':'');
     }
@@ -2515,7 +2541,7 @@ body.com-teclado .app{padding-bottom:56vh;}
      urgente da lista, e ficava só um cinza mais claro — indistinguível de "já
      resolvido". Agora a data fica vermelha e diz "atrasado". */
   function atrasado(t){
-    if(!t.classDate || t.status==='lido' || t.status==='parcial') return false;
+    if(!t.classDate || resolvido(t) || t.status==='parcial') return false;
     var d=dayDiff(t.classDate);
     return d!=null && d<0;
   }
@@ -2541,7 +2567,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     var d=dayDiff(t.classDate);
     if(d==null) return false;
     if(d<0) return true;                       // aula já passou
-    return d===0 && t.status==='lido';         // é de hoje, mas já está lido
+    return d===0 && resolvido(t);              // é de hoje, mas já está encerrado
   }
   /* Anel colorido: no próximo texto a cor vem do STATUS (muda conforme avança);
      numa avaliação vem da cor escolhida para o item. Quando o item é os dois, o
@@ -2689,7 +2715,7 @@ body.com-teclado .app{padding-bottom:56vh;}
     renderStatusMenu();
     var pend=0, pendMin=0, avalPend=0;
     list.forEach(function(t){
-      if(t.status==='lido') return;
+      if(resolvido(t)) return;
       if(ehAval(t)){ avalPend++; return; }        // prova não é "página por ler"
       pend++; var m=estMinRest(t); if(m!=null) pendMin+=m;
     });
@@ -2712,7 +2738,7 @@ body.com-teclado .app{padding-bottom:56vh;}
       if(!t.classDate) return;
       var d=dayDiff(t.classDate,t0);
       if(d==null) return;
-      if(d<0){ if(t.status!=='lido') g.late.push(t); }
+      if(d<0){ if(!resolvido(t)) g.late.push(t); }
       else if(d===0) g.today.push(t);
       else if(d===1) g.tomorrow.push(t);
       else if(d<=7) g.soon.push(t);
@@ -2764,8 +2790,10 @@ body.com-teclado .app{padding-bottom:56vh;}
     var semanaLeitura=semana.filter(function(t){ return !ehAval(t); });
     var lidos=0, pendMin=0, pend=0;
     semanaLeitura.forEach(function(t){
+      /* Quem foi dado por não lido não é "lido" nem "por ler": sai das duas
+         contas da semana, como um item já encerrado. */
       if(t.status==='lido') lidos++;
-      else { pend++; var m=estMinRest(t); if(m!=null) pendMin+=m; }
+      else if(!resolvido(t)){ pend++; var m=estMinRest(t); if(m!=null) pendMin+=m; }
     });
     var avalSemana=semana.length-semanaLeitura.length;
     var atrasadasLeitura=g.late.filter(function(t){ return !ehAval(t); }).length;
@@ -4476,8 +4504,9 @@ body.com-teclado .app{padding-bottom:56vh;}
         '<ul><li><b>A ler</b> — leitura ainda não iniciada.</li>'
         +'<li><b>Lendo</b> — leitura em andamento.</li>'
         +'<li><b>Lido parcialmente</b> — leitura interrompida sem previsão de conclusão, como no caso de um trecho pedido pelo professor.</li>'
-        +'<li><b>Lido</b> — leitura concluída.</li></ul>'
-        +'<p>Em uma <b>avaliação</b> os mesmos status recebem outros nomes: <i>A fazer</i>, <i>Estudando</i>, <i>Estudei em parte</i> e <i>Pronta</i>.</p>'
+        +'<li><b>Lido</b> — leitura concluída.</li>'
+        +'<li><b>Não lido</b> — a aula passou e a leitura não foi feita nem será. Encerra o item: ele deixa de contar como pendente ou atrasado, mas continua fora do total de lidos.</li></ul>'
+        +'<p>Em uma <b>avaliação</b> os mesmos status recebem outros nomes: <i>A fazer</i>, <i>Estudando</i>, <i>Estudei em parte</i>, <i>Pronta</i> e <i>Não feita</i>.</p>'
         +'<p>Com o número de <b>páginas</b> preenchido, um toque sobre ele na lista registra a página em que a leitura parou. Ao chegar à última, o texto passa a "Lido" automaticamente.</p>')
 
       +bloco('Para que serve o controle de faltas?',
