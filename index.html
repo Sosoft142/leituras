@@ -8,8 +8,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Leituras">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236E2639'/%3E%3Cpath d='M12 16h15c3 0 4.5 1.5 4.5 4v32c0-2.2-1.8-3.6-4.5-3.6H12zM52 16H37c-3 0-4.5 1.5-4.5 4v32c0-2.2 1.8-3.6 4.5-3.6h15z' fill='none' stroke='%23F6EEDF' stroke-width='3.4' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%236E2639'/%3E%3Cpath d='M12 16h15c3 0 4.5 1.5 4.5 4v32c0-2.2-1.8-3.6-4.5-3.6H12zM52 16H37c-3 0-4.5 1.5-4.5 4v32c0-2.2 1.8-3.6 4.5-3.6h15z' fill='none' stroke='%23F6EEDF' stroke-width='3.4' stroke-linejoin='round'/%3E%3C/svg%3E">
+<meta name="description" content="Organizador das leituras e das faltas das disciplinas, guardado no próprio navegador.">
+<link rel="icon" id="ico-svg" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236E2639'/%3E%3Cpath d='M12 16h15c3 0 4.5 1.5 4.5 4v32c0-2.2-1.8-3.6-4.5-3.6H12zM52 16H37c-3 0-4.5 1.5-4.5 4v32c0-2.2 1.8-3.6 4.5-3.6h15z' fill='none' stroke='%23F6EEDF' stroke-width='3.4' stroke-linejoin='round'/%3E%3C/svg%3E">
+<!-- O ícone do iPhone e o da aba precisam ser PNG: o Safari ignora favicon SVG
+     na hora de "Adicionar à Tela de Início". São gerados a partir do SVG acima,
+     logo abaixo, para não engordar o arquivo com base64 nem fixar a cor. -->
+<link rel="icon" type="image/png" sizes="32x32" id="ico-32">
+<link rel="apple-touch-icon" sizes="180x180" id="ico-180">
 <link rel="manifest" id="manifest">
 <title>Tracker de Leituras</title>
 <style>
@@ -495,7 +500,9 @@ body.com-teclado .app{padding-bottom:56vh;}
   padding:10px 13px; color:var(--ink-soft); font-size:13px;}
 .instalar-in > span{flex:1 1 220px;}
 .instalar-in b{color:var(--ink);}
-.instalar .btn-ghost.sm{height:34px; font-size:12.5px; padding:0 11px; flex:none;}
+.instalar .btn-ghost.sm, .instalar .btn-wine.sm{height:34px; font-size:12.5px; padding:0 11px; flex:none;}
+.instalar-acoes{display:flex; gap:7px; flex:none;}
+@media (max-width:620px){ .instalar-acoes{width:100%;} .instalar-acoes button{flex:1;} }
 /* Aviso passageiro: confirma o que acabou de acontecer */
 .toast{position:fixed; left:50%; bottom:max(18px,env(safe-area-inset-bottom)); transform:translate(-50%,14px);
   background:var(--ink); color:var(--paper); padding:12px 18px; border-radius:11px;
@@ -865,10 +872,28 @@ body.com-teclado .app{padding-bottom:56vh;}
 <div class="app" id="app"></div>
 <script>
 /* Manifesto de app gerado aqui para o arquivo continuar sendo um só. Assim,
-   depois de publicado num link, dá para "Adicionar à tela de início". */
+   depois de publicado num link, o navegador oferece instalar de verdade. */
 (function(){ try{
-  var icone="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236E2639'/%3E%3Cpath d='M12 16h15c3 0 4.5 1.5 4.5 4v32c0-2.2-1.8-3.6-4.5-3.6H12zM52 16H37c-3 0-4.5 1.5-4.5 4v32c0-2.2 1.8-3.6 4.5-3.6h15z' fill='none' stroke='%23F6EEDF' stroke-width='3.4' stroke-linejoin='round'/%3E%3C/svg%3E";
+  /* Uma função só desenha os três feitios do ícone. O "maskable" é o que o
+     Android recorta em círculo ou losango conforme o aparelho: o fundo sangra
+     até a borda e o livro encolhe para caber nos 80% centrais, senão as pontas
+     das páginas somem no recorte. */
+  function svgIcone(cor, maskable){
+    var enc=encodeURIComponent(cor);
+    var fundo = maskable
+      ? "%3Crect width='64' height='64' fill='"+enc+"'/%3E"
+      : "%3Crect width='64' height='64' rx='14' fill='"+enc+"'/%3E";
+    var livro = "%3Cpath d='M12 16h15c3 0 4.5 1.5 4.5 4v32c0-2.2-1.8-3.6-4.5-3.6H12zM52 16H37c-3 0-4.5 1.5-4.5 4v32c0-2.2 1.8-3.6 4.5-3.6h15z' fill='none' stroke='%23F6EEDF' stroke-width='3.4' stroke-linejoin='round'/%3E";
+    if(maskable) livro = "%3Cg transform='translate(32 32) scale(.68) translate(-32 -32)'%3E"+livro+"%3C/g%3E";
+    /* width e height explícitos: sem eles o SVG não rasteriza dentro de um
+       <img> em parte dos navegadores, e os PNG saíam em branco. */
+    return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 64 64'%3E"+fundo+livro+"%3C/svg%3E";
+  }
   var url=location.href.split('#')[0].split('?')[0];
+  /* start_url e scope precisam ser absolutos: o manifesto é servido de um Blob,
+     que não tem caminho relativo nenhum. Com "./" o Chrome recusa o manifesto
+     inteiro e o app deixa de ser instalável, sem dizer por quê. */
+  var base=url.replace(/[^/]*$/,'');
   /* O nome é escolhido por quem usa e mora junto com os dados. Lido aqui, antes
      do app subir, para o atalho na tela de início e a aba do navegador já
      nascerem com o nome certo em vez de piscarem o padrão. */
@@ -899,40 +924,110 @@ body.com-teclado .app{padding-bottom:56vh;}
     if(ac && CORES[ac]) cor=CORES[ac];
   }catch(e){}
   window.__curtoDe=curtoDe;
-  if(cor!=="#6E2639"){
-    var enc=encodeURIComponent(cor);
-    icone=icone.replace(/fill='%236E2639'/, "fill='"+enc+"'");
-    var mt=document.querySelector('meta[name="theme-color"]'); if(mt) mt.setAttribute('content',cor);
-    document.querySelectorAll('link[rel="icon"],link[rel="apple-touch-icon"]').forEach(function(l){
-      l.setAttribute('href',(l.getAttribute('href')||'').replace(/fill='%236E2639'/, "fill='"+enc+"'"));
-    });
-  }
   document.title=nome;
   var ap=document.querySelector('meta[name="apple-mobile-web-app-title"]');
   if(ap) ap.setAttribute('content', curto);
-  var man={ name:nome, short_name:curto,
-    description:"Organizador das leituras e faltas das disciplinas.",
-    start_url:url, scope:url.replace(/[^/]*$/,''), display:"standalone",
-    orientation:"portrait-primary", background_color:"#EBE7DE", theme_color:cor,
-    icons:[{src:icone, sizes:"any", type:"image/svg+xml", purpose:"any"}] };
-  var el=document.getElementById('manifest');
+
+  var DESC="Organizador das leituras e das faltas das disciplinas, guardado no próprio navegador.";
+  var man={ id:base, name:nome, short_name:curto, description:DESC, lang:"pt-BR",
+    start_url:url, scope:base, display:"standalone",
+    /* Sem "orientation": o tracker também é usado no computador e no celular
+       deitado, e travar em retrato só atrapalharia. */
+    background_color:"#EBE7DE", theme_color:cor,
+    icons:[{src:svgIcone(cor,false), sizes:"any", type:"image/svg+xml", purpose:"any"}] };
+
+  var el=document.getElementById('manifest'), urlAntiga=null;
   function gravarManifesto(){
-    if(el && location.protocol!=='file:'){
-      el.href='data:application/manifest+json;charset=utf-8,'+encodeURIComponent(JSON.stringify(man));
-    }
+    if(!el || location.protocol==='file:') return;
+    /* Manifesto em "data:" é bloqueado pelo Chrome — tem de ser Blob. A URL
+       anterior é revogada para não vazar memória a cada troca de cor. */
+    try{
+      var nova=URL.createObjectURL(new Blob([JSON.stringify(man)],{type:'application/manifest+json'}));
+      el.href=nova;
+      if(urlAntiga) URL.revokeObjectURL(urlAntiga);
+      urlAntiga=nova;
+    }catch(e){}
   }
   gravarManifesto();
+
+  /* Os PNG saem do mesmo SVG, desenhados num canvas em tempo de execução. Não
+     entram no arquivo como base64 (que dobraria de tamanho) e acompanham a cor
+     de destaque escolhida, em vez de ficarem presos ao vinho. */
+  function pngDoSvg(svgUrl, tam, cb){
+    try{
+      var img=new Image();
+      img.onload=function(){
+        try{
+          var c=document.createElement('canvas'); c.width=c.height=tam;
+          var x=c.getContext('2d'); x.drawImage(img,0,0,tam,tam);
+          cb(c.toDataURL('image/png'));
+        }catch(e){ cb(null); }
+      };
+      img.onerror=function(){ cb(null); };
+      img.src=svgUrl;
+    }catch(e){ cb(null); }
+  }
+  function gerarIcones(corAtual){
+    var normal=svgIcone(corAtual,false), mask=svgIcone(corAtual,true);
+    var pend=4, saida={};
+    function pronto(){
+      if(--pend>0) return;
+      var l32=document.getElementById('ico-32'), l180=document.getElementById('ico-180');
+      if(saida.p32 && l32) l32.href=saida.p32;
+      if(saida.p180 && l180) l180.href=saida.p180;
+      var lista=[];
+      if(saida.p192) lista.push({src:saida.p192, sizes:"192x192", type:"image/png", purpose:"any"});
+      if(saida.p512) lista.push({src:saida.p512, sizes:"512x512", type:"image/png", purpose:"any"});
+      if(saida.pmask) lista.push({src:saida.pmask, sizes:"512x512", type:"image/png", purpose:"maskable"});
+      /* O SVG fica no fim como reserva; se nenhum PNG saiu, ele continua sendo
+         o único ícone e o app pelo menos não fica sem manifesto. */
+      lista.push({src:normal, sizes:"any", type:"image/svg+xml", purpose:"any"});
+      man.icons=lista;
+      gravarManifesto();
+      if(window.__iconesProntos) try{ window.__iconesProntos(); }catch(e){}
+    }
+    pngDoSvg(normal,192,function(d){ saida.p192=d; pngDoSvg(normal,32,function(e){ saida.p32=e; pronto(); }); });
+    pngDoSvg(normal,512,function(d){ saida.p512=d; pronto(); });
+    pngDoSvg(normal,180,function(d){ saida.p180=d; pronto(); });
+    pngDoSvg(mask,512,function(d){ saida.pmask=d; pronto(); });
+    pend--; pronto();
+  }
+  gerarIcones(cor);
+  if(cor!=="#6E2639"){
+    var mt=document.querySelector('meta[name="theme-color"]'); if(mt) mt.setAttribute('content',cor);
+    var ls=document.getElementById('ico-svg'); if(ls) ls.href=svgIcone(cor,false);
+  }
+
   /* Trocar a cor ou o nome com o app aberto tem de valer para quem instalar
      logo em seguida — senão o atalho nasce com a cor antiga. */
   window.__atualizarManifesto=function(nomeNovo, corNova){
     if(nomeNovo){ man.name=nomeNovo; man.short_name=curtoDe(nomeNovo); }
-    if(corNova){
-      man.theme_color=corNova;
-      man.icons=[{src:icone.replace(/fill='%23[0-9A-Fa-f]{6}'/, "fill='"+encodeURIComponent(corNova)+"'"),
-                  sizes:"any", type:"image/svg+xml", purpose:"any"}];
-    }
+    if(corNova){ man.theme_color=corNova; gerarIcones(corNova); }
     gravarManifesto();
   };
+
+  /* Service worker: só existe modo offline se o sw.js estiver ao lado do HTML
+     no servidor. O catch vazio é de propósito — sem o arquivo, o app funciona
+     igual, apenas sem abrir sem internet. isSecureContext em vez de conferir
+     "https:" para que localhost também registre, na hora de testar. */
+  if('serviceWorker' in navigator && window.isSecureContext){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('sw.js').catch(function(){});
+    });
+  }
+
+  /* O Chrome avisa uma vez que o app é instalável e some. Guardar o evento é o
+     que permite ter um botão "Instalar" de verdade em vez de instruções. */
+  window.__promptInstalar=null;
+  window.addEventListener('beforeinstallprompt', function(ev){
+    ev.preventDefault();
+    window.__promptInstalar=ev;
+    if(window.__aoPoderInstalar) try{ window.__aoPoderInstalar(); }catch(e){}
+  });
+  window.addEventListener('appinstalled', function(){
+    window.__promptInstalar=null;
+    if(window.__aoPoderInstalar) try{ window.__aoPoderInstalar(); }catch(e){}
+  });
 }catch(e){} })();
 
 /* Aplica o tema salvo antes do app renderizar, para não piscar claro ao abrir no escuro. */
@@ -951,7 +1046,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   /* Sobe 0.01 a cada versão entregue. Aparece no rodapé, junto dos atalhos. */
   /* O tracker deixou de ser um app de uma pessoa só e virou um que qualquer
      estudante configura: a contagem recomeça do zero aqui, em V0.1. */
-  var APP_VERSAO = '0.17';
+  var APP_VERSAO = '0.18';
   var STORAGE_KEY = 'tracker-leituras:v1';
   var UI_KEY      = 'tracker-leituras:ui';
 
@@ -3294,7 +3389,10 @@ body.com-teclado .app{padding-bottom:56vh;}
     /* Antes isto era só texto mandando usar um botão chamado "Exportar" que
        não existia em tela nenhuma. Agora a própria frase é o botão. */
     return ' · salvo <b>só neste navegador</b>'
-      +(comDica?' · <button type="button" class="link-btn" data-act="bkp-rodape">baixar uma cópia</button>':'');
+      +(comDica?' · <button type="button" class="link-btn" data-act="bkp-rodape">baixar uma cópia</button>':'')
+      /* Visível em qualquer tela e sempre no mesmo lugar: o convite do alto
+         some depois de dispensado, este não. */
+      +(podeInstalar()?' · <button type="button" class="link-btn" data-act="inst-rodape">instalar como app</button>':'');
   }
   function renderPendBtn(){
     var b=document.getElementById('pend'); if(!b) return;
@@ -3356,15 +3454,41 @@ body.com-teclado .app{padding-bottom:56vh;}
         || window.navigator.standalone===true;
     }catch(e){ return false; }
   }
+  /* O Chrome guarda o evento "beforeinstallprompt" e só o oferece uma vez. Ter
+     o evento em mãos é o que separa um botão que instala de verdade de um
+     texto explicando onde clicar. O iPhone nunca dispara o evento: lá o caminho
+     escrito é o único que existe. */
+  function temPrompt(){ return !!window.__promptInstalar; }
+  function podeInstalar(){ return !jaEhApp(); }
   function podeConvidarInstalar(){
-    if(!isNarrow() || jaEhApp()) return false;
+    if(jaEhApp()) return false;
     /* Duas faixas empilhadas no topo do celular comem meia tela. O lembrete de
        cópia é mais urgente: enquanto ele estiver lá, o convite espera. */
     if(precisaLembrete()) return false;
     if(estadoInstalar()==='nao') return false;
     if(!temConteudoVivo()) return false;
+    /* No computador o convite só aparece quando há botão de verdade para
+       oferecer; no celular, também pelo caminho escrito, a partir da segunda
+       visita — na primeira a pessoa ainda está entendendo o que é o app. */
+    if(!isNarrow()) return temPrompt();
     // '' = nunca abriu, 'visto1' = está na primeira visita, 'visto2' = já voltou
     return estadoInstalar()==='visto2';
+  }
+  /* Instalar de fato. O prompt é de uso único: depois de chamado, o evento
+     guardado não serve mais e some junto com o convite. */
+  function instalarAgora(){
+    var ev=window.__promptInstalar;
+    if(!ev){ abrirInstalar(); return; }
+    window.__promptInstalar=null;
+    try{
+      ev.prompt();
+      var p=ev.userChoice;
+      if(p && p.then) p.then(function(r){
+        if(r && r.outcome==='accepted'){ marcarInstalar('nao'); anunciar('Instalação iniciada'); }
+        renderInstalar(); renderMain();
+      });
+      else { renderInstalar(); renderMain(); }
+    }catch(e){ abrirInstalar(); }
   }
   function contarVisita(){
     var e=estadoInstalar();
@@ -3374,14 +3498,58 @@ body.com-teclado .app{padding-bottom:56vh;}
   function renderInstalar(){
     var el=document.getElementById('instalar'); if(!el) return;
     if(!podeConvidarInstalar()){ el.innerHTML=''; el.style.display='none'; return; }
-    var iOS = /iphone|ipad|ipod/i.test(navigator.userAgent||'');
-    var como = iOS
-      ? 'em <b>Compartilhar</b>, escolher <b>Adicionar à Tela de Início</b>'
-      : 'no menu do navegador (⋮), escolher <b>Adicionar à tela inicial</b>';
     el.style.display='';
+    var acao = temPrompt()
+      ? '<button class="btn-wine sm" data-act="inst-sim">'+svg(IC.down,14)+' Instalar</button>'
+      : '<button class="btn-ghost sm" data-act="inst-como">Como instalar</button>';
     el.innerHTML='<div class="instalar-in">'+svg(IC.book,15)
-      +'<span>Para abrir mais rápido, '+como+'. O tracker ganha um ícone próprio e passa a abrir em tela cheia.</span>'
-      +'<button class="btn-ghost sm" data-act="inst-nao">Agora não</button></div>';
+      +'<span>O tracker pode virar um aplicativo, com ícone próprio e em tela cheia.</span>'
+      +'<span class="instalar-acoes">'+acao
+      +'<button class="btn-ghost sm" data-act="inst-nao">Agora não</button></span></div>';
+  }
+  /* Passo a passo escrito, para quando não há evento guardado — o caso do
+     iPhone, do Firefox e de quem já dispensou o convite do Chrome. */
+  function passosInstalar(){
+    var ua=navigator.userAgent||'';
+    var iOS=/iphone|ipad|ipod/i.test(ua);
+    var android=/android/i.test(ua);
+    if(iOS) return {onde:'iPhone e iPad (Safari)',
+      passos:['Abrir esta página no <b>Safari</b>.',
+              'Tocar no botão <b>Compartilhar</b>, o quadrado com a seta para cima.',
+              'Escolher <b>Adicionar à Tela de Início</b> e confirmar.'],
+      nota:'No Chrome do iPhone a opção não existe: só o Safari instala.'};
+    if(android) return {onde:'Android (Chrome)',
+      passos:['Abrir o menu de três pontos, no alto à direita.',
+              'Escolher <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.',
+              'Confirmar em <b>Instalar</b>.'],
+      nota:'Alguns navegadores mostram a opção direto na barra de endereço.'};
+    return {onde:'Computador (Chrome, Edge ou Opera)',
+      passos:['Procurar o ícone de instalar na barra de endereço, à direita.',
+              'Sem ele: menu de três pontos → <b>Transmitir, salvar e compartilhar</b> → <b>Instalar página como app</b>.',
+              'Confirmar em <b>Instalar</b>.'],
+      nota:'O Firefox e o Safari de computador não instalam páginas como app.'};
+  }
+  function abrirInstalar(){
+    var g=passosInstalar();
+    var botao = temPrompt()
+      ? '<div class="fileacts"><button class="btn-wine" data-instalar>'+svg(IC.down,15)+' Instalar agora</button></div>'
+      : '';
+    var html='<div class="modal" role="dialog" aria-modal="true">'
+      +'<div class="modal-head"><h2>Instalar como aplicativo</h2>'
+      +'<button class="icon-btn" data-x aria-label="Fechar">'+svg(IC.x)+'</button></div>'
+      +'<p>Instalado, o tracker ganha ícone próprio na tela inicial, abre em tela cheia, sem a barra do navegador, e continua funcionando sem internet. Os dados são os mesmos: nada é copiado nem movido.</p>'
+      +botao
+      +'<h3 class="fsec">'+esc(g.onde)+'</h3>'
+      +'<ol class="hint2" style="margin:0 0 10px;padding-left:20px">'
+      +g.passos.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ol>'
+      +'<p class="hint2">'+g.nota+'</p>'
+      +'<p class="hint2">O modo offline depende de o arquivo <code>sw.js</code> estar publicado ao lado da página. Sem ele o app instala e abre igual, apenas exige conexão.</p>'
+      +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Fechar</button></div></div>';
+    var ov=buildOverlay(html);
+    ov.querySelector('[data-x]').addEventListener('click', closeModal);
+    ov.querySelector('[data-cancel]').addEventListener('click', closeModal);
+    var b=ov.querySelector('[data-instalar]');
+    if(b) b.addEventListener('click', function(){ closeModal(); instalarAgora(); });
   }
   function renderMain(){
     var foco=marcaDoFoco();
@@ -4526,11 +4694,11 @@ body.com-teclado .app{padding-bottom:56vh;}
         '<p>Menu ☰ → <b>Semestres</b> → "Fechar e começar um novo". Todo o conteúdo em tela é guardado por inteiro e a área fica livre para o semestre seguinte.</p>'
         +'<p>Nada é apagado: os semestres guardados ficam listados ali e podem ser trazidos de volta a qualquer momento pelo <b>Restaurar</b>.</p>')
 
-      +bloco('É possível usar como aplicativo no celular?',
-        '<p>Sim, sem instalar nada de loja alguma. Com o tracker aberto no navegador do celular:</p>'
-        +'<ul><li><b>iPhone (Safari):</b> botão de compartilhar → <b>Adicionar à Tela de Início</b>.</li>'
-        +'<li><b>Android (Chrome):</b> menu de três pontos → <b>Adicionar à tela inicial</b>.</li></ul>'
-        +'<p>O tracker passa a abrir em tela cheia, com ícone próprio, como qualquer outro aplicativo. Os dados permanecem os mesmos.</p>')
+      +bloco('É possível usar como aplicativo?',
+        '<p>Sim, no celular e no computador, sem passar por loja alguma. O caminho mais curto é o botão <b>instalar como app</b>, no rodapé da página: onde o navegador permite, ele instala na hora; onde não permite, mostra o passo a passo do aparelho em uso.</p>'
+        +'<ul><li><b>Android e computador (Chrome, Edge, Opera):</b> a instalação é oferecida pelo próprio navegador.</li>'
+        +'<li><b>iPhone e iPad:</b> só pelo <b>Safari</b>, em compartilhar → <b>Adicionar à Tela de Início</b>. O Chrome do iPhone não oferece a opção.</li></ul>'
+        +'<p>Instalado, o tracker abre em tela cheia, com ícone próprio, e funciona sem internet. Os dados permanecem os mesmos, no mesmo lugar.</p>')
 
       +'<div class="modal-foot"><button class="btn-ghost" data-cancel>Fechar</button></div></div>';
     var ov=buildOverlay(html);
@@ -4938,8 +5106,10 @@ body.com-teclado .app{padding-bottom:56vh;}
     /* O rodapé é reescrito por três funções diferentes; um só ouvinte no
        elemento pai cobre todas sem cada uma ter de religar o botão. */
     foot.addEventListener('click', function(e){
-      var b=e.target.closest('[data-act="bkp-rodape"]'); if(!b) return;
-      doExport();
+      var b=e.target.closest('[data-act]'); if(!b) return;
+      var act=b.getAttribute('data-act');
+      if(act==='bkp-rodape'){ doExport(); return; }
+      if(act==='inst-rodape'){ abrirInstalar(); return; }
     });
     document.getElementById('lembrete').addEventListener('click', function(e){
       var b=e.target.closest('[data-act]'); if(!b) return;
@@ -4949,9 +5119,16 @@ body.com-teclado .app{padding-bottom:56vh;}
         anunciar('Lembrete adiado por duas semanas'); return; }
     });
     document.getElementById('instalar').addEventListener('click', function(e){
-      if(!e.target.closest('[data-act="inst-nao"]')) return;
-      marcarInstalar('nao'); renderInstalar();
+      var b=e.target.closest('[data-act]'); if(!b) return;
+      var act=b.getAttribute('data-act');
+      if(act==='inst-nao'){ marcarInstalar('nao'); renderInstalar(); renderMain(); return; }
+      if(act==='inst-sim'){ instalarAgora(); return; }
+      if(act==='inst-como'){ abrirInstalar(); return; }
     });
+    /* O aviso de que dá para instalar chega quando o navegador quer, às vezes
+       depois da primeira pintura. Sem redesenhar, o botão só apareceria na
+       próxima ação da pessoa. */
+    window.__aoPoderInstalar=function(){ try{ renderInstalar(); renderMain(); }catch(e){} };
     subjectsEl.addEventListener('click', function(e){
       var el=e.target.closest('[data-act]'); if(!el) return;
       var act=el.getAttribute('data-act');
