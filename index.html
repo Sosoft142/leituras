@@ -876,6 +876,19 @@ body.com-teclado .app{padding-bottom:56vh;}
 <body>
 <div class="app" id="app"></div>
 <script>
+/* Pinta a barra do navegador (no celular) e a de estado (no app instalado).
+   O Chrome no Android nem sempre repinta a barra quando só o atributo content
+   da meta muda com o app já aberto — era por isso que a barra não escurecia ao
+   ligar o modo escuro. Remover a meta e recriá-la força uma nova leitura. */
+window.__setBarraTema=function(cor){
+  try{
+    var velhas=document.querySelectorAll('meta[name="theme-color"]');
+    for(var i=0;i<velhas.length;i++) velhas[i].parentNode.removeChild(velhas[i]);
+    var m=document.createElement('meta');
+    m.setAttribute('name','theme-color'); m.setAttribute('content', cor);
+    (document.head||document.getElementsByTagName('head')[0]).appendChild(m);
+  }catch(e){}
+};
 /* Manifesto de app gerado aqui para o arquivo continuar sendo um só. Assim,
    depois de publicado num link, o navegador oferece instalar de verdade. */
 (function(){ try{
@@ -1043,8 +1056,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   if(u && u.dark){
     document.getElementById('app').classList.add('dark');
     document.body.style.background='#1b1713';
-    var m=document.querySelector('meta[name="theme-color"]');
-    if(m) m.setAttribute('content','#1b1713');
+    if(window.__setBarraTema) window.__setBarraTema('#1b1713');
   }
 }catch(e){} })();
 </script>
@@ -1055,7 +1067,7 @@ body.com-teclado .app{padding-bottom:56vh;}
   /* Sobe 0.01 a cada versão entregue. Aparece no rodapé, junto dos atalhos. */
   /* O tracker deixou de ser um app de uma pessoa só e virou um que qualquer
      estudante configura: a contagem recomeça do zero aqui, em V0.1. */
-  var APP_VERSAO = '0.19';
+  var APP_VERSAO = '0.20';
   var STORAGE_KEY = 'tracker-leituras:v1';
   var UI_KEY      = 'tracker-leituras:ui';
 
@@ -1167,8 +1179,7 @@ body.com-teclado .app{padding-bottom:56vh;}
       /* A barra do navegador segue o PAPEL, não o acento: com a cor de destaque
          ela virava uma faixa forte no alto do celular. Como o papel muda com o
          tema, o valor é reescrito aqui, que roda a cada renderAll. */
-      var m=document.querySelector('meta[name="theme-color"]');
-      if(m) m.setAttribute('content', dark ? '#1b1713' : '#EBE7DE');
+      if(window.__setBarraTema) window.__setBarraTema(dark ? '#1b1713' : '#EBE7DE');
       /* O ícone, esse continua acompanhando o acento. Só o SVG é reescrito por
          regex; os PNG são redesenhados do zero em __atualizarManifesto. */
       var cor=encodeURIComponent(acentoIcone());
@@ -3400,10 +3411,13 @@ body.com-teclado .app{padding-bottom:56vh;}
     if(naoSalva) return ' · <b class="nao-salvo">GRAVAÇÃO BLOQUEADA — baixar uma cópia</b>';
     /* Antes isto era só texto mandando usar um botão chamado "Exportar" que
        não existia em tela nenhuma. Agora a própria frase é o botão. */
+    /* "Baixar uma cópia" saiu do rodapé: era redundante com o botão em
+       destaque no painel "Seus dados" (ícone no alto) e com o lembrete que
+       aparece quando a cópia está atrasada. O parâmetro comDica fica sem uso,
+       mantido só para não mexer nas chamadas. */
     return ' · salvo <b>só neste navegador</b>'
-      +(comDica?' · <button type="button" class="link-btn" data-act="bkp-rodape">baixar uma cópia</button>':'')
-      /* Visível em qualquer tela e sempre no mesmo lugar: o convite do alto
-         some depois de dispensado, este não. */
+      /* Instalar continua no rodapé: é o único lugar fixo em qualquer tela — o
+         convite do alto some depois de dispensado. */
       +(podeInstalar()?' · <button type="button" class="link-btn" data-act="inst-rodape">instalar como app</button>':'');
   }
   function renderPendBtn(){
@@ -5120,7 +5134,6 @@ body.com-teclado .app{padding-bottom:56vh;}
     foot.addEventListener('click', function(e){
       var b=e.target.closest('[data-act]'); if(!b) return;
       var act=b.getAttribute('data-act');
-      if(act==='bkp-rodape'){ doExport(); return; }
       if(act==='inst-rodape'){ abrirInstalar(); return; }
     });
     document.getElementById('lembrete').addEventListener('click', function(e){
