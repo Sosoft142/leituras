@@ -3,12 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!-- theme-color pinta a barra do navegador no celular. Com a cor de destaque
-     ela virava um bloco forte no alto da tela, chamando mais atenção que o
-     próprio conteúdo. Aqui ela recebe a cor do papel do app: a barra deixa de
-     aparecer como faixa e se confunde com a página. O valor é reescrito logo
-     abaixo conforme o tema claro ou escuro guardado. -->
-<meta name="theme-color" content="#EBE7DE">
+<!-- A barra do topo — endereço no navegador, status no app instalado — recebe
+     a cor do PAPEL, não a de destaque (que virava um bloco forte no alto).
+     Num app JÁ instalado no Android, o sistema pinta essa barra pela meta que
+     casa com o tema do APARELHO e ignora troca por JavaScript; por isso são
+     duas metas, uma por esquema, e o app abre no tema do sistema quando ninguém
+     escolheu ainda. No navegador comum a meta #tc-run (criada pelo app) segue o
+     botão de tema. -->
+<meta name="theme-color" content="#EBE7DE" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1b1713" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -876,17 +879,20 @@ body.com-teclado .app{padding-bottom:56vh;}
 <body>
 <div class="app" id="app"></div>
 <script>
-/* Pinta a barra do navegador (no celular) e a de estado (no app instalado).
-   O Chrome no Android nem sempre repinta a barra quando só o atributo content
-   da meta muda com o app já aberto — era por isso que a barra não escurecia ao
-   ligar o modo escuro. Remover a meta e recriá-la força uma nova leitura. */
+/* No NAVEGADOR comum, a barra segue o botão de tema do app: esta meta, sem
+   media-query, é a última da lista e por isso vence as duas por esquema. É
+   recriada (não só editada) a cada troca porque o Chrome nem sempre repinta ao
+   mudar só o content. As duas metas por media-query ficam intactas — são elas
+   que valem no app instalado, onde o Android decide a barra pelo tema do
+   aparelho e não relê troca feita por JavaScript. */
 window.__setBarraTema=function(cor){
   try{
-    var velhas=document.querySelectorAll('meta[name="theme-color"]');
-    for(var i=0;i<velhas.length;i++) velhas[i].parentNode.removeChild(velhas[i]);
+    var head=document.head||document.getElementsByTagName('head')[0];
+    var velho=document.getElementById('tc-run');
+    if(velho) velho.parentNode.removeChild(velho);
     var m=document.createElement('meta');
-    m.setAttribute('name','theme-color'); m.setAttribute('content', cor);
-    (document.head||document.getElementsByTagName('head')[0]).appendChild(m);
+    m.id='tc-run'; m.setAttribute('name','theme-color'); m.setAttribute('content', cor);
+    head.appendChild(m);
   }catch(e){}
 };
 /* Manifesto de app gerado aqui para o arquivo continuar sendo um só. Assim,
@@ -1053,7 +1059,11 @@ window.__setBarraTema=function(cor){
 /* Aplica o tema salvo antes do app renderizar, para não piscar claro ao abrir no escuro. */
 (function(){ try{
   var u=JSON.parse(localStorage.getItem('tracker-leituras:ui')||'{}');
-  if(u && u.dark){
+  /* Respeita a escolha salva; sem ela, segue o tema do aparelho. Feito aqui,
+     antes da 1ª pintura, para não piscar claro ao abrir no escuro. */
+  var querEscuro = (u && typeof u.dark==='boolean') ? u.dark
+    : !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  if(querEscuro){
     document.getElementById('app').classList.add('dark');
     document.body.style.background='#1b1713';
     if(window.__setBarraTema) window.__setBarraTema('#1b1713');
@@ -1067,7 +1077,7 @@ window.__setBarraTema=function(cor){
   /* Sobe 0.01 a cada versão entregue. Aparece no rodapé, junto dos atalhos. */
   /* O tracker deixou de ser um app de uma pessoa só e virou um que qualquer
      estudante configura: a contagem recomeça do zero aqui, em V0.1. */
-  var APP_VERSAO = '0.20';
+  var APP_VERSAO = '0.21';
   var STORAGE_KEY = 'tracker-leituras:v1';
   var UI_KEY      = 'tracker-leituras:ui';
 
@@ -1334,7 +1344,11 @@ window.__setBarraTema=function(cor){
   var currentSubjectId=null, query="", fTag="", sortKey="number", sortDir="asc";
   var soPendentes=false;   // "falta ler": esconde o que já está lido
   var contornos=true;      // anéis coloridos na avaliação e no próximo texto
-  var dark=false, pace=3, gradiente=false;
+  /* Sem escolha salva, o app abre no tema do APARELHO — assim o conteúdo casa
+     com a barra do topo, que no app instalado segue o sistema. Quem já escolheu
+     mantém a escolha (loadUI sobrescreve com u.dark). */
+  var dark=(function(){ try{ return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); }catch(e){ return false; } })(),
+      pace=3, gradiente=false;
   var openMenuId=null;
   var menuScroll={x:0,y:0};   // posição da página quando o menu de status abriu
   var menuPorTeclado=false;   // abriu pelo Enter/Espaço: o foco entra no menu
@@ -2188,7 +2202,9 @@ window.__setBarraTema=function(cor){
       if(typeof u.anel==='boolean') contornos=u.anel;
       if(typeof u.bkp==='string') backupEm=u.bkp;
       if(typeof u.bkpAdiado==='string') lembreteAdiado=u.bkpAdiado;
-      dark=!!u.dark;
+      /* Só sobrescreve o tema quando há escolha de fato salva; sem a chave,
+         mantém o padrão do sistema definido lá em cima. */
+      if(typeof u.dark==='boolean') dark=u.dark;
       if(u.pace) pace=Number(u.pace)||3;
       if(typeof u.tag==='string') fTag=u.tag;
       gradiente=!!u.grad;
