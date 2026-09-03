@@ -957,10 +957,14 @@ window.__setBarraTema=function(cor){
     start_url:url, scope:base, display:"standalone",
     /* Sem "orientation": o tracker também é usado no computador e no celular
        deitado, e travar em retrato só atrapalharia. */
-    /* theme_color pinta a barra de estado do app instalado. Mesma escolha da
-       meta lá em cima: a cor do papel, para não virar uma faixa forte no topo.
-       background_color é a tela de abertura, que já era o papel. */
-    background_color:"#EBE7DE", theme_color:"#EBE7DE",
+    /* SEM theme_color de propósito. Num app JÁ instalado no Android, o sistema
+       pinta a barra de status por esta chave e ignora as metas da página — foi
+       por isso que, instalado, o topo ficava sempre claro mesmo no modo escuro.
+       Sem ela, a barra passa a seguir as metas <meta name="theme-color"> por
+       media-query, que acompanham o tema do APARELHO. (Muda numa instalação
+       nova: o Android congela o manifesto na hora de instalar.)
+       background_color é só a tela de abertura. */
+    background_color:"#EBE7DE",
     icons:[{src:svgIcone(cor,false), sizes:"any", type:"image/svg+xml", purpose:"any"}] };
 
   var el=document.getElementById('manifest'), urlAntiga=null;
@@ -1028,7 +1032,7 @@ window.__setBarraTema=function(cor){
      logo em seguida — senão o atalho nasce com a cor antiga. */
   window.__atualizarManifesto=function(nomeNovo, corNova){
     if(nomeNovo){ man.name=nomeNovo; man.short_name=curtoDe(nomeNovo); }
-    if(corNova){ gerarIcones(corNova); }   // a barra não segue o acento; o ícone sim
+    if(corNova){ gerarIcones(corNova); }   // a barra não segue o acento (nem tem theme_color); o ícone sim
     gravarManifesto();
   };
 
@@ -1077,7 +1081,7 @@ window.__setBarraTema=function(cor){
   /* Sobe 0.01 a cada versão entregue. Aparece no rodapé, junto dos atalhos. */
   /* O tracker deixou de ser um app de uma pessoa só e virou um que qualquer
      estudante configura: a contagem recomeça do zero aqui, em V0.1. */
-  var APP_VERSAO = '0.21';
+  var APP_VERSAO = '0.22';
   var STORAGE_KEY = 'tracker-leituras:v1';
   var UI_KEY      = 'tracker-leituras:ui';
 
