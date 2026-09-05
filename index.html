@@ -874,6 +874,65 @@ body.com-teclado .app{padding-bottom:56vh;}
   .app *, .app *::before, .app *::after{transition:none !important; animation:none !important;}
 }
 
+/* ---- TCC: linha do tempo retrátil ---- */
+.tcc-col{margin:0;}
+.tcc-colbtn{display:inline-flex; align-items:center; gap:7px; border:0; background:none; cursor:pointer;
+  font:inherit; font-size:15px; font-weight:600; color:var(--ink); padding:0; text-align:left;}
+.tcc-colbtn:hover{color:var(--wine-fg);}
+.tcc-chev{display:inline-flex; color:var(--ink-soft); transition:transform .18s ease;}
+.tcc-chev:not(.aberto){transform:rotate(-90deg);}
+.tcc-colbtn:hover .tcc-chev{color:var(--wine-fg);}
+/* ---- Mural (post-its) ---- */
+.mural-add{margin-bottom:14px;}
+.mural-txt{width:100%; box-sizing:border-box; border:1.5px solid var(--line); border-radius:10px;
+  background:var(--input); color:var(--ink); font:inherit; font-size:14px; line-height:1.45;
+  padding:10px 12px; resize:none; overflow:hidden; min-height:52px;}
+.mural-txt::placeholder{color:var(--faint);}
+.mural-txt:focus{outline:none; border-color:var(--wine-fg);}
+.mural-add-row{display:flex; align-items:center; gap:10px; margin-top:8px; flex-wrap:wrap;}
+.mcores{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-right:auto;}
+.mcor{width:22px; height:22px; border-radius:50%; border:1.5px solid; cursor:pointer; padding:0;
+  transition:transform .12s ease;}
+.mcor:hover{transform:scale(1.12);}
+.mcor.sel{box-shadow:0 0 0 2px var(--card), 0 0 0 4px var(--ink);}
+.mcor.mini{width:16px; height:16px;}
+.mcor.mini.sel{box-shadow:0 0 0 1.5px var(--card), 0 0 0 3px var(--ink-soft);}
+.mural-vazio{color:var(--ink-soft); margin:4px 0 0;}
+.mural-wall{column-width:158px; column-gap:11px;}
+.nota{break-inside:avoid; -webkit-column-break-inside:avoid; margin:0 0 11px; border:1px solid;
+  border-radius:10px; padding:10px 11px 8px; box-shadow:0 1px 2px rgba(0,0,0,.05);}
+.nota-amarelo{background:#FBF1C7; border-color:#E4CE83;}
+.nota-rosa{background:#F7DCE3; border-color:#E3AFBD;}
+.nota-azul{background:#D8E6F1; border-color:#A9C6DC;}
+.nota-verde{background:#DCEBD1; border-color:#AFCF9E;}
+.nota-roxo{background:#E7DBF0; border-color:#C6B0DA;}
+.nota-neutro{background:#F1ECE1; border-color:#D8D1C3;}
+.nota-txt{font-size:14px; line-height:1.45; white-space:pre-wrap; overflow-wrap:anywhere; cursor:text;
+  min-height:20px; color:#3a3220;}
+.nota-vazia{color:#8a806a; font-style:italic;}
+.nota-acoes{display:flex; align-items:center; justify-content:space-between; gap:8px;
+  margin-top:9px; padding-top:7px; border-top:1px solid rgba(0,0,0,.09);}
+.nota-cores{display:flex; align-items:center; gap:5px; flex-wrap:wrap;}
+.nota-del{color:#7a5a2a; opacity:.62;}
+.nota-del:hover{opacity:1; color:var(--wine-fg);}
+.nota-editando{cursor:auto;}
+.nota-edit{width:100%; box-sizing:border-box; border:1.5px solid var(--wine-fg); border-radius:8px;
+  background:var(--input); color:var(--ink); font:inherit; font-size:14px; line-height:1.45;
+  padding:8px 10px; resize:none; overflow:hidden; min-height:44px;}
+.nota-edit:focus{outline:none;}
+.nota-edit-acoes{display:flex; justify-content:flex-end; gap:7px; margin-top:8px;}
+.app.dark .nota-amarelo{background:#3a3218; border-color:#5a4d24;}
+.app.dark .nota-rosa{background:#3b2831; border-color:#5c3a48;}
+.app.dark .nota-azul{background:#20303d; border-color:#35495c;}
+.app.dark .nota-verde{background:#233524; border-color:#3a5236;}
+.app.dark .nota-roxo{background:#2e2740; border-color:#473a5e;}
+.app.dark .nota-neutro{background:#2d2822; border-color:#423b34;}
+.app.dark .nota-txt{color:#e6e1d9;}
+.app.dark .nota-vazia{color:#a99c8b;}
+.app.dark .nota-acoes{border-top-color:rgba(255,255,255,.11);}
+.app.dark .nota-del{color:#cca65c;}
+@media(max-width:620px){ .mural-wall{column-width:150px; column-gap:10px;} }
+@media(max-width:380px){ .mural-wall{column-width:130px;} }
 </style>
 </head>
 <body>
@@ -1081,7 +1140,7 @@ window.__setBarraTema=function(cor){
   /* Sobe 0.01 a cada versão entregue. Aparece no rodapé, junto dos atalhos. */
   /* O tracker deixou de ser um app de uma pessoa só e virou um que qualquer
      estudante configura: a contagem recomeça do zero aqui, em V0.1. */
-  var APP_VERSAO = '0.22';
+  var APP_VERSAO = '0.23';
   var STORAGE_KEY = 'tracker-leituras:v1';
   var UI_KEY      = 'tracker-leituras:ui';
 
@@ -1345,6 +1404,8 @@ window.__setBarraTema=function(cor){
   var arquivos=[];              // semestres fechados, guardados inteiros
   var view='subject';
   var cronoModo='gantt';        // 'gantt' | 'lista' — preferência salva
+  var cronoAberto=true;         // a linha do tempo do TCC pode ser recolhida
+  var muralCorNova='amarelo';   // cor escolhida para a próxima nota do mural
   var currentSubjectId=null, query="", fTag="", sortKey="number", sortDir="asc";
   var soPendentes=false;   // "falta ler": esconde o que já está lido
   var contornos=true;      // anéis coloridos na avaliação e no próximo texto
@@ -1379,6 +1440,15 @@ window.__setBarraTema=function(cor){
     done : {label:'Concluída',   dot:'#4E8C48', dotD:'#85b474', chip:'#E3EFDF', text:'#3F6A36', chipD:'#2f3f29', textD:'#85b474'}
   };
   var ETAPA_ORD = ['todo','doing','done'];
+  var MURAL_CORES = {
+    amarelo:{bg:'#FBF1C7', bd:'#E4CE83', bgD:'#3a3218', bdD:'#5a4d24'},
+    rosa:   {bg:'#F7DCE3', bd:'#E3AFBD', bgD:'#3b2831', bdD:'#5c3a48'},
+    azul:   {bg:'#D8E6F1', bd:'#A9C6DC', bgD:'#20303d', bdD:'#35495c'},
+    verde:  {bg:'#DCEBD1', bd:'#AFCF9E', bgD:'#233524', bdD:'#3a5236'},
+    roxo:   {bg:'#E7DBF0', bd:'#C6B0DA', bgD:'#2e2740', bdD:'#473a5e'},
+    neutro: {bg:'#F1ECE1', bd:'#D8D1C3', bgD:'#2d2822', bdD:'#423b34'}
+  };
+  var MURAL_ORDEM = ['amarelo','rosa','azul','verde','roxo','neutro'];
   var ATRASO_DOT='#A23A3A', ATRASO_DOT_D='#d9958d';
   function etapaCor(cfg, late){
     if(late) return dark?ATRASO_DOT_D:ATRASO_DOT;
@@ -1597,6 +1667,14 @@ window.__setBarraTema=function(cor){
     if(!isoOk(o.date)) o.date='';
     return o;
   }
+  function normNota(n0){
+    var n=Object.assign({id:"",texto:"",cor:"amarelo",em:""}, ehObjeto(n0)?n0:null);
+    n.id=idSeguro(n.id,'nota');
+    n.texto=txtSeguro(n.texto,4000);
+    if(!MURAL_CORES[n.cor]) n.cor='amarelo';
+    if(typeof n.em!=='string') n.em='';
+    return n;
+  }
   /* Um backup ou um aparelho de versão anterior à aba TCC manda o payload SEM a
      chave "tcc". Isso não é "TCC vazio", é "não sei nada sobre TCC" — zerar as
      etapas e orientações nesse caso destrói dados. */
@@ -1684,6 +1762,7 @@ window.__setBarraTema=function(cor){
     if(!o.prazoLabel) o.prazoLabel='Entrega final';
     o.etapas = Array.isArray(o.etapas) ? o.etapas.map(normEtapa) : [];
     o.orientacoes = Array.isArray(o.orientacoes) ? o.orientacoes.map(normOrient) : [];
+    o.mural = Array.isArray(o.mural) ? o.mural.map(normNota) : [];
     return o;
   }
   /* Só o formato deixava passar 2026-02-31 e 0000-00-00: o Date transbordava
@@ -2191,7 +2270,7 @@ window.__setBarraTema=function(cor){
     }
   }
   function saveUI(){
-    try{ localStorage.setItem(UI_KEY, JSON.stringify({cur:currentSubjectId, sk:sortKey, sd:sortDir, view:view, dark:dark, pace:pace, tag:fTag, grad:gradiente, crono:cronoModo, pend:soPendentes, anel:contornos, bkp:backupEm, bkpAdiado:lembreteAdiado})); }catch(e){}
+    try{ localStorage.setItem(UI_KEY, JSON.stringify({cur:currentSubjectId, sk:sortKey, sd:sortDir, view:view, dark:dark, pace:pace, tag:fTag, grad:gradiente, crono:cronoModo, crab:cronoAberto, mcor:muralCorNova, pend:soPendentes, anel:contornos, bkp:backupEm, bkpAdiado:lembreteAdiado})); }catch(e){}
   }
   function loadUI(){
     try{
@@ -2202,6 +2281,8 @@ window.__setBarraTema=function(cor){
       if(u.view==='week') view='week';   // a antiga aba de faltas virou parte do card
       if(u.view==='tcc') view='tcc';
       if(u.crono==='lista'||u.crono==='gantt') cronoModo=u.crono;
+      if(typeof u.crab==='boolean') cronoAberto=u.crab;
+      if(typeof u.mcor==='string' && MURAL_CORES[u.mcor]) muralCorNova=u.mcor;
       soPendentes=!!u.pend;
       if(typeof u.anel==='boolean') contornos=u.anel;
       if(typeof u.bkp==='string') backupEm=u.bkp;
@@ -2533,7 +2614,7 @@ window.__setBarraTema=function(cor){
      apagada com o resto ainda em pé cai no aviso curto de sempre. */
   function primeiraVez(){
     if(subjects.length || texts.length) return false;
-    if(tcc && ((tcc.etapas&&tcc.etapas.length) || (tcc.orientacoes&&tcc.orientacoes.length) || tcc.titulo)) return false;
+    if(tcc && ((tcc.etapas&&tcc.etapas.length) || (tcc.orientacoes&&tcc.orientacoes.length) || (tcc.mural&&tcc.mural.length) || tcc.titulo)) return false;
     /* O que separa "nunca usou" de "apagou a última matéria" é existir um
        registro salvo. Sem isto, remover a única matéria fazia a tela de
        primeira vez voltar como se todo o histórico não tivesse existido. */
@@ -3210,6 +3291,70 @@ window.__setBarraTema=function(cor){
     }).join('')+'</div>';
   }
 
+  function acharNota(id){ for(var i=0;i<tcc.mural.length;i++){ if(tcc.mural[i].id===id) return tcc.mural[i]; } return null; }
+  function chipsCor(sel, acao, id, mini){
+    return MURAL_ORDEM.map(function(c){
+      var on=(c===sel);
+      return '<button type="button" class="mcor'+(mini?' mini':'')+(on?' sel':'')+'" data-act="'+acao+'" data-cor="'+c+'"'
+        +(id?' data-id="'+esc(id)+'"':'')+' style="background:'+MURAL_CORES[c].bg+';border-color:'+MURAL_CORES[c].bd+'"'
+        +' aria-label="Cor '+c+'" aria-pressed="'+(on?'true':'false')+'"></button>';
+    }).join('');
+  }
+  function notaHtml(n){
+    return '<div class="nota nota-'+n.cor+'" data-id="'+esc(n.id)+'">'
+      +'<div class="nota-txt" data-act="mural-edit" data-id="'+esc(n.id)+'" title="Editar">'
+        +(n.texto ? esc(n.texto).replace(/\n/g,'<br>') : '<span class="nota-vazia">(nota vazia)</span>')+'</div>'
+      +'<div class="nota-acoes"><div class="nota-cores">'+chipsCor(n.cor,'mural-recor',n.id,true)+'</div>'
+        +'<button class="icon-btn nota-del" data-act="mural-del" data-id="'+esc(n.id)+'" aria-label="Apagar nota" title="Apagar">'+svg(IC.trash,14)+'</button>'
+      +'</div></div>';
+  }
+  function renderMural(){
+    var compose='<div class="mural-add">'
+      +'<textarea id="mural_txt" class="mural-txt" rows="2" maxlength="4000" '
+        +'placeholder="Escreva uma ideia, uma dúvida, um lembrete… (Enter fixa · Shift+Enter quebra linha)"></textarea>'
+      +'<div class="mural-add-row"><div class="mcores" role="group" aria-label="Cor da nota">'+chipsCor(muralCorNova,'mural-cor','',false)+'</div>'
+      +'<button class="btn-wine sm" data-act="mural-add">'+svg(IC.pin,14)+' Fixar</button></div></div>';
+    var lista=tcc.mural.slice().sort(function(a,b){
+      var ea=a.em||'', eb=b.em||''; return ea<eb?1:(ea>eb?-1:0);   // mais recentes no topo
+    });
+    var wall = lista.length
+      ? '<div class="mural-wall">'+lista.map(notaHtml).join('')+'</div>'
+      : '<p class="mural-vazio hint">O mural começa vazio. A primeira nota escrita acima fica fixada aqui.</p>';
+    return compose+wall;
+  }
+  function fixarNota(){
+    var ta=document.getElementById('mural_txt'); if(!ta) return;
+    var txt=ta.value.trim(); if(!txt){ ta.focus(); return; }
+    tcc.mural.push(normNota({texto:txt, cor:muralCorNova, em:nowISO()}));
+    persist(); renderTcc();
+    var novo=document.getElementById('mural_txt'); if(novo) novo.focus();
+  }
+  function editarNota(id){
+    var n=acharNota(id); if(!n){ renderTcc(); return; }
+    var card=tccEl && tccEl.querySelector('.nota[data-id="'+id+'"]');
+    if(!card){ renderTcc(); return; }
+    card.classList.add('nota-editando');
+    card.innerHTML='<textarea class="nota-edit" maxlength="4000">'+esc(n.texto)+'</textarea>'
+      +'<div class="nota-edit-acoes">'
+      +'<button class="btn-ghost sm" data-act="mural-cancel">Cancelar</button>'
+      +'<button class="btn-wine sm" data-act="mural-salvar" data-id="'+esc(id)+'">Salvar</button>'
+      +'</div>';
+    var ta=card.querySelector('.nota-edit');
+    if(ta){ ta.focus(); try{ ta.setSelectionRange(ta.value.length, ta.value.length); }catch(e){}
+      ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,400)+'px'; }
+  }
+  function salvarNota(id){
+    var n=acharNota(id); if(!n){ renderTcc(); return; }
+    var card=tccEl && tccEl.querySelector('.nota[data-id="'+id+'"]');
+    var ta=card && card.querySelector('.nota-edit');
+    var txt=ta ? ta.value.trim() : n.texto;
+    /* Nota esvaziada não serve para nada: sai do mural (com desfazer, porque é
+       fácil apagar sem querer o que se tinha escrito). */
+    if(!txt){ guardarDesfazer('a nota'); tcc.mural=tcc.mural.filter(function(x){ return x.id!==id; });
+      persist(); renderTcc(); avisoNaTela('Nota vazia removida.', 'ok', true); return; }
+    n.texto=txt; persist(); renderTcc();
+  }
+
   function renderPrazo(){
     if(!tcc.prazo){
       return '<div class="prazo"><span class="prazo-ic">'+svg(IC.cal,17)+'</span>'
@@ -3260,17 +3405,28 @@ window.__setBarraTema=function(cor){
       +(drive?'<div class="subj-chips">'+drive+'</div>':'')
       +'</div>';
 
-    h+='<section class="tcc-sec"><div class="tcc-sh"><h3>Etapas e cronograma</h3>'
+    h+='<section class="tcc-sec"><div class="tcc-sh">'
+      +'<h3 class="tcc-col"><button class="tcc-colbtn" data-act="cronotoggle" aria-expanded="'+(cronoAberto?'true':'false')+'">'
+        +'<span class="tcc-chev'+(cronoAberto?' aberto':'')+'">'+SVG_CARET+'</span>Etapas e cronograma</button></h3>'
       +(tcc.etapas.length?'<span class="conta">'+nFeitas+'/'+tcc.etapas.length+' concluídas</span>':'')
-      +'<div class="dir">'
-      +(tcc.etapas.length
-        ? '<div class="seg" id="cronoseg">'
-            +'<button data-act="crono" data-m="gantt" aria-pressed="'+(cronoModo==='gantt')+'"'+(cronoModo==='gantt'?' class="on"':'')+'>'+svg(IC.cal,13)+' Barras</button>'
-            +'<button data-act="crono" data-m="lista" aria-pressed="'+(cronoModo==='lista')+'"'+(cronoModo==='lista'?' class="on"':'')+'>'+svg(IC.list,13)+' Lista</button>'
-          +'</div>'
-          +'<button class="btn-ghost sm" data-act="etnova">'+svg(IC.plus,14)+' Etapa</button>'
-        : '')
-      +'</div></div>'+renderEtapas()+'</section>';
+      +(cronoAberto?('<div class="dir">'
+        +(tcc.etapas.length
+          ? '<div class="seg" id="cronoseg">'
+              +'<button data-act="crono" data-m="gantt" aria-pressed="'+(cronoModo==='gantt')+'"'+(cronoModo==='gantt'?' class="on"':'')+'>'+svg(IC.cal,13)+' Barras</button>'
+              +'<button data-act="crono" data-m="lista" aria-pressed="'+(cronoModo==='lista')+'"'+(cronoModo==='lista'?' class="on"':'')+'>'+svg(IC.list,13)+' Lista</button>'
+            +'</div>'
+            +'<button class="btn-ghost sm" data-act="etnova">'+svg(IC.plus,14)+' Etapa</button>'
+          : '')
+        +'</div>'):'')
+      +'</div>'
+      +(cronoAberto?renderEtapas():'')
+      +'</section>';
+
+    /* Mural: anotações e ideias soltas, em post-its. Fica logo abaixo da linha
+       do tempo, para capturar uma ideia sem sair do lugar. */
+    h+='<section class="tcc-sec"><div class="tcc-sh"><h3>Mural</h3>'
+      +(tcc.mural.length?'<span class="conta">'+tcc.mural.length+(tcc.mural.length===1?' nota':' notas')+'</span>':'')
+      +'</div>'+renderMural()+'</section>';
 
     if(sTcc && !leituras.length){
       h+='<div class="tcc-mat">'+svg(IC.book,14)+' Matéria vinculada: <b>'+esc(sTcc.name)+'</b>'
@@ -3312,6 +3468,8 @@ window.__setBarraTema=function(cor){
     if(atrasadas) partes.push(atrasadas+' em atraso');
     var no=tcc.orientacoes.length;
     if(no) partes.push(no+' '+plural(no,'orientação registrada','orientações registradas'));
+    var nm=tcc.mural.length;
+    if(nm) partes.push(nm+' '+plural(nm,'nota no mural','notas no mural'));
     return esc(partes.join(' · '))+textoSalvo(false)+'<br>'
       +'<span class="kbd">n</span> nova etapa · <span class="kbd">t</span> voltar · <span class="kbd">Esc</span> fechar'
       +selo();
@@ -3765,7 +3923,7 @@ window.__setBarraTema=function(cor){
   }
   function temConteudoVivo(){
     return !!(subjects.length || texts.length
-      || (tcc && ((tcc.etapas&&tcc.etapas.length) || (tcc.orientacoes&&tcc.orientacoes.length) || tcc.titulo)));
+      || (tcc && ((tcc.etapas&&tcc.etapas.length) || (tcc.orientacoes&&tcc.orientacoes.length) || (tcc.mural&&tcc.mural.length) || tcc.titulo)));
   }
   /* Arquivar NÃO apaga: move o semestre inteiro para a lista e deixa a mesa
      limpa. Restaurar faz o caminho de volta, arquivando antes o que estiver na
@@ -4535,6 +4693,29 @@ window.__setBarraTema=function(cor){
     if(act==='ornova'){ openOrientModal(null); return; }
     if(act==='oredit'){ var or=acharOrient(id); if(or) openOrientModal(or); return; }
     if(act==='crono'){ cronoModo=el.getAttribute('data-m'); saveUI(); renderTcc(); return; }
+    if(act==='cronotoggle'){ cronoAberto=!cronoAberto; saveUI(); renderTcc(); return; }
+    if(act==='mural-add'){ fixarNota(); return; }
+    if(act==='mural-edit'){ e.stopPropagation(); editarNota(id); return; }
+    if(act==='mural-salvar'){ salvarNota(id); return; }
+    if(act==='mural-cancel'){ renderTcc(); return; }
+    if(act==='mural-recor'){ var nr=acharNota(id); if(nr){ nr.cor=el.getAttribute('data-cor'); persist(); renderTcc(); } return; }
+    if(act==='mural-del'){
+      var nd=acharNota(id); if(!nd) return;
+      guardarDesfazer('a nota');
+      tcc.mural=tcc.mural.filter(function(x){ return x.id!==id; });
+      persist(); renderTcc(); avisoNaTela('Nota apagada.', 'ok', true); return;
+    }
+    if(act==='mural-cor'){
+      /* Trocar a cor da PRÓXIMA nota não pode redesenhar a aba: perderia o
+         texto sendo digitado no campo. Só atualiza a seleção dos discos. */
+      muralCorNova=el.getAttribute('data-cor'); saveUI();
+      var box=el.closest('.mcores');
+      if(box) Array.prototype.forEach.call(box.querySelectorAll('.mcor'), function(bt){
+        var on=bt.getAttribute('data-cor')===muralCorNova;
+        bt.classList.toggle('sel', on); bt.setAttribute('aria-pressed', on?'true':'false');
+      });
+      return;
+    }
     if(act==='pedit'){ e.stopPropagation(); e.preventDefault(); abrirEdicaoPaginas(el); return; }
     if(act==='editsubj'){ var mat=findSubject(id)||subjectTcc(); if(mat) openSubjectModal(mat); return; }
     if(act==='tccadd'){
@@ -5107,9 +5288,28 @@ window.__setBarraTema=function(cor){
     tccEl=document.getElementById('tcc');
     tccEl.addEventListener('click', tccActions);
     tccEl.addEventListener('keydown', function(e){
+      /* Campo de escrever no mural: Enter fixa, Shift+Enter quebra linha. */
+      if(e.target && e.target.id==='mural_txt'){
+        if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); fixarNota(); }
+        return;
+      }
+      /* Editando uma nota: Esc cancela, Ctrl/Cmd+Enter salva; Enter é quebra. */
+      if(e.target && e.target.classList && e.target.classList.contains('nota-edit')){
+        if(e.key==='Escape'){ e.preventDefault(); renderTcc(); }
+        else if(e.key==='Enter' && (e.ctrlKey||e.metaKey)){ e.preventDefault();
+          var c=e.target.closest('.nota'); if(c) salvarNota(c.getAttribute('data-id')); }
+        return;
+      }
       if(e.key!=='Enter' && e.key!==' ') return;
       var alvo=e.target.closest('.gcell-l[data-act]'); if(!alvo) return;
       e.preventDefault(); alvo.click();
+    });
+    /* Campos de texto do mural crescem com o conteúdo, sem barra de rolagem. */
+    tccEl.addEventListener('input', function(e){
+      var t=e.target;
+      if(t && (t.id==='mural_txt' || (t.classList && t.classList.contains('nota-edit')))){
+        t.style.height='auto'; t.style.height=Math.min(t.scrollHeight, 400)+'px';
+      }
     });
     foot=document.getElementById('foot');
     searchInput=document.getElementById('q');
